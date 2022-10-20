@@ -4,6 +4,11 @@ author: Simon B. Støvring
 runs:
   using: composite
   steps:
+    - name: Install SSH Key
+      uses: benoitchantre/setup-ssh-authentication-action@1.0.0
+      with:
+        private-key: ${{ secrets.CI_SSH_KEY }}
+        known-hosts: ${{ secrets.CI_SSH_KNOWN_HOSTS }}
     - name: Install Shipshape
       run: npm install -g git+ssh://git@github.com:shapehq/ship-shape-cli.git
       shell: bash
