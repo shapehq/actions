@@ -23,3 +23,8 @@ runs:
       with:
         ruby-version: 3.1.2
         bundler-cache: true
+    - name: Install Certificate
+      uses: apple-actions/import-codesign-certs@v1
+      with: 
+        p12-file-base64: ${{ secrets.APPLE_ENTERPRISE_DISTRIBUTION_CERTIFICATE }}
+        p12-password: ${{ secrets.APPLE_ENTERPRISE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
