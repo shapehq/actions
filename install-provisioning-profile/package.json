@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "author": "Simon B. Støvring",
   "scripts": {
-    "build": "tsc && ncc build",
+    "build": "tsc && ncc build --minify",
     "test": "jest"
   },
   "dependencies": {
