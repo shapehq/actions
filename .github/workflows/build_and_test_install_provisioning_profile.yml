@@ -1,4 +1,4 @@
-name: Test install-provisioning-profile
+name: Build and Test install-provisioning-profile
 
 on:
   workflow_dispatch: {}
@@ -21,6 +21,9 @@ jobs:
       - name: Install Dependencies
         working-directory: install-provisioning-profile
         run: npm install
+      - name: Build
+        working-directory: install-provisioning-profile
+        run: npm run build
       - name: Test
         working-directory: install-provisioning-profile
         run: npm test
