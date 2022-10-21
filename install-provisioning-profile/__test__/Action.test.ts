@@ -4,6 +4,10 @@ import { ProfileUninstaller } from "../src/ProfileUninstaller"
 import { MockStateStore } from "./mock/MockStateStore"
 import { PROVISIONING_PROFILES_DIR } from "../src/constants"
 
+test("Failing test", () => {
+  expect(false).toBeTruthy()
+})
+
 test("Enters post-phase after running main-phase", () => {
   const profileInstaller =  makeMockProfileInstaller()
   const profileUninstaller = makeMockProfileUninstaller()
