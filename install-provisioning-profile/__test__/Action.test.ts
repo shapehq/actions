@@ -2,6 +2,7 @@ import { ActionOptions, Action } from "../src/Action"
 import { ProfileInstaller } from "../src/ProfileInstaller"
 import { ProfileUninstaller } from "../src/ProfileUninstaller"
 import { makeMockStateStore } from "./mock/make-mock-state-store"
+import { makeMockLogger } from "./mock/make-mock-logger"
 import { PROVISIONING_PROFILES_DIR } from "../src/constants"
 
 test("Enters post-phase after running main-phase", () => {
@@ -23,7 +24,8 @@ test("Uses filename passed in options", () => {
     mock.makeDir,
     (filePath: string, content: string) => {
       writtenFilePath = filePath
-    }
+    },
+    makeMockLogger()
   )
   const profileUninstaller = makeMockProfileUninstaller()
   const stateStore = makeMockStateStore()
@@ -43,7 +45,8 @@ test("Uses profile base64 passed in options", () => {
     mock.makeDir,
     (filePath: string, content: string) => {
       writtenContent = content
-    }
+    },
+    makeMockLogger()
   )
   const profileUninstaller = makeMockProfileUninstaller()
   const stateStore = makeMockStateStore()
@@ -74,12 +77,14 @@ test("Only installs profile in main-phase", () => {
     mock.makeDir,
     (filePath: string, content: string) => {
       didWriteFile = true
-    }
+    },
+    makeMockLogger()
   )
   const profileUninstaller = new ProfileUninstaller(
     (filePath: string) => {
       didRemoveFile = true
-    }
+    },
+    makeMockLogger()
   )
   const stateStore = makeMockStateStore()
   const action = new Action(stateStore, profileInstaller, profileUninstaller)
@@ -97,12 +102,14 @@ test("Only uninstalls profile in post-phase", () => {
     mock.makeDir,
     (filePath: string, content: string) => {
       didWriteFile = true
-    }
+    },
+    makeMockLogger()
   )
   const profileUninstaller = new ProfileUninstaller(
     (filePath: string) => {
       didRemoveFile = true
-    }
+    },
+    makeMockLogger()
   )
   const stateStore = makeMockStateStore()
   stateStore.isPost = true
@@ -119,7 +126,8 @@ test("The post-phase deletes the same file as was stored in the main-phase", () 
   const profileUninstaller = new ProfileUninstaller(
     (filePath: string) => {
       removedFilePath = filePath
-    }
+    },
+    makeMockLogger()
   )
   const filePath = PROVISIONING_PROFILES_DIR + "/foo.mobileprovision"
   const stateStore = makeMockStateStore()
@@ -147,12 +155,16 @@ function makeMockProfileInstaller(): ProfileInstaller {
     mock.filenameGenerator,
     mock.base64Decoder,
     mock.makeDir,
-    mock.fileWriter
+    mock.fileWriter,
+    makeMockLogger()
   )
 }
 
 function makeMockProfileUninstaller(): ProfileUninstaller {
-  return new ProfileUninstaller(mock.fileRemover)
+  return new ProfileUninstaller(
+    mock.fileRemover,
+    makeMockLogger()
+  )
 }
 
 function makeMockActionOptions(): ActionOptions {

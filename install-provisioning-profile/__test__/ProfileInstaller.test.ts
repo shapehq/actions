@@ -1,5 +1,7 @@
 import { PROVISIONING_PROFILES_DIR } from "../src/constants"
 import { ProfileInstaller } from "../src/ProfileInstaller"
+import { makeMockLogger } from "./mock/make-mock-logger"
+import { Logger } from "../src/Logger"
 
 const mock = {
   filenameGenerator: (baseFilename: string | null) => {
@@ -20,7 +22,8 @@ test("Writes to provisioning profiles directory", () => {
     mock.makeDir,
     (filePath: string, content: string) => {
       writtenFilePath = filePath
-    }
+    },
+    makeMockLogger()
   )
   const filename = "profile.mobileprovision"
   profileInstaller.install("somedata", filename)
@@ -36,7 +39,8 @@ test("Calls base64 decoded", () => {
       return data
     },
     mock.makeDir,
-    mock.fileWriter
+    mock.fileWriter,
+    makeMockLogger()
   )
   profileInstaller.install("somedata", "profile.mobileprovision")
   expect(didDecode).toBeTruthy()
@@ -53,7 +57,8 @@ test("Writes decoded content", () => {
     mock.makeDir,
     (filePath: string, content: string) => {
       writtenContent = content
-    }
+    },
+    makeMockLogger()
   )
   profileInstaller.install("somecontent", "profile.mobileprovision")
   expect(writtenContent).toBe(expectedWrittenContent)
@@ -67,7 +72,8 @@ test("Creates provisioning profiles directory", () => {
     (dir: string) => {
       writtenDir = dir
     },
-    mock.fileWriter
+    mock.fileWriter,
+    makeMockLogger()
   )
   profileInstaller.install("somedata", "someprofile.mobileprovision")
   expect(writtenDir).toBe(PROVISIONING_PROFILES_DIR)
@@ -81,11 +87,32 @@ test("Returns file path of the installed provisioning profile", () => {
     mock.makeDir,
     (filePath: string, content: string) => {
       writtenFilePath = filePath
-    }
+    },
+    makeMockLogger()
   )
   const filename = "profile.mobileprovision"
   const expectedFilePath = PROVISIONING_PROFILES_DIR + "/" + filename
   const resultingFilePath = profileInstaller.install("somedata", filename)
   expect(resultingFilePath).toBe(writtenFilePath)
   expect(resultingFilePath).toBe(expectedFilePath)
+})
+
+test("Logs a message that includes the file path", () => {
+  let writtenFilePath: string | null = null
+  let loggedMessage: string | null = null
+  const profileInstaller = new ProfileInstaller(
+    mock.filenameGenerator,
+    mock.base64Decoder,
+    mock.makeDir,
+    (filePath: string, content: string) => {
+      writtenFilePath = filePath
+    },
+    new Logger({
+      info: (message: string) => {
+        loggedMessage = message
+      }
+    })
+  )
+  profileInstaller.install("somedata", "profile.mobileprovision")
+  expect(loggedMessage).toContain(writtenFilePath)
 })

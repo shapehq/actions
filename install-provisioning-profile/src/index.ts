@@ -8,10 +8,12 @@ import { Action } from "./Action"
 import { StateStore } from "./StateStore"
 import { ProfileInstaller } from "./ProfileInstaller"
 import { ProfileUninstaller } from "./ProfileUninstaller"
+import { Logger } from "./Logger"
 import { getOptions } from "./get-options"
 
 const stateStore = new StateStore(core)
-const profileInstaller = new ProfileInstaller(generateFilename, decodeBase64, makeDir, writeFile)
-const profileUninstaller = new ProfileUninstaller(removeFile)
+const logger = new Logger(core)
+const profileInstaller = new ProfileInstaller(generateFilename, decodeBase64, makeDir, writeFile, logger)
+const profileUninstaller = new ProfileUninstaller(removeFile, logger)
 const action = new Action(stateStore, profileInstaller, profileUninstaller)
 action.run(getOptions())
