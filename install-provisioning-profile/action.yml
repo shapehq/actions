@@ -1,0 +1,13 @@
+name: Install Provisioning Profile
+description: Installs a provisioning profile to be accessible for Xcode.
+inputs:
+  profile-base64:
+    description: Base64 encoded provisioning profile. The profile can be created by running `base64 -i profile.mobileprovision | pbcopy` in the terminal.
+    required: true
+  filename:
+    description: Filename of the provisioning profile on the disk. If multiple provisioning profiles are added, the files should be given unique names.
+    required: false
+runs:
+  using: node16
+  main: dist/index.js
+  post: dist/index.js

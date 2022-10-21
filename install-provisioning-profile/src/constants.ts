@@ -1,0 +1,1 @@
+export const PROVISIONING_PROFILES_DIR = "~/Library/MobileDevice/Provisioning Profiles"
