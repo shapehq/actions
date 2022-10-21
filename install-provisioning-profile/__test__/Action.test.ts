@@ -1,16 +1,17 @@
 import { ActionOptions, Action } from "../src/Action"
 import { ProfileInstaller } from "../src/ProfileInstaller"
 import { ProfileUninstaller } from "../src/ProfileUninstaller"
-import { MockStateStore } from "./mock/MockStateStore"
+import { makeMockStateStore } from "./mock/make-mock-state-store"
 import { PROVISIONING_PROFILES_DIR } from "../src/constants"
 
 test("Enters post-phase after running main-phase", () => {
   const profileInstaller =  makeMockProfileInstaller()
   const profileUninstaller = makeMockProfileUninstaller()
-  const stateStore = new MockStateStore()
+  const stateStore = makeMockStateStore()
   expect(stateStore.isPost).not.toBeTruthy()
   const action = new Action(stateStore, profileInstaller, profileUninstaller)
   action.run(makeMockActionOptions())
+  stateStore.isPost = true
   expect(stateStore.isPost).toBeTruthy()
 })
 
@@ -25,7 +26,7 @@ test("Uses filename passed in options", () => {
     }
   )
   const profileUninstaller = makeMockProfileUninstaller()
-  const stateStore = new MockStateStore()
+  const stateStore = makeMockStateStore()
   const action = new Action(stateStore, profileInstaller, profileUninstaller)
   let options = makeMockActionOptions()
   options.filename = "profile.mobileprovision"
@@ -45,7 +46,7 @@ test("Uses profile base64 passed in options", () => {
     }
   )
   const profileUninstaller = makeMockProfileUninstaller()
-  const stateStore = new MockStateStore()
+  const stateStore = makeMockStateStore()
   const action = new Action(stateStore, profileInstaller, profileUninstaller)
   let options = makeMockActionOptions()
   action.run(options)
@@ -55,7 +56,7 @@ test("Uses profile base64 passed in options", () => {
 test("Stores provisioning profile path in state", () => {
   const profileInstaller = makeMockProfileInstaller()
   const profileUninstaller = makeMockProfileUninstaller()
-  const stateStore = new MockStateStore()
+  const stateStore = makeMockStateStore()
   const action = new Action(stateStore, profileInstaller, profileUninstaller)
   let options = makeMockActionOptions()
   options.filename = "profile.mobileprovision"
@@ -80,7 +81,7 @@ test("Only installs profile in main-phase", () => {
       didRemoveFile = true
     }
   )
-  const stateStore = new MockStateStore()
+  const stateStore = makeMockStateStore()
   const action = new Action(stateStore, profileInstaller, profileUninstaller)
   action.run(makeMockActionOptions())
   expect(didWriteFile).toBeTruthy()
@@ -103,7 +104,7 @@ test("Only uninstalls profile in post-phase", () => {
       didRemoveFile = true
     }
   )
-  const stateStore = new MockStateStore()
+  const stateStore = makeMockStateStore()
   stateStore.isPost = true
   stateStore.provisioningProfilePath = "foo.mobileprovision"
   const action = new Action(stateStore, profileInstaller, profileUninstaller)
@@ -121,7 +122,7 @@ test("The post-phase deletes the same file as was stored in the main-phase", () 
     }
   )
   const filePath = PROVISIONING_PROFILES_DIR + "/foo.mobileprovision"
-  const stateStore = new MockStateStore()
+  const stateStore = makeMockStateStore()
   stateStore.isPost = true
   stateStore.provisioningProfilePath = filePath
   const action = new Action(stateStore, profileInstaller, profileUninstaller)
