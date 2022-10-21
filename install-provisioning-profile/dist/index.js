@@ -106,6 +106,46 @@ exports.ProfileUninstaller = ProfileUninstaller;
 
 /***/ }),
 
+/***/ 805:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.StateStore = void 0;
+const KEY = {
+    IS_POST: "isPost",
+    PROVISIONING_PROFILE_PATH: "provisioningProfilePath"
+};
+class StateStore {
+    constructor(storage) {
+        this.storage = storage;
+        this.isPost = false;
+    }
+    get isPost() {
+        return !!this.storage.getState(KEY.IS_POST);
+    }
+    set isPost(isPost) {
+        this.storage.saveState(KEY.IS_POST, isPost);
+    }
+    get provisioningProfilePath() {
+        const value = this.storage.getState(KEY.PROVISIONING_PROFILE_PATH);
+        if (value !== undefined) {
+            return value;
+        }
+        else {
+            return null;
+        }
+    }
+    set provisioningProfilePath(provisioningProfilePath) {
+        this.storage.saveState(KEY.PROVISIONING_PROFILE_PATH, provisioningProfilePath);
+    }
+}
+exports.StateStore = StateStore;
+
+
+/***/ }),
+
 /***/ 105:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -160,7 +200,7 @@ exports.getOptions = getOptions;
 
 /***/ }),
 
-/***/ 405:
+/***/ 822:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -189,27 +229,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.CoreStateStore = void 0;
 const core = __importStar(__nccwpck_require__(186));
-const KEY = {
-    IS_POST: "isPost",
-    PROVISIONING_PROFILE_PATH: "provisioningProfilePath"
-};
-class CoreStateStore {
-    get isPost() {
-        return core.getState(KEY.IS_POST) == "true";
-    }
-    set isPost(isPost) {
-        core.saveState(KEY.IS_POST, isPost);
-    }
-    get provisioningProfilePath() {
-        return core.getState(KEY.PROVISIONING_PROFILE_PATH);
-    }
-    set(provisioningProfilePath) {
-        core.saveState(KEY.PROVISIONING_PROFILE_PATH, provisioningProfilePath);
-    }
-}
-exports.CoreStateStore = CoreStateStore;
+const decode_base64_1 = __nccwpck_require__(972);
+const generate_filename_1 = __nccwpck_require__(912);
+const make_dir_1 = __nccwpck_require__(966);
+const remove_file_1 = __nccwpck_require__(508);
+const write_file_1 = __nccwpck_require__(958);
+const Action_1 = __nccwpck_require__(658);
+const StateStore_1 = __nccwpck_require__(805);
+const ProfileInstaller_1 = __nccwpck_require__(474);
+const ProfileUninstaller_1 = __nccwpck_require__(781);
+const get_options_1 = __nccwpck_require__(970);
+const stateStore = new StateStore_1.StateStore(core);
+const profileInstaller = new ProfileInstaller_1.ProfileInstaller(generate_filename_1.generateFilename, decode_base64_1.decodeBase64, make_dir_1.makeDir, write_file_1.writeFile);
+const profileUninstaller = new ProfileUninstaller_1.ProfileUninstaller(remove_file_1.removeFile);
+const action = new Action_1.Action(stateStore, profileInstaller, profileUninstaller);
+action.run((0, get_options_1.getOptions)());
 
 
 /***/ }),
@@ -271,7 +306,7 @@ exports.makeDir = makeDir;
 
 /***/ }),
 
-/***/ 491:
+/***/ 508:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2085,7 +2120,7 @@ var tls = __nccwpck_require__(404);
 var http = __nccwpck_require__(685);
 var https = __nccwpck_require__(687);
 var events = __nccwpck_require__(361);
-var assert = __nccwpck_require__(728);
+var assert = __nccwpck_require__(491);
 var util = __nccwpck_require__(837);
 
 
@@ -2992,7 +3027,7 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 728:
+/***/ 491:
 /***/ ((module) => {
 
 "use strict";
@@ -3118,31 +3153,12 @@ module.exports = require("util");
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
-(() => {
-"use strict";
-var exports = __webpack_exports__;
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const decode_base64_1 = __nccwpck_require__(972);
-const generate_filename_1 = __nccwpck_require__(912);
-const make_dir_1 = __nccwpck_require__(966);
-const remove_file_1 = __nccwpck_require__(491);
-const write_file_1 = __nccwpck_require__(958);
-const Action_1 = __nccwpck_require__(658);
-const CoreStateStore_1 = __nccwpck_require__(405);
-const ProfileInstaller_1 = __nccwpck_require__(474);
-const ProfileUninstaller_1 = __nccwpck_require__(781);
-const get_options_1 = __nccwpck_require__(970);
-const stateStore = new CoreStateStore_1.CoreStateStore();
-const profileInstaller = new ProfileInstaller_1.ProfileInstaller(generate_filename_1.generateFilename, decode_base64_1.decodeBase64, make_dir_1.makeDir, write_file_1.writeFile);
-const profileUninstaller = new ProfileUninstaller_1.ProfileUninstaller(remove_file_1.removeFile);
-const action = new Action_1.Action(stateStore, profileInstaller, profileUninstaller);
-action.run((0, get_options_1.getOptions)());
-
-})();
-
-module.exports = __webpack_exports__;
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __nccwpck_require__(822);
+/******/ 	module.exports = __webpack_exports__;
+/******/ 	
 /******/ })()
 ;
