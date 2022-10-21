@@ -19,10 +19,8 @@ jobs:
         with:
           node-version: 16
       - name: Install Dependencies
-        run: |
-          cd install-provisioning-profile
-          npm install
+        working-directory: install-provisioning-profile
+        run: npm install
       - name: Test
-        run: |
-          cd install-provisioning-profile
-          npm test
+        working-directory: install-provisioning-profile
+        run: npm test
