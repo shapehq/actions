@@ -1,4 +1,4 @@
-import { StateStore } from "./state/StateStore"
+import { StateStore } from "./StateStore"
 import { ProfileInstaller } from "./ProfileInstaller"
 import { ProfileUninstaller } from "./ProfileUninstaller"
 
