@@ -25,5 +25,5 @@ const provisioningProfileInstaller = new LiveProvisioningProfileInstaller(
   decodeBase64, 
   provisioningProfileStore
 )
-const action = new Action(stateStore, provisioningProfileStore, provisioningProfileInstaller)
+const action = new Action(stateStore, provisioningProfileStore, provisioningProfileInstaller, core)
 action.run(getOptions())
