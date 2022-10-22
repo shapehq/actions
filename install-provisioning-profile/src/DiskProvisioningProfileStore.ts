@@ -39,7 +39,6 @@ export class DiskProvisioningProfileStore implements ProvisioningProfileStore {
       this.directoryCreator(this.dir)
     }
     const filePath = path.join(this.dir, filename)
-    console.log(filePath)
     this.fileWriter(filePath, content)
     this.logger.info("Created " + filePath)
     return filePath
