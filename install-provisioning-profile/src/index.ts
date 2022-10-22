@@ -1,8 +1,9 @@
 import * as core from "@actions/core"
 import * as os from "os"
 import * as path from "path"
-import { existsSync, mkdirSync, writeFileSync, unlinkSync } from "fs"
+import { existsSync, writeFileSync, unlinkSync } from "fs"
 import { decodeBase64 } from "./utils/decode-base64"
+import { mkdir } from "./utils/mkdir"
 import { generateFilename } from "./utils/generate-filename"
 import { Action } from "./Action"
 import { LiveProvisioningProfileInstaller } from "./LiveProvisioningProfileInstaller"
@@ -15,7 +16,7 @@ const provisioningProfileStore = new DiskProvisioningProfileStore({
   dir: path.join(os.homedir(), "/Library/MobileDevice/Provisioning Profiles"),
   logger: core,
   fileExistanceChecker: existsSync,
-  directoryCreator: (dir: string) => mkdirSync(dir, { recursive: true }),
+  directoryCreator: mkdir,
   fileWriter: writeFileSync,
   fileRemover: unlinkSync
 })
