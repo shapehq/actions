@@ -1,15 +1,3 @@
-export interface LogDestination {
+export interface Logger {
   info(message: string)
-}
-
-export class Logger {
-  destination: LogDestination
-  
-  constructor(destination: LogDestination) {
-    this.destination = destination
-  }
-  
-  info(message: string) {
-    this.destination.info(message)
-  }
 }

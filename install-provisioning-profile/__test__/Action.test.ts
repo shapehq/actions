@@ -1,175 +1,136 @@
-import { ActionOptions, Action } from "../src/Action"
-import { ProfileInstaller } from "../src/ProfileInstaller"
-import { ProfileUninstaller } from "../src/ProfileUninstaller"
-import { makeMockStateStore } from "./mock/make-mock-state-store"
-import { makeMockLogger } from "./mock/make-mock-logger"
-import { PROVISIONING_PROFILES_DIR } from "../src/constants"
+import * as path from "path"
+import { Action } from "../src/Action"
+import { MockStateStore } from "./mock/MockStateStore"
+import { MockProvisioningProfileInstaller } from "./mock/MockProvisioningProfileInstaller"
+import { MockProvisioningProfileStore } from "./mock/MockProvisioningProfileStore"
+import { MockActionOptions } from "./mock/MockActionOptions"
+
+test("Does not perform installation when no profile is provided", () => {
+  let didInstallFile = false
+  const stateStore = new MockStateStore()
+  const provisioningProfileInstaller = {
+    install: (profileBase64: string, baseFilename: string | null): string => {
+      didInstallFile = true
+      return baseFilename || ""
+    }
+  }
+  const provisioningProfileStore = new MockProvisioningProfileStore()
+  const action = new Action(stateStore, provisioningProfileStore, provisioningProfileInstaller)
+  expect(stateStore.isPost).not.toBeTruthy()
+  const options = new MockActionOptions("foo")
+  options.profileBase64 = ""
+  action.run(options)
+  expect(didInstallFile).not.toBeTruthy()
+})
 
 test("Enters post-phase after running main-phase", () => {
-  const profileInstaller =  makeMockProfileInstaller()
-  const profileUninstaller = makeMockProfileUninstaller()
-  const stateStore = makeMockStateStore()
+  const stateStore = new MockStateStore()
+  const provisioningProfileInstaller = new MockProvisioningProfileInstaller()
+  const provisioningProfileStore = new MockProvisioningProfileStore()
+  const action = new Action(stateStore, provisioningProfileStore, provisioningProfileInstaller)
   expect(stateStore.isPost).not.toBeTruthy()
-  const action = new Action(stateStore, profileInstaller, profileUninstaller)
-  action.run(makeMockActionOptions())
-  stateStore.isPost = true
+  action.run(new MockActionOptions("foo"))
   expect(stateStore.isPost).toBeTruthy()
 })
 
 test("Uses filename passed in options", () => {
-  let writtenFilePath: string | null = null
-  const profileInstaller = new ProfileInstaller(
-    mock.filenameGenerator,
-    mock.base64Decoder,
-    mock.makeDir,
-    (filePath: string, content: string) => {
-      writtenFilePath = filePath
-    },
-    makeMockLogger()
-  )
-  const profileUninstaller = makeMockProfileUninstaller()
-  const stateStore = makeMockStateStore()
-  const action = new Action(stateStore, profileInstaller, profileUninstaller)
-  let options = makeMockActionOptions()
-  options.filename = "profile.mobileprovision"
+  const stateStore = new MockStateStore()
+  const provisioningProfileInstaller = new MockProvisioningProfileInstaller()
+  const provisioningProfileStore = new MockProvisioningProfileStore()
+  const action = new Action(stateStore, provisioningProfileStore, provisioningProfileInstaller)
+  const options = new MockActionOptions("foo", "foo.mobileprovision")
   action.run(options)
-  const expectedFilePath = PROVISIONING_PROFILES_DIR + "/" + options.filename
-  expect(writtenFilePath).toBe(expectedFilePath)
+  expect(provisioningProfileInstaller.installedFilename).toBe(options.filename)
 })
 
 test("Uses profile base64 passed in options", () => {
-  let writtenContent: string | null = null
-  const profileInstaller = new ProfileInstaller(
-    mock.filenameGenerator,
-    mock.base64Decoder,
-    mock.makeDir,
-    (filePath: string, content: string) => {
-      writtenContent = content
-    },
-    makeMockLogger()
-  )
-  const profileUninstaller = makeMockProfileUninstaller()
-  const stateStore = makeMockStateStore()
-  const action = new Action(stateStore, profileInstaller, profileUninstaller)
-  let options = makeMockActionOptions()
+  const stateStore = new MockStateStore()
+  const provisioningProfileInstaller = new MockProvisioningProfileInstaller()
+  const provisioningProfileStore = new MockProvisioningProfileStore()
+  const action = new Action(stateStore, provisioningProfileStore, provisioningProfileInstaller)
+  const options = new MockActionOptions("foo", "foo.mobileprovision")
   action.run(options)
-  expect(writtenContent).toBe(options.profileBase64)
+  expect(provisioningProfileInstaller.installedProfileBase64).toBe(options.profileBase64)
 })
 
 test("Stores provisioning profile path in state", () => {
-  const profileInstaller = makeMockProfileInstaller()
-  const profileUninstaller = makeMockProfileUninstaller()
-  const stateStore = makeMockStateStore()
-  const action = new Action(stateStore, profileInstaller, profileUninstaller)
-  let options = makeMockActionOptions()
-  options.filename = "profile.mobileprovision"
+  const stateStore = new MockStateStore()
+  const provisioningProfileInstaller = new MockProvisioningProfileInstaller()
+  const provisioningProfileStore = new MockProvisioningProfileStore()
+  const action = new Action(stateStore, provisioningProfileStore, provisioningProfileInstaller)
+  const options = new MockActionOptions("foo", "foo.mobileprovision")
   action.run(options)
-  const expectedFilePath = PROVISIONING_PROFILES_DIR + "/" + options.filename
-  expect(stateStore.provisioningProfilePath).toBe(expectedFilePath)
+  expect(stateStore.provisioningProfilePath).toBe(options.filename)
 })
 
 test("Only installs profile in main-phase", () => {
-  let didWriteFile = false
+  let didInstallFile = false
   let didRemoveFile = false
-  const profileInstaller = new ProfileInstaller(
-    mock.filenameGenerator,
-    mock.base64Decoder,
-    mock.makeDir,
-    (filePath: string, content: string) => {
-      didWriteFile = true
+  const stateStore = new MockStateStore()
+  const provisioningProfileInstaller = {
+    install: (profileBase64: string, baseFilename: string | null): string => {
+      didInstallFile = true
+      return baseFilename || ""
+    }
+  }
+  const provisioningProfileStore = {
+    store: (filename: string, content: string): string => {
+      return filename
     },
-    makeMockLogger()
-  )
-  const profileUninstaller = new ProfileUninstaller(
-    (filePath: string) => {
+    remove: (filePath: string) => {
       didRemoveFile = true
-    },
-    makeMockLogger()
-  )
-  const stateStore = makeMockStateStore()
-  const action = new Action(stateStore, profileInstaller, profileUninstaller)
-  action.run(makeMockActionOptions())
-  expect(didWriteFile).toBeTruthy()
+    }
+  }
+  const action = new Action(stateStore, provisioningProfileStore, provisioningProfileInstaller)
+  const options = new MockActionOptions("foo", "foo.mobileprovision")
+  action.run(options)
+  expect(didInstallFile).toBeTruthy()
   expect(didRemoveFile).not.toBeTruthy()
 })
 
-test("Only uninstalls profile in post-phase", () => {
-  let didWriteFile = false
+test("Only removes profile in post-phase", () => {
+  let didInstallFile = false
   let didRemoveFile = false
-  const profileInstaller = new ProfileInstaller(
-    mock.filenameGenerator,
-    mock.base64Decoder,
-    mock.makeDir,
-    (filePath: string, content: string) => {
-      didWriteFile = true
-    },
-    makeMockLogger()
-  )
-  const profileUninstaller = new ProfileUninstaller(
-    (filePath: string) => {
-      didRemoveFile = true
-    },
-    makeMockLogger()
-  )
-  const stateStore = makeMockStateStore()
+  const stateStore = new MockStateStore()
   stateStore.isPost = true
   stateStore.provisioningProfilePath = "foo.mobileprovision"
-  const action = new Action(stateStore, profileInstaller, profileUninstaller)
-  action.run(makeMockActionOptions())
-  expect(didWriteFile).not.toBeTruthy()
+  const provisioningProfileInstaller = {
+    install: (profileBase64: string, baseFilename: string | null): string => {
+      didInstallFile = true
+      return baseFilename || ""
+    }
+  }
+  const provisioningProfileStore = {
+    store: (filename: string, content: string): string => {
+      return filename
+    },
+    remove: (filePath: string) => {
+      didRemoveFile = true
+    }
+  }
+  const action = new Action(stateStore, provisioningProfileStore, provisioningProfileInstaller)
+  const options = new MockActionOptions("foo", "foo.mobileprovision")
+  action.run(options)
+  expect(didInstallFile).not.toBeTruthy()
   expect(didRemoveFile).toBeTruthy()
 })
 
 test("The post-phase deletes the same file as was stored in the main-phase", () => {
   let removedFilePath: string | null = null
-  const profileInstaller = makeMockProfileInstaller()
-  const profileUninstaller = new ProfileUninstaller(
-    (filePath: string) => {
-      removedFilePath = filePath
-    },
-    makeMockLogger()
-  )
-  const filePath = PROVISIONING_PROFILES_DIR + "/foo.mobileprovision"
-  const stateStore = makeMockStateStore()
+  const stateStore = new MockStateStore()
   stateStore.isPost = true
-  stateStore.provisioningProfilePath = filePath
-  const action = new Action(stateStore, profileInstaller, profileUninstaller)
-  action.run(makeMockActionOptions())
-  expect(removedFilePath).toBe(filePath)
-})
-
-const mock = {
-  filenameGenerator: (baseFilename: string | null) => {
-    return baseFilename || "default.mobileprovision"
-  },
-  base64Decoder: (data: string) => {
-    return data
-  },
-  makeDir: (dir: string) => {},
-  fileWriter: (filePath: string, content: string) => {},
-  fileRemover: (filePath: string) => {}
-}
-
-function makeMockProfileInstaller(): ProfileInstaller {
-  return new ProfileInstaller(
-    mock.filenameGenerator,
-    mock.base64Decoder,
-    mock.makeDir,
-    mock.fileWriter,
-    makeMockLogger()
-  )
-}
-
-function makeMockProfileUninstaller(): ProfileUninstaller {
-  return new ProfileUninstaller(
-    mock.fileRemover,
-    makeMockLogger()
-  )
-}
-
-function makeMockActionOptions(): ActionOptions {
-  return {
-    profileBase64: "Hello world!",
-    filename: null
+  stateStore.provisioningProfilePath = "foo.mobileprovision"
+  const provisioningProfileInstaller = new MockProvisioningProfileInstaller()
+  const provisioningProfileStore = {
+    store: (filename: string, content: string): string => {
+      return filename
+    },
+    remove: (filePath: string) => {
+      removedFilePath = filePath
+    }
   }
-}
+  const action = new Action(stateStore, provisioningProfileStore, provisioningProfileInstaller)
+  const options = new MockActionOptions("foo")
+  action.run(options)
+  expect(removedFilePath).toBe(stateStore.provisioningProfilePath)
+})

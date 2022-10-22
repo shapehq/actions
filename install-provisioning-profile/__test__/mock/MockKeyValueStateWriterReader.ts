@@ -1,10 +1,6 @@
-import { Storage, StateStore } from "../../src/StateStore"
+import { KeyValueStateWriterReader } from "../../src/KeyValueStateStore"
 
-export function makeMockStateStore(): StateStore {
-  return new StateStore(new MockBackingStorage())
-}
-
-class MockBackingStorage implements Storage {
+export class MockKeyValueStateWriterReader implements KeyValueStateWriterReader {
   __store: {}
   
   constructor() {

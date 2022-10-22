@@ -1,19 +1,28 @@
 import * as core from "@actions/core"
+import * as os from "os"
+import * as path from "path"
+import { existsSync, mkdirSync, writeFileSync, unlinkSync } from "fs"
 import { decodeBase64 } from "./utils/decode-base64"
 import { generateFilename } from "./utils/generate-filename"
-import { makeDir } from "./utils/make-dir"
-import { removeFile } from "./utils/remove-file"
-import { writeFile } from "./utils/write-file"
 import { Action } from "./Action"
-import { StateStore } from "./StateStore"
-import { ProfileInstaller } from "./ProfileInstaller"
-import { ProfileUninstaller } from "./ProfileUninstaller"
-import { Logger } from "./Logger"
+import { LiveProvisioningProfileInstaller } from "./LiveProvisioningProfileInstaller"
+import { DiskProvisioningProfileStore } from "./DiskProvisioningProfileStore"
+import { KeyValueStateStore } from "./KeyValueStateStore"
 import { getOptions } from "./get-options"
 
-const stateStore = new StateStore(core)
-const logger = new Logger(core)
-const profileInstaller = new ProfileInstaller(generateFilename, decodeBase64, makeDir, writeFile, logger)
-const profileUninstaller = new ProfileUninstaller(removeFile, logger)
-const action = new Action(stateStore, profileInstaller, profileUninstaller)
+const stateStore = new KeyValueStateStore(core)
+const provisioningProfileStore = new DiskProvisioningProfileStore({
+  dir: path.join(os.homedir(), "/Library/MobileDevice/Provisioning Profiles"),
+  logger: core,
+  fileExistanceChecker: existsSync,
+  directoryCreator: (dir: string) => mkdirSync(dir, { recursive: true }),
+  fileWriter: writeFileSync,
+  fileRemover: unlinkSync
+})
+const provisioningProfileInstaller = new LiveProvisioningProfileInstaller(
+  generateFilename, 
+  decodeBase64, 
+  provisioningProfileStore
+)
+const action = new Action(stateStore, provisioningProfileStore, provisioningProfileInstaller)
 action.run(getOptions())

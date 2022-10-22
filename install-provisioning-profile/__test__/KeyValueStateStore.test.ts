@@ -1,7 +1,8 @@
-import { makeMockStateStore } from "./mock/make-mock-state-store"
+import { KeyValueStateStore } from "../src/KeyValueStateStore"
+import { MockKeyValueStateWriterReader } from "./mock/MockKeyValueStateWriterReader"
 
 test("It saves isPost", () => {
-  const stateStore = makeMockStateStore()
+  const stateStore = new KeyValueStateStore(new MockKeyValueStateWriterReader())
   expect(stateStore.isPost).not.toBeTruthy()
   stateStore.isPost = true
   expect(stateStore.isPost).toBeTruthy()
@@ -9,7 +10,7 @@ test("It saves isPost", () => {
 
 test("It saves provisioningProfilePath", () => {
   const filename = "foo.mobileprovision"
-  const stateStore = makeMockStateStore()
+  const stateStore = new KeyValueStateStore(new MockKeyValueStateWriterReader())
   expect(stateStore.provisioningProfilePath).toBeNull()
   stateStore.provisioningProfilePath = filename
   expect(stateStore.provisioningProfilePath).toBe(filename)

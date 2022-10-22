@@ -1,6 +1,6 @@
 import { StateStore } from "./StateStore"
-import { ProfileInstaller } from "./ProfileInstaller"
-import { ProfileUninstaller } from "./ProfileUninstaller"
+import { ProvisioningProfileInstaller } from "./ProvisioningProfileInstaller"
+import { ProvisioningProfileStore } from "./ProvisioningProfileStore"
 
 export interface ActionOptions {
   profileBase64: string
@@ -9,25 +9,30 @@ export interface ActionOptions {
 
 export class Action {
   stateStore: StateStore
-  profileInstaller: ProfileInstaller
-  profileUninstaller: ProfileUninstaller
+  provisioningProfileStore: ProvisioningProfileStore
+  provisioningProfileInstaller: ProvisioningProfileInstaller
   
-  constructor(stateStore: StateStore, 
-              profileInstaller: ProfileInstaller, 
-              profileUninstaller: ProfileUninstaller) {
+  constructor(stateStore: StateStore,
+              provisioningProfileStore: ProvisioningProfileStore,
+              provisioningProfileInstaller: ProvisioningProfileInstaller) {
     this.stateStore = stateStore
-    this.profileInstaller = profileInstaller
-    this.profileUninstaller = profileUninstaller
+    this.provisioningProfileStore = provisioningProfileStore
+    this.provisioningProfileInstaller = provisioningProfileInstaller
   }
 
   run(options: ActionOptions) {
+    const filename = options.filename
+    const profileBase64 = options.profileBase64
+    if (profileBase64 == undefined || profileBase64 == null || profileBase64.length == 0) {
+      return
+    }
     if (!this.stateStore.isPost) {
-      const provisioningProfilePath = this.profileInstaller.install(options.profileBase64, options.filename)
+      const provisioningProfilePath = this.provisioningProfileInstaller.install(filename, profileBase64)
       this.stateStore.isPost = true
       this.stateStore.provisioningProfilePath = provisioningProfilePath
     } else {
       if (this.stateStore.provisioningProfilePath != null) {
-        this.profileUninstaller.uninstall(this.stateStore.provisioningProfilePath)
+        this.provisioningProfileStore.remove(this.stateStore.provisioningProfilePath)
       }
     }
   }
