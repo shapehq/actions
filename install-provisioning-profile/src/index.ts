@@ -2,7 +2,6 @@ import * as core from "@actions/core"
 import * as os from "os"
 import * as path from "path"
 import { existsSync, writeFileSync, unlinkSync } from "fs"
-import { decodeBase64 } from "./utils/decode-base64"
 import { mkdir } from "./utils/mkdir"
 import { generateFilename } from "./utils/generate-filename"
 import { Action } from "./Action"
@@ -20,10 +19,6 @@ const provisioningProfileStore = new DiskProvisioningProfileStore({
   fileWriter: writeFileSync,
   fileRemover: unlinkSync
 })
-const provisioningProfileInstaller = new LiveProvisioningProfileInstaller(
-  generateFilename, 
-  decodeBase64, 
-  provisioningProfileStore
-)
+const provisioningProfileInstaller = new LiveProvisioningProfileInstaller(generateFilename, provisioningProfileStore)
 const action = new Action(stateStore, provisioningProfileStore, provisioningProfileInstaller, core)
 action.run(getOptions())

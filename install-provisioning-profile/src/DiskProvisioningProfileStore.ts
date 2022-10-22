@@ -5,7 +5,7 @@ import { ProvisioningProfileStore } from "./ProvisioningProfileStore"
 
 type FileExistanceChecker = (filePath: string) => boolean
 type DirectoryCreator = (dir: string) => void
-type FileWriter = (filePath: string, content: string) => void
+type FileWriter = (filePath: string, content: Buffer) => void
 type FileRemover = (filePath: string) => void
 
 export interface DiskProvisioningProfileStoreArguments {
@@ -34,7 +34,7 @@ export class DiskProvisioningProfileStore implements ProvisioningProfileStore {
     this.fileRemover = args.fileRemover
   }
 
-  store(filename: string, content: string): string {
+  store(filename: string, content: Buffer): string {
     if (!this.fileExistanceChecker(this.dir)) {
       this.directoryCreator(this.dir)
     }

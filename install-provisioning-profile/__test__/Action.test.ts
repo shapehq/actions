@@ -74,7 +74,7 @@ test("Only installs profile in main-phase", () => {
     }
   }
   const provisioningProfileStore = {
-    store: (filename: string, content: string): string => {
+    store: (filename: string, content: Buffer): string => {
       return filename
     },
     remove: (filePath: string) => {
@@ -101,7 +101,7 @@ test("Only removes profile in post-phase", () => {
     }
   }
   const provisioningProfileStore = {
-    store: (filename: string, content: string): string => {
+    store: (filename: string, content: Buffer): string => {
       return filename
     },
     remove: (filePath: string) => {
@@ -122,7 +122,7 @@ test("The post-phase deletes the same file as was stored in the main-phase", () 
   stateStore.provisioningProfilePath = "foo.mobileprovision"
   const provisioningProfileInstaller = new MockProvisioningProfileInstaller()
   const provisioningProfileStore = {
-    store: (filename: string, content: string): string => {
+    store: (filename: string, content: Buffer): string => {
       return filename
     },
     remove: (filePath: string) => {

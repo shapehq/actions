@@ -8,6 +8,6 @@ export class MockDiskProvisioningProfileStoreArguments implements DiskProvisioni
     return false
   }
   public directoryCreator = (dir: string) => {}
-  public fileWriter = (filePath: string, content: string) => {}
+  public fileWriter = (filePath: string, content: Buffer) => {}
   public fileRemover = (filePath: string) => {}
 } 

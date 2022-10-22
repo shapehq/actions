@@ -9,7 +9,7 @@ export class MockProvisioningProfileStore implements ProvisioningProfileStore {
     this.dir = dir
   }
   
-  store(filename: string, content: string): string {
+  store(filename: string, content: Buffer): string {
     const filePath = path.join(this.dir, filename)
     this.storedFiles[filePath] = content
     return filePath

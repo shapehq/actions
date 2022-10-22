@@ -14,7 +14,7 @@ test("Logs a message that includes file path when creating file", () => {
   const store = new DiskProvisioningProfileStore(args)
   const filename = "foo.mobileprovision"
   const expectedFilePath = path.join(args.dir, filename)
-  store.store(filename, "foo")
+  store.store(filename, Buffer.from("foo", "utf-8"))
   expect(loggedMessage).toContain(expectedFilePath)
 })
 
@@ -64,7 +64,7 @@ test("Creates directory if it does not exist", () => {
     didCreateDirectory = true
   }
   const store = new DiskProvisioningProfileStore(args)
-  store.store("foo.mobileprovision", "foo")
+  store.store("foo.mobileprovision", Buffer.from("foo", "utf-8"))
   expect(didCreateDirectory).toBeTruthy()
 })
 
@@ -78,23 +78,23 @@ test("Does not create directory if it exists", () => {
     didCreateDirectory = true
   }
   const store = new DiskProvisioningProfileStore(args)
-  store.store("foo.mobileprovision", "foo")
+  store.store("foo.mobileprovision", Buffer.from("foo", "utf-8"))
   expect(didCreateDirectory).not.toBeTruthy()
 })
 
 test("Writes file content", () => {
   let didWriteFile = false
-  let writtenContent: string | null = null
+  let writtenContent: Buffer | null = null
   const args = new MockDiskProvisioningProfileStoreArguments()
   args.fileExistanceChecker = (filePath: string) => {
     return true
   }
-  args.fileWriter = (filePath: string, content: string) => {
+  args.fileWriter = (filePath: string, content: Buffer) => {
     didWriteFile = true
     writtenContent = content
   }
   const store = new DiskProvisioningProfileStore(args)
-  const content = "Hello world!"
+  const content = Buffer.from("Hello world!", "utf-8")
   store.store("foo.mobileprovision", content)
   expect(didWriteFile).toBeTruthy()
   expect(writtenContent).toBe(content)
