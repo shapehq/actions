@@ -25,12 +25,6 @@ export class Action {
   }
 
   run(options: ActionOptions) {
-    if (this.logger != null) {
-      const logger = this.logger
-      logger.info(JSON.stringify(options, null, 2))
-      logger.info("isPost: " + this.stateStore.isPost)
-      logger.info("provisioningProfilePath: " + this.stateStore.provisioningProfilePath)
-    }
     const filename = options.filename
     const profileBase64 = options.profileBase64
     if (profileBase64 == undefined || profileBase64 == null || profileBase64.length == 0) {
