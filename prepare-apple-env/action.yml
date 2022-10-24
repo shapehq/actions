@@ -32,6 +32,6 @@ runs:
         p12-file-base64: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_DISTRIBUTION_CERTIFICATE }}
         p12-password: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
     - name: Install Enterprise Provisioning Profile
-      uses: ../install-provisioning-profile
+      uses: ./../install-provisioning-profile
       with:
         profile-base64: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_PROVISIONING_PROFILE }}
