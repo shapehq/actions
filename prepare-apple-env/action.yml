@@ -34,7 +34,13 @@ runs:
       with: 
         p12-file-base64: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_DISTRIBUTION_CERTIFICATE }}
         p12-password: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
+    - name: Checkout Actions Repository
+      uses: actions/checkout@v3
+      with:
+        repository: shapehq/actions
+        path: ./.actions
+        ssh-key: ${{ secrets.CI_SSH_KEY }}
     - name: Install Enterprise Provisioning Profile
-      uses: ${{ format("{0}/install-provisioning-profile", inputs.actions-repository-path) }}
+      uses: ./.actions/install-provisioning-profile
       with:
         profile-base64: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_PROVISIONING_PROFILE }}
