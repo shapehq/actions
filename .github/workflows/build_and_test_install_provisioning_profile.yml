@@ -1,4 +1,4 @@
-name: Test install-provisioning-profile
+name: Build and Test install-provisioning-profile
 
 on:
   workflow_dispatch: {}
@@ -13,12 +13,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Change Directory
-        run: cd install-provisioning-profile
+      - name: Install Dependencies
+        working-directory: install-provisioning-profile
+        run: npm install
+      - name: Build
+        working-directory: install-provisioning-profile
+        run: npm run build
       - name: Test
+        working-directory: install-provisioning-profile
         run: npm test
