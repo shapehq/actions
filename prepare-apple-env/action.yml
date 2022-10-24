@@ -39,7 +39,7 @@ runs:
       with:
         repository: shapehq/actions
         path: ./.actions
-        ssh-key: ${{ secrets.CI_SSH_KEY }}
+        ssh-key: ${{ fromJSON(inputs.secrets).CI_SSH_KEY }}
     - name: Install Enterprise Provisioning Profile
       uses: ./.actions/install-provisioning-profile
       with:
