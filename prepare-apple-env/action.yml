@@ -37,6 +37,8 @@ runs:
         repository: shapehq/actions
         path: ./.actions
         ssh-key: ${{ fromJSON(inputs.secrets).CI_SSH_KEY }}
+    - name: Install 1Password CLI
+      uses: ./.actions/install-op-cli
     - name: Install Enterprise Provisioning Profile
       uses: ./.actions/install-provisioning-profile
       with:
