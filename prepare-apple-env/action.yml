@@ -35,6 +35,7 @@ runs:
       uses: actions/checkout@v3
       with:
         repository: shapehq/actions
+        ref: feature/install-op-cli
         path: ./.actions
         ssh-key: ${{ fromJSON(inputs.secrets).CI_SSH_KEY }}
     - name: Install 1Password CLI
