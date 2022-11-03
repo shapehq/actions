@@ -6,5 +6,7 @@ runs:
   steps:
     - name: Download 1Password CLI
       run: curl https://cache.agilebits.com/dist/1P/op2/pkg/v2.8.0-beta.05/op_apple_universal_v2.8.0-beta.05.pkg --output op_cli.pkg
+      shell: bash
     - name: Install 1Password CLI
       run: sudo installer -pkg op_cli.pkg -target ~
+      shell: bash
