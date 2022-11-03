@@ -3,7 +3,7 @@ description: Prepares the environment to be used for distributing apps on Apple'
 author: Simon B. Støvring
 inputs:
   secrets:
-   required: true
+    required: true
 runs:
   using: composite
   steps:
@@ -31,3 +31,13 @@ runs:
       with: 
         p12-file-base64: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_DISTRIBUTION_CERTIFICATE }}
         p12-password: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
+    - name: Checkout Actions Repository
+      uses: actions/checkout@v3
+      with:
+        repository: shapehq/actions
+        path: ./.actions
+        ssh-key: ${{ fromJSON(inputs.secrets).CI_SSH_KEY }}
+    - name: Install Enterprise Provisioning Profile
+      uses: ./.actions/install-provisioning-profile
+      with:
+        profile-base64: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_PROVISIONING_PROFILE }}
