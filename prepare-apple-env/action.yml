@@ -25,7 +25,9 @@ runs:
       run: npm install -g git+ssh://git@github.com:shapehq/ship-shape-cli.git
       shell: bash
     - name: Setup Shipshape Activation Code
-      run: echo '{"ship_activation_code":"${{ fromJSON(inputs.secrets).SHIPSHAPE_ACTIVATION_CODE }}"}' > ~/shape-dev.config
+      run: |
+        SHIPSHAPE_ACTIVATION_CODE=$(op read "op://GitHub Actions/CI Shipshape Activation Code/password")
+        echo '{"ship_activation_code":"${SHIPSHAPE_ACTIVATION_CODE}"}' > ~/shape-dev.config
       shell: bash
     - name: Install appiconannotator
       run: npm install -g git+ssh://git@github.com:shapehq/appiconannotator
