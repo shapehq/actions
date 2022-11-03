@@ -11,27 +11,27 @@ runs:
           sudo installer -pkg op_cli.pkg -target ~
         fi
       shell: bash
-    # - name: Install SSH Key
-    #   run: |
-    #     mkdir -p ~/.ssh
-    #     op read --out-file ~/.ssh/id_rsa "op://GitHub Actions/CI SSH Private Key/ci-ssh-key"
-    #   shell: bash
-    # - name: Install Shipshape
-    #   run: npm install -g git+ssh://git@github.com:shapehq/ship-shape-cli.git
-    #   shell: bash
-    # - name: Setup Shipshape Activation Code
-    #   run: |
-    #     SHIPSHAPE_ACTIVATION_CODE=$(op read "op://GitHub Actions/CI Shipshape Activation Code/password")
-    #     echo '{"ship_activation_code":"${SHIPSHAPE_ACTIVATION_CODE}"}' > ~/shape-dev.config
-    #   shell: bash
-    # - name: Install appiconannotator
-    #   run: npm install -g git+ssh://git@github.com:shapehq/appiconannotator
-    #   shell: bash
-    # - name: Set Up Ruby
-    #   uses: ruby/setup-ruby@v1
-    #   with:
-    #     ruby-version: 3.1.2
-    #     bundler-cache: true
+    - name: Install SSH Key
+      run: |
+        mkdir -p ~/.ssh
+        op read --out-file ~/.ssh/id_rsa "op://GitHub Actions/CI SSH Private Key/ci-ssh-key"
+      shell: bash
+    - name: Install Shipshape
+      run: npm install -g git+ssh://git@github.com:shapehq/ship-shape-cli.git
+      shell: bash
+    - name: Setup Shipshape Activation Code
+      run: |
+        SHIPSHAPE_ACTIVATION_CODE=$(op read "op://GitHub Actions/CI Shipshape Activation Code/password")
+        echo '{"ship_activation_code":"${SHIPSHAPE_ACTIVATION_CODE}"}' > ~/shape-dev.config
+      shell: bash
+    - name: Install appiconannotator
+      run: npm install -g git+ssh://git@github.com:shapehq/appiconannotator
+      shell: bash
+    - name: Set Up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.1.2
+        bundler-cache: true
     - name: Install Enterprise Distribution Certificate
       run: |
         CERTIFICATE_PASSWORD=$(op read "op://GitHub Actions/Enterprise Distribution Certificate/password")
