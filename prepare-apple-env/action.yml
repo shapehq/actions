@@ -7,11 +7,26 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Checkout Actions Repository
+      uses: actions/checkout@v3
+      with:
+        repository: shapehq/actions
+        ref: feature/install-op-cli
+        path: ./.actions
+        ssh-key: ${{ fromJSON(inputs.secrets).CI_SSH_KEY }}
+    - name: Install 1Password CLI
+      uses: ./.actions/install-op-cli
+    - name: Read CI SSH Private Key from 1Password
+      run: echo "ci_ssh_private_key=$(op read "op://GitHub Actions/CI SSH Private Key/ci-ssh-key")" >> $GITHUB_OUTPUT
+      id: ci_ssh_private_key
+    - name: Read CI SSH Known Hosts from 1Password
+      run: echo "ci_ssh_known_hosts=$(op read "op://GitHub Actions/CI SSH Known Hosts/notesPlain")" >> $GITHUB_OUTPUT
+      id: ci_ssh_known_hosts
     - name: Install SSH Key
       uses: benoitchantre/setup-ssh-authentication-action@1.0.0
       with:
-        private-key: ${{ fromJSON(inputs.secrets).CI_SSH_KEY }}
-        known-hosts: ${{ fromJSON(inputs.secrets).CI_SSH_KNOWN_HOSTS }}
+        private-key: ${{ steps.ci_ssh_private_key.outputs.ci_ssh_private_key }}
+        known-hosts: ${{ steps.ci_ssh_known_hosts.outputs.ci_ssh_known_hosts }}
     - name: Install Shipshape
       run: npm install -g git+ssh://git@github.com:shapehq/ship-shape-cli.git
       shell: bash
@@ -31,15 +46,6 @@ runs:
       with: 
         p12-file-base64: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_DISTRIBUTION_CERTIFICATE }}
         p12-password: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
-    - name: Checkout Actions Repository
-      uses: actions/checkout@v3
-      with:
-        repository: shapehq/actions
-        ref: feature/install-op-cli
-        path: ./.actions
-        ssh-key: ${{ fromJSON(inputs.secrets).CI_SSH_KEY }}
-    - name: Install 1Password CLI
-      uses: ./.actions/install-op-cli
     - name: Install Enterprise Provisioning Profile
       uses: ./.actions/install-provisioning-profile
       with:
