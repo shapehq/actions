@@ -7,15 +7,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Checkout Actions Repository
-      uses: actions/checkout@v3
-      with:
-        repository: shapehq/actions
-        ref: feature/install-op-cli
-        path: ./.actions
-        ssh-key: ${{ fromJSON(inputs.secrets).CI_SSH_KEY }}
+    - name: Download 1Password CLI
+      run: curl https://cache.agilebits.com/dist/1P/op2/pkg/v2.8.0-beta.05/op_apple_universal_v2.8.0-beta.05.pkg --output op_cli.pkg
+      shell: bash
     - name: Install 1Password CLI
-      uses: ./.actions/install-op-cli
+      run: sudo installer -pkg op_cli.pkg -target ~
     # - name: Install SSH Key
     #   run: |
     #     mkdir -p ~/.ssh
