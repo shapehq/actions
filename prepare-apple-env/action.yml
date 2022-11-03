@@ -17,11 +17,11 @@ runs:
     - name: Install 1Password CLI
       uses: ./.actions/install-op-cli
     - name: Read CI SSH Private Key from 1Password
-      run: echo "ci_ssh_private_key=$(op read "op://GitHub Actions/CI SSH Private Key/ci-ssh-key")" >> $GITHUB_OUTPUT
+      run: echo "ci_ssh_private_key=$(op read "op://GitHub Actions/CI SSH Private Key/ci-ssh-key" | sed "$ ! s/$/\\n/" | tr -d "\n")" >> $GITHUB_OUTPUT
       shell: bash
       id: ci_ssh_private_key
     - name: Read CI SSH Known Hosts from 1Password
-      run: echo "ci_ssh_known_hosts=$(op read "op://GitHub Actions/CI SSH Known Hosts/notesPlain")" >> $GITHUB_OUTPUT
+      run: echo "ci_ssh_known_hosts=$(op read "op://GitHub Actions/CI SSH Known Hosts/notesPlain" | sed "$ ! s/$/\\n/" | tr -d "\n")" >> $GITHUB_OUTPUT
       shell: bash
       id: ci_ssh_known_hosts
     - name: Install SSH Key
