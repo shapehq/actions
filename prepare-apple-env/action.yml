@@ -16,33 +16,35 @@ runs:
         ssh-key: ${{ fromJSON(inputs.secrets).CI_SSH_KEY }}
     - name: Install 1Password CLI
       uses: ./.actions/install-op-cli
-    - name: Install SSH Key
+    # - name: Install SSH Key
+    #   run: |
+    #     mkdir -p ~/.ssh
+    #     op read --out-file ~/.ssh/id_rsa "op://GitHub Actions/CI SSH Private Key/ci-ssh-key"
+    #   shell: bash
+    # - name: Install Shipshape
+    #   run: npm install -g git+ssh://git@github.com:shapehq/ship-shape-cli.git
+    #   shell: bash
+    # - name: Setup Shipshape Activation Code
+    #   run: |
+    #     SHIPSHAPE_ACTIVATION_CODE=$(op read "op://GitHub Actions/CI Shipshape Activation Code/password")
+    #     echo '{"ship_activation_code":"${SHIPSHAPE_ACTIVATION_CODE}"}' > ~/shape-dev.config
+    #   shell: bash
+    # - name: Install appiconannotator
+    #   run: npm install -g git+ssh://git@github.com:shapehq/appiconannotator
+    #   shell: bash
+    # - name: Set Up Ruby
+    #   uses: ruby/setup-ruby@v1
+    #   with:
+    #     ruby-version: 3.1.2
+    #     bundler-cache: true
+    - name: Install Enterprise Distribution Certificate
       run: |
-        mkdir -p ~/.ssh
-        op read --out-file ~/.ssh/id_rsa "op://GitHub Actions/CI SSH Private Key/ci-ssh-key"
-      shell: bash
-    - name: Install Shipshape
-      run: npm install -g git+ssh://git@github.com:shapehq/ship-shape-cli.git
-      shell: bash
-    - name: Setup Shipshape Activation Code
-      run: |
-        SHIPSHAPE_ACTIVATION_CODE=$(op read "op://GitHub Actions/CI Shipshape Activation Code/password")
-        echo '{"ship_activation_code":"${SHIPSHAPE_ACTIVATION_CODE}"}' > ~/shape-dev.config
-      shell: bash
-    - name: Install appiconannotator
-      run: npm install -g git+ssh://git@github.com:shapehq/appiconannotator
-      shell: bash
-    - name: Set Up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 3.1.2
-        bundler-cache: true
-    - name: Install Certificate
-      uses: apple-actions/import-codesign-certs@v1
-      with: 
-        p12-file-base64: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_DISTRIBUTION_CERTIFICATE }}
-        p12-password: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
-    - name: Install Enterprise Provisioning Profile
-      uses: ./.actions/install-provisioning-profile
-      with:
-        profile-base64: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_PROVISIONING_PROFILE }}
+        CERTIFICATE_PASSWORD=$(op read "op://GitHub Actions/Enterprise Distribution Certificate/password")
+        CERTIFICATE_FILE_PATH=enterprise_distribution_certificate.p12
+        op read --out-file $CERTIFICATE_FILE_PATH "op://GitHub Actions/Enterprise Distribution Certificate/Certificate.p12"
+        security import $CERTIFICATE_FILE_PATH -P $CERTIFICATE_PASSWORD
+        rm $CERTIFICATE_FILE_PATH
+    # - name: Install Enterprise Provisioning Profile
+    #   uses: ./.actions/install-provisioning-profile
+    #   with:
+    #     profile-base64: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_PROVISIONING_PROFILE }}
