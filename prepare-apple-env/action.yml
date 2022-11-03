@@ -9,6 +9,7 @@ runs:
       shell: bash
     - name: Install 1Password CLI
       run: sudo installer -pkg op_cli.pkg -target ~
+      shell: bash
     # - name: Install SSH Key
     #   run: |
     #     mkdir -p ~/.ssh
