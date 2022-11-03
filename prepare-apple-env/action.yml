@@ -43,6 +43,6 @@ runs:
       run: |
         PROVISIONING_PROFILE_DIR=~/Library/MobileDevice/Provisioning\ Profiles
         PROVISIONING_PROFILE_FILE_PATH=$PROVISIONING_PROFILE_DIR/$(uuidgen).mobileprovision
-        mkdir -p $PROVISIONING_PROFILE_DIR
+        mkdir -p "${PROVISIONING_PROFILE_DIR}"
         op read --out-file "${PROVISIONING_PROFILE_FILE_PATH}" "op://GitHub Actions/Enterprise Distribution Provisioning Profile/profile.mobileprovision"
       shell: bash
