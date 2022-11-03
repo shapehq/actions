@@ -44,6 +44,7 @@ runs:
         op read --out-file $CERTIFICATE_FILE_PATH "op://GitHub Actions/Enterprise Distribution Certificate/Certificate.p12"
         security import $CERTIFICATE_FILE_PATH -P $CERTIFICATE_PASSWORD
         rm $CERTIFICATE_FILE_PATH
+      shell: bash
     # - name: Install Enterprise Provisioning Profile
     #   uses: ./.actions/install-provisioning-profile
     #   with:
