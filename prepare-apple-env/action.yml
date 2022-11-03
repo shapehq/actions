@@ -4,9 +4,6 @@ author: Simon B. Støvring
 inputs:
   secrets:
     required: true
-  actions-repository-path:
-    required: false
-    default: ./.actions
 runs:
   using: composite
   steps:
