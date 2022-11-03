@@ -42,9 +42,7 @@ runs:
     - name: Install Enterprise Distribution Provisioning Profile
       run: |
         PROVISIONING_PROFILE_DIR=~/Library/MobileDevice/Provisioning\ Profiles
-        PROVISIONING_PROFILE_FILE_PATH=$(uuidgen).mobileprovision
-        op read --out-file $PROVISIONING_PROFILE_FILE_PATH "op://GitHub Actions/Enterprise Distribution Provisioning Profile/profile.mobileprovision"
+        PROVISIONING_PROFILE_FILE_PATH=$PROVISIONING_PROFILE_DIR/$(uuidgen).mobileprovision
         mkdir -p $PROVISIONING_PROFILE_DIR
-        cp $PROVISIONING_PROFILE_FILE_PATH $PROVISIONING_PROFILE_DIR
-        rm $PROVISIONING_PROFILE_FILE_PATH
+        op read --out-file $PROVISIONING_PROFILE_FILE_PATH "op://GitHub Actions/Enterprise Distribution Provisioning Profile/profile.mobileprovision"
       shell: bash
