@@ -1,22 +1,28 @@
 name: Prepare Apple Environment
 description: Prepares the environment to be used for distributing apps on Apple's platforms.
 author: Simon B. Støvring
-inputs:
-  secrets:
-    required: true
 runs:
   using: composite
   steps:
+    - name: Install 1Password CLI
+      run: |
+        if ! [ -x "$(command -v op)" ]; then
+          curl https://cache.agilebits.com/dist/1P/op2/pkg/v2.8.0-beta.05/op_apple_universal_v2.8.0-beta.05.pkg --output op_cli.pkg
+          sudo installer -pkg op_cli.pkg -target ~
+        fi
+      shell: bash
     - name: Install SSH Key
-      uses: benoitchantre/setup-ssh-authentication-action@1.0.0
-      with:
-        private-key: ${{ fromJSON(inputs.secrets).CI_SSH_KEY }}
-        known-hosts: ${{ fromJSON(inputs.secrets).CI_SSH_KNOWN_HOSTS }}
+      run: |
+        mkdir -p ~/.ssh
+        op read --out-file ~/.ssh/id_rsa "op://GitHub Actions/CI SSH Private Key/ci-ssh-key"
+      shell: bash
     - name: Install Shipshape
       run: npm install -g git+ssh://git@github.com:shapehq/ship-shape-cli.git
       shell: bash
     - name: Setup Shipshape Activation Code
-      run: echo '{"ship_activation_code":"${{ fromJSON(inputs.secrets).SHIPSHAPE_ACTIVATION_CODE }}"}' > ~/shape-dev.config
+      run: |
+        SHIPSHAPE_ACTIVATION_CODE=$(op read "op://GitHub Actions/CI Shipshape Activation Code/password")
+        echo '{"ship_activation_code":"${SHIPSHAPE_ACTIVATION_CODE}"}' > ~/shape-dev.config
       shell: bash
     - name: Install appiconannotator
       run: npm install -g git+ssh://git@github.com:shapehq/appiconannotator
@@ -26,18 +32,18 @@ runs:
       with:
         ruby-version: 3.1.2
         bundler-cache: true
-    - name: Install Certificate
-      uses: apple-actions/import-codesign-certs@v1
-      with: 
-        p12-file-base64: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_DISTRIBUTION_CERTIFICATE }}
-        p12-password: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
-    - name: Checkout Actions Repository
-      uses: actions/checkout@v3
-      with:
-        repository: shapehq/actions
-        path: ./.actions
-        ssh-key: ${{ fromJSON(inputs.secrets).CI_SSH_KEY }}
-    - name: Install Enterprise Provisioning Profile
-      uses: ./.actions/install-provisioning-profile
-      with:
-        profile-base64: ${{ fromJSON(inputs.secrets).APPLE_ENTERPRISE_PROVISIONING_PROFILE }}
+    - name: Install Enterprise Distribution Certificate
+      run: |
+        CERTIFICATE_PASSWORD=$(op read "op://GitHub Actions/Enterprise Distribution Certificate/password")
+        CERTIFICATE_FILE_PATH=$(uuidgen).p12
+        op read --out-file $CERTIFICATE_FILE_PATH "op://GitHub Actions/Enterprise Distribution Certificate/Certificate.p12"
+        security import $CERTIFICATE_FILE_PATH -P $CERTIFICATE_PASSWORD
+        rm $CERTIFICATE_FILE_PATH
+      shell: bash
+    - name: Install Enterprise Distribution Provisioning Profile
+      run: |
+        PROVISIONING_PROFILE_DIR=~/Library/MobileDevice/Provisioning\ Profiles
+        PROVISIONING_PROFILE_FILE_PATH=$PROVISIONING_PROFILE_DIR/$(uuidgen).mobileprovision
+        mkdir -p "${PROVISIONING_PROFILE_DIR}"
+        op read --out-file "${PROVISIONING_PROFILE_FILE_PATH}" "op://GitHub Actions/Enterprise Distribution Provisioning Profile/profile.mobileprovision"
+      shell: bash
