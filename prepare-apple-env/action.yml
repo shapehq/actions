@@ -4,14 +4,11 @@ author: Simon B. Støvring
 runs:
   using: composite
   steps:
-    - name: Configure 1Password
-      uses: 1password/load-secrets-action/configure@v1
-      with:
-        OP_SERVICE_ACCOUNT_TOKEN: ${{ env.OP_SERVICE_ACCOUNT_TOKEN }}
     - name: Load SSH Key from 1Password
       id: op-ssh-key
       uses: 1password/load-secrets-action@v1
       env:
+        OP_SERVICE_ACCOUNT_TOKEN: ${{ env.OP_SERVICE_ACCOUNT_TOKEN }}
         SECRET: op://GitHub Actions/CI SSH Private Key/ci-ssh-key
     - name: Install SSH Key
       run: |
