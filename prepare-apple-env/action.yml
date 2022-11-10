@@ -1,10 +1,6 @@
 name: Prepare Apple Environment
 description: Prepares the environment to be used for distributing apps on Apple's platforms.
 author: Simon B. Støvring
-inputs:
-  opToken:
-    type: string
-    required: true
 runs:
   using: composite
   steps:
