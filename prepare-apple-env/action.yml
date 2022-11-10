@@ -12,7 +12,7 @@ runs:
     - name: Install SSH Key
       run: |
         mkdir -p ~/.ssh
-        op read --out-file ~/.ssh/id_rsa ${{ steps.op-ssh-key.outputs.SECRET }}
+        echo "${{ steps.op-ssh-key.outputs.SECRET }}" > ~/.ssh/id_rsa
       shell: bash
     - name: Install Shipshape
       run: npm install -g git+ssh://git@github.com:shapehq/ship-shape-cli.git
