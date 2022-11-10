@@ -9,6 +9,7 @@ runs:
       uses: 1password/load-secrets-action@v1
       env:
         SECRET: op://GitHub Actions/CI SSH Private Key/ci-ssh-key
+        OP_SERVICE_ACCOUNT_TOKEN: ${{ env.OP_SERVICE_ACCOUNT_TOKEN }}
     - name: Install SSH Key
       run: |
         mkdir -p ~/.ssh
