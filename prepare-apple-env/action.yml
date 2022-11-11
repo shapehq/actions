@@ -56,7 +56,7 @@ runs:
         op read --out-file $CERTIFICATE_FILE_PATH "
         security import $CERTIFICATE_FILE_PATH -P ${{ steps.op-certificate-password.outputs.SECRET }}}
         rm $CERTIFICATE_FILE_PATH
-    #   shell: bash
+      shell: bash
     # - name: Install Enterprise Distribution Provisioning Profile
     #   run: |
     #     PROVISIONING_PROFILE_DIR=~/Library/MobileDevice/Provisioning\ Profiles
