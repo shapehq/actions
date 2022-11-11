@@ -6,7 +6,7 @@ runs:
   steps:
     - name: Load SSH Key from 1Password
       id: op-ssh-key
-      uses: 1password/load-secrets-action@v1
+      uses: 1password/load-secrets-action@v1.1.0
       env:
         SECRET: op://GitHub Actions/CI SSH Private Key/ci-ssh-key
         OP_SERVICE_ACCOUNT_TOKEN: ${{ env.OP_SERVICE_ACCOUNT_TOKEN }}
