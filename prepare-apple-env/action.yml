@@ -53,7 +53,6 @@ runs:
       run: |
         CERTIFICATE_FILE_PATH=$(uuidgen).p12
         echo ${{ steps.op-certificate.outputs.SECRET }}} > $CERTIFICATE_FILE_PATH
-        op read --out-file $CERTIFICATE_FILE_PATH "
         security import $CERTIFICATE_FILE_PATH -P ${{ steps.op-certificate-password.outputs.SECRET }}}
         rm $CERTIFICATE_FILE_PATH
       shell: bash
