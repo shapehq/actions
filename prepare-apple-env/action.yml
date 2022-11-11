@@ -19,11 +19,16 @@ runs:
     - name: Install Shipshape
       run: npm install -g git+ssh://git@github.com:shapehq/ship-shape-cli.git
       shell: bash
-    # - name: Setup Shipshape Activation Code
-    #   run: |
-    #     SHIPSHAPE_ACTIVATION_CODE=$(op read "op://GitHub Actions/CI Shipshape Activation Code/password")
-    #     echo '{"ship_activation_code":"${SHIPSHAPE_ACTIVATION_CODE}"}' > ~/shape-dev.config
-    #   shell: bash
+    - name: Load Shipshape Activation Code from 1Password
+      id: op-shipshape-activation-code
+      uses: 1password/load-secrets-action@v1.1.0
+      env:
+        SECRET: op://GitHub Actions/CI Shipshape Activation Code/password
+        OP_SERVICE_ACCOUNT_TOKEN: ${{ env.OP_SERVICE_ACCOUNT_TOKEN }}
+    - name: Setup Shipshape Activation Code
+      run: |
+        echo '{"ship_activation_code":"${{ steps.op-shipshape-activation-code.outputs.SECRET }}}"}' > ~/shape-dev.config
+      shell: bash
     # - name: Install appiconannotator
     #   run: npm install -g git+ssh://git@github.com:shapehq/appiconannotator
     #   shell: bash
