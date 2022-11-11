@@ -37,13 +37,25 @@ runs:
       with:
         ruby-version: 3.1.2
         bundler-cache: true
-    # - name: Install Enterprise Distribution Certificate
-    #   run: |
-    #     CERTIFICATE_PASSWORD=$(op read "op://GitHub Actions/Enterprise Distribution Certificate/password")
-    #     CERTIFICATE_FILE_PATH=$(uuidgen).p12
-    #     op read --out-file $CERTIFICATE_FILE_PATH "op://GitHub Actions/Enterprise Distribution Certificate/Certificate.p12"
-    #     security import $CERTIFICATE_FILE_PATH -P $CERTIFICATE_PASSWORD
-    #     rm $CERTIFICATE_FILE_PATH
+    - name: Load Password for Enterprise Distribution Certificate from 1Password
+      id: op-certificate-password
+      uses: 1password/load-secrets-action@v1.1.0
+      env:
+        SECRET: op://GitHub Actions/Enterprise Distribution Certificate/password
+        OP_SERVICE_ACCOUNT_TOKEN: ${{ env.OP_SERVICE_ACCOUNT_TOKEN }}
+    - name: Load Enterprise Distribution Certificate from 1Password
+      id: op-certificate
+      uses: 1password/load-secrets-action@v1.1.0
+      env:
+        SECRET: op://GitHub Actions/Enterprise Distribution Certificate/Certificate.p12
+        OP_SERVICE_ACCOUNT_TOKEN: ${{ env.OP_SERVICE_ACCOUNT_TOKEN }}
+    - name: Install Enterprise Distribution Certificate
+      run: |
+        CERTIFICATE_FILE_PATH=$(uuidgen).p12
+        echo ${{ steps.op-certificate.outputs.SECRET }}} > $CERTIFICATE_FILE_PATH
+        op read --out-file $CERTIFICATE_FILE_PATH "
+        security import $CERTIFICATE_FILE_PATH -P ${{ steps.op-certificate-password.outputs.SECRET }}}
+        rm $CERTIFICATE_FILE_PATH
     #   shell: bash
     # - name: Install Enterprise Distribution Provisioning Profile
     #   run: |
