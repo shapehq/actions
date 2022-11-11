@@ -14,6 +14,7 @@ runs:
       run: |
         mkdir -p ~/.ssh
         echo "${{ steps.op-ssh-key.outputs.SECRET }}" > ~/.ssh/id_rsa
+        chmod 400 ~/.ssh/id_rsa
       shell: bash
     - name: Install Shipshape
       run: npm install -g git+ssh://git@github.com:shapehq/ship-shape-cli.git
