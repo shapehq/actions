@@ -27,7 +27,7 @@ runs:
         OP_SERVICE_ACCOUNT_TOKEN: ${{ env.OP_SERVICE_ACCOUNT_TOKEN }}
     - name: Setup Shipshape Activation Code
       run: |
-        echo '{"ship_activation_code":"${{ steps.op-shipshape-activation-code.outputs.SECRET }}}"}' > ~/shape-dev.config
+        echo '{"ship_activation_code":"${{ steps.op-shipshape-activation-code.outputs.SECRET }}"}' > ~/shape-dev.config
       shell: bash
     - name: Install appiconannotator
       run: npm install -g git+ssh://git@github.com:shapehq/appiconannotator
