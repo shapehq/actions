@@ -29,14 +29,14 @@ runs:
       run: |
         echo '{"ship_activation_code":"${{ steps.op-shipshape-activation-code.outputs.SECRET }}}"}' > ~/shape-dev.config
       shell: bash
-    # - name: Install appiconannotator
-    #   run: npm install -g git+ssh://git@github.com:shapehq/appiconannotator
-    #   shell: bash
-    # - name: Set Up Ruby
-    #   uses: ruby/setup-ruby@v1
-    #   with:
-    #     ruby-version: 3.1.2
-    #     bundler-cache: true
+    - name: Install appiconannotator
+      run: npm install -g git+ssh://git@github.com:shapehq/appiconannotator
+      shell: bash
+    - name: Set Up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.1.2
+        bundler-cache: true
     # - name: Install Enterprise Distribution Certificate
     #   run: |
     #     CERTIFICATE_PASSWORD=$(op read "op://GitHub Actions/Enterprise Distribution Certificate/password")
