@@ -27,6 +27,13 @@ runs:
     - name: Install appiconannotator
       run: npm install -g git+ssh://git@github.com:shapehq/appiconannotator
       shell: bash
+    - name: Setup Keychain
+      run: |
+        KEYCHAIN_PASSWORD=$(uuidgen)
+        security create-keychain -p $KEYCHAIN_PASSWORD ci.keychain
+        security default-keychain -s ci.keychain
+        security unlock-keychain -p $KEYCHAIN_PASSWORD ci.keychain
+        security set-key-partition-list -S apple-tool:,apple: -s -k actions ci.keychain
     - name: Install Enterprise Distribution Certificate
       run: |
         CERTIFICATE_PASSWORD=$(op read "op://GitHub Actions/Enterprise Distribution Certificate/password")
