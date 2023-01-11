@@ -33,7 +33,7 @@ runs:
         security create-keychain -p $KEYCHAIN_PASSWORD ci.keychain
         security default-keychain -s ci.keychain
         security unlock-keychain -p $KEYCHAIN_PASSWORD ci.keychain
-        security set-key-partition-list -S apple-tool:,apple: -s -k actions ci.keychain
+        security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASSWORD ci.keychain
       shell: bash
     - name: Install Enterprise Distribution Certificate
       run: |
