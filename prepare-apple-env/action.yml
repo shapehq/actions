@@ -34,6 +34,7 @@ runs:
         security default-keychain -s ci.keychain
         security unlock-keychain -p $KEYCHAIN_PASSWORD ci.keychain
         security set-key-partition-list -S apple-tool:,apple: -s -k actions ci.keychain
+      shell: bash
     - name: Install Enterprise Distribution Certificate
       run: |
         CERTIFICATE_PASSWORD=$(op read "op://GitHub Actions/Enterprise Distribution Certificate/password")
