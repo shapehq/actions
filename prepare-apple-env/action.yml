@@ -5,12 +5,9 @@ runs:
   using: composite
   steps:
     - name: Install 1Password CLI
-      run: |
-        if ! [ -x "$(command -v op)" ]; then
-          curl https://cache.agilebits.com/dist/1P/op2/pkg/v2.10.0-beta.02/op_apple_universal_v2.10.0-beta.02.pkg --output op_cli.pkg
-          sudo installer -pkg op_cli.pkg -target ~
-        fi
-      shell: bash
+        uses: simonbs/install-op-cli@1.0.0
+        with:
+          version-number: 2.10.0-beta.02
     - name: Install SSH Key
       run: |
         mkdir -p ~/.ssh
