@@ -1,0 +1,19 @@
+name: Install Shipshape
+description: Installs Shipshape and sets an activation code.
+author: Simon B. Støvring
+inputs:
+  op-reference:
+    description: Reference to the activation code in 1Password.
+    required: false
+    default: "op://GitHub Actions/CI Shipshape Activation Code/password"
+runs:
+  using: composite
+  steps:
+    - name: Install Shipshape
+      run: npm install -g git+ssh://git@github.com:shapehq/ship-shape-cli.git
+      shell: bash
+    - name: Setup Shipshape Activation Code
+      run: |
+        SHIPSHAPE_ACTIVATION_CODE=$(op read "${{ inputs.op-reference }}")
+        echo '{"ship_activation_code":"${SHIPSHAPE_ACTIVATION_CODE}"}' > ~/shape-dev.config
+      shell: bash
