@@ -1,0 +1,11 @@
+name: Install Enterprise Distribution Certificate
+description: Installs the enterprise distribution certificate in the keychain.
+author: Simon B. Støvring
+runs:
+  using: composite
+  steps:
+    - name: Install Enterprise Distribution Certificate
+      uses: ../install-certificate
+      with:
+        password-op-reference: op://GitHub Actions/Enterprise Distribution Certificate/password
+        certificate-op-reference: op://GitHub Actions/Enterprise Distribution Certificate/Certificate.p12
