@@ -5,15 +5,15 @@ runs:
   using: composite
   steps:
     - name: List Files
-      run: ls -la ./../
+      run: ls -la ./
       shell: bash
     - name: List Files
-      run: ls -la ./../.actions
+      run: ls -la ./.actions
       shell: bash
     - name: List Files
-      run: ls -la ./../.actions/install-ssh-key
+      run: ls -la ./.actions/install-ssh-key
       shell: bash
     - name: Install CI SSH Key
-      uses: ./../.actions/install-ssh-key
+      uses: ./.actions/install-ssh-key
       with:
         op-reference: op://GitHub Actions/CI SSH Private Key/ci-ssh-key
