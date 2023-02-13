@@ -12,6 +12,9 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: GitHub Action Path
+      run: echo $GITHUB_ACTION_PATH
+      shell: bash
     - name: Install SSH Key
       run: |
         mkdir -p ~/.ssh
