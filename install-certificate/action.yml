@@ -13,7 +13,7 @@ runs:
   steps:
     - name: Install Certificate
       run: |
-        CERTIFICATE_PASSWORD=$(op read "${{ inputs.password-op-reference }}"
+        CERTIFICATE_PASSWORD=$(op read "${{ inputs.password-op-reference }}")
         CERTIFICATE_FILE_PATH=$(uuidgen).p12
         KEYCHAIN_PASSWORD=$(uuidgen)
         KEYCHAIN_NAME="signing_tmp.keychain"
