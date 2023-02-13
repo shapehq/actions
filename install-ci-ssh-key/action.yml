@@ -4,15 +4,6 @@ author: Simon B. Støvring
 runs:
   using: composite
   steps:
-    - name: List Files
-      run: ls -la ./
-      shell: bash
-    - name: List Files
-      run: ls -la ./.actions
-      shell: bash
-    - name: List Files
-      run: ls -la ./.actions/install-ssh-key
-      shell: bash
     - name: Install CI SSH Key
       uses: ./.actions/install-ssh-key
       with:
