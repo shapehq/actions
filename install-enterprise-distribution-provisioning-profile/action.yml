@@ -5,6 +5,6 @@ runs:
   using: composite
   steps:
     - name: Install Enterprise Distribution Certificate
-      uses: ../install-provisioning-profile-with-op
+      uses: ./.actions/install-provisioning-profile-with-op
       with:
         op-reference: op://GitHub Actions/Enterprise Distribution Provisioning Profile/profile.mobileprovision
