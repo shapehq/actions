@@ -1,0 +1,19 @@
+name: Install SSH Key with 1Password
+description: Installs a SSH key read from 1Password
+author: Simon B. Støvring
+inputs:
+  op-reference:
+    description: Reference to the SSH key in 1Password.
+    required: true
+  filename:
+    description: Name of the file to store the key in.
+    required: false
+    default: id_rsa
+runs:
+  using: composite
+  steps:
+    - name: Install SSH Key
+      run: |
+        mkdir -p ~/.ssh
+        op read --out-file "~/.ssh/${{ inputs.filename }}" "${{ inputs.op-reference }}"
+      shell: bash
