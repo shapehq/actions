@@ -1,0 +1,10 @@
+name: Install the CI SSH Key
+description: Installs the CI server's SSH key
+author: Simon B. Støvring
+runs:
+  using: composite
+  steps:
+    - name: Install CI SSH Key
+      uses: ../install-ssh-key
+      with:
+        op-reference: op://GitHub Actions/CI SSH Private Key/ci-ssh-key
