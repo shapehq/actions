@@ -2,6 +2,8 @@
 
 This repository contains actions to be used with [GitHub Actions](https://github.com/features/actions) internally at Shape.
 
+## Getting Started
+
 Several of these actions depend on the 1Password CLI being installed. Please use the [install-op-cli](https://github.com/simonbs/install-op-cli) action to install the 1Password CLI.
 
 The examples in the following sections assume that your workflow clones this repository into the `./.actions` folder as shown below.
@@ -14,6 +16,8 @@ with:
   path: ./.actions
   ssh-key: ${{ secrets.ACTIONS_REPOSITORY_DEPLOY_KEY }}
 ```
+
+Note that we use the deploy key stored in the `ACTIONS_REPOSITORY_DEPLOY_KEY` secret as SSH key when cloning this repository. This is necessary as we should use the [install-ci-ssh-key](https://github.com/shapehq/actions/edit/main/README.md#install-ci-ssh-key) in this repository to install our SSH key but we also need a key to clone this repository. All private repositories in Shape has access to the `ACTIONS_REPOSITORY_DEPLOY_KEY` secret.
 
 ## [install-certificate](https://github.com/shapehq/actions/blob/main/install-certificate/action.yml)
 
