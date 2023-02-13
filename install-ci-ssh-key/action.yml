@@ -5,6 +5,6 @@ runs:
   using: composite
   steps:
     - name: Install CI SSH Key
-      uses: ./../install-ssh-key
+      uses: ./../.actions/install-ssh-key
       with:
         op-reference: op://GitHub Actions/CI SSH Private Key/ci-ssh-key
