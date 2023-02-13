@@ -19,9 +19,11 @@ runs:
         KEYCHAIN_NAME="signing_tmp.keychain"
         op read --out-file $CERTIFICATE_FILE_PATH "${{ inputs.certificate-op-reference }}"
         security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
-        security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+        security list-keychains -d user -s "$KEYCHAIN_NAME" $(security list-keychains -d user | tr -d '"')
+        security set-keychain-settings "$KEYCHAIN_NAME"
         security import $CERTIFICATE_FILE_PATH -k "$KEYCHAIN_NAME" -f pkcs12 -A -T /usr/bin/codesign -T /usr/bin/security -P $CERTIFICATE_PASSWORD
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
-        security list-keychains -d user -s "$KEYCHAIN_NAME" "login.keychain"
+        security default-keychain -d user -s $KEYCHAIN_NAME
+        security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
         rm $CERTIFICATE_FILE_PATH
       shell: bash
