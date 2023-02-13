@@ -15,5 +15,5 @@ runs:
     - name: Install SSH Key
       run: |
         mkdir -p ~/.ssh
-        op read --out-file "~/.ssh/${{ inputs.filename }}" "${{ inputs.op-reference }}"
+        op read --out-file ~/.ssh/${{ inputs.filename }} "${{ inputs.op-reference }}"
       shell: bash
