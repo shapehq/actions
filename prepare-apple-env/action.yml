@@ -1,0 +1,47 @@
+name: Prepare Apple Environment
+description: Prepares the environment to be used for distributing apps on Apple's platforms.
+author: Simon B. Støvring
+runs:
+  using: composite
+  steps:
+    - name: Install 1Password CLI
+      uses: simonbs/install-op-cli@1.0.0
+      with:
+        version-number: 2.10.0-beta.02
+    - name: Install SSH Key
+      run: |
+        mkdir -p ~/.ssh
+        op read --out-file ~/.ssh/id_rsa "op://GitHub Actions/CI SSH Private Key/ci-ssh-key"
+      shell: bash
+    - name: Install Shipshape
+      run: npm install -g git+ssh://git@github.com:shapehq/ship-shape-cli.git
+      shell: bash
+    - name: Setup Shipshape Activation Code
+      run: |
+        SHIPSHAPE_ACTIVATION_CODE=$(op read "op://GitHub Actions/CI Shipshape Activation Code/password")
+        echo '{"ship_activation_code":"${SHIPSHAPE_ACTIVATION_CODE}"}' > ~/shape-dev.config
+      shell: bash
+    - name: Install appiconannotator
+      run: npm install -g git+ssh://git@github.com:shapehq/appiconannotator
+      shell: bash
+    - name: Install Enterprise Distribution Certificate
+      run: |
+        CERTIFICATE_PASSWORD=$(op read "op://GitHub Actions/Enterprise Distribution Certificate/password")
+        CERTIFICATE_FILE_PATH=$(uuidgen).p12
+        KEYCHAIN_PASSWORD=$(uuidgen)
+        KEYCHAIN_NAME="signing_tmp.keychain"
+        op read --out-file $CERTIFICATE_FILE_PATH "op://GitHub Actions/Enterprise Distribution Certificate/Certificate.p12"
+        security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+        security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+        security import $CERTIFICATE_FILE_PATH -k "$KEYCHAIN_NAME" -f pkcs12 -A -T /usr/bin/codesign -T /usr/bin/security -P $CERTIFICATE_PASSWORD
+        security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+        security list-keychains -d user -s "$KEYCHAIN_NAME" "login.keychain"
+        rm $CERTIFICATE_FILE_PATH
+      shell: bash
+    - name: Install Enterprise Distribution Provisioning Profile
+      run: |
+        PROVISIONING_PROFILE_DIR=~/Library/MobileDevice/Provisioning\ Profiles
+        PROVISIONING_PROFILE_FILE_PATH=$PROVISIONING_PROFILE_DIR/$(uuidgen).mobileprovision
+        mkdir -p "${PROVISIONING_PROFILE_DIR}"
+        op read --out-file "${PROVISIONING_PROFILE_FILE_PATH}" "op://GitHub Actions/Enterprise Distribution Provisioning Profile/profile.mobileprovision"
+      shell: bash
