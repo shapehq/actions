@@ -1,6 +1,14 @@
 name: Install Enterprise Distribution Certificate
 description: Installs the enterprise distribution certificate in the keychain.
 author: Simon B. Støvring
+inputs:
+  keychain-name:
+    description: Name of the keychain to add the certificate to. The keychain will be created if it does not exist
+    required: false
+    default: build.keychain
+  keychain-password:
+    description: Password of the keychain to add the certificate to. Fallback to a randomly generated password if not set or empty.
+    required: false
 runs:
   using: composite
   steps:
@@ -8,8 +16,9 @@ runs:
       run: |
         CERTIFICATE_PASSWORD=$(op read "op://GitHub Actions/Enterprise Distribution Certificate/password")
         CERTIFICATE_FILE_PATH=$(uuidgen).p12
-        KEYCHAIN_PASSWORD=$(uuidgen)
-        KEYCHAIN_NAME="build.keychain"
+        INPUT_KEYCHAIN_PASSWORD_VALUE="{{ inputs.keychain-password }}"
+        KEYCHAIN_PASSWORD="${INPUT_KEYCHAIN_PASSWORD_VALUE:-$(uuidgen)}"
+        KEYCHAIN_NAME="{{ inputs.keychain-name }}"
         KEYCHAIN_PATH="/Users/$(whoami)/Library/Keychains/${KEYCHAIN_NAME}"
         KEYCHAIN_DB_PATH="${KEYCHAIN_PATH}-db"
         op read --out-file $CERTIFICATE_FILE_PATH "op://GitHub Actions/Enterprise Distribution Certificate/Certificate.p12"
