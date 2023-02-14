@@ -49,7 +49,7 @@ with:
   filename: ci
 ```
 
-You can use the [install-ssh-key](https://github.com/shapehq/actions/edit/main/README.md#install-ssh-key) action to install a specified SSH key.
+Use the [install-ssh-key](https://github.com/shapehq/actions/edit/main/README.md#install-ssh-key) action to install a specified SSH key.
 
 ## [install-enterprise-distribution-certificate](https://github.com/shapehq/actions/blob/main/install-enterprise-distribution-certificate/action.yml)
 
@@ -60,7 +60,17 @@ name: Install Enterprise Distribution Certificate
 uses: ./.actions/install-enterprise-distribution-certificate
 ```
 
-You can use the [install-certificate](https://github.com/shapehq/actions/edit/main/README.md#install-certificate) action to install a specified certificate.
+You may optionally specify the name of the keychain to install the certificate and the password of that keychain.
+
+```yml
+name: Install Enterprise Distribution Certificate
+uses: ./.actions/install-enterprise-distribution-certificate
+with:
+  keychain-name: signing.keychain
+  keychain-password: h3ll0w0rld
+```
+
+Use the [install-certificate](https://github.com/shapehq/actions/edit/main/README.md#install-certificate) action to install a specified certificate.
 
 ## [install-enterprise-distribution-provisioning-profile](https://github.com/shapehq/actions/blob/main/install-enterprise-distribution-provisioning-profile/action.yml)
 
