@@ -31,6 +31,29 @@ with:
   certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
 ```
 
+The action makes the keychain the default keychain on the system. You can disable this as shown below.
+
+```yml
+name: Install Certificate
+uses: ./.actions/install-certificate
+with:
+  password-op-reference: op://My Vault/My Certificate/password
+  certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
+  set-default-keychain: false
+```
+
+You may optionally specify the name of the keychain to install the certificate and the password of that keychain.
+
+```yml
+name: Install Certificate
+uses: ./.actions/install-certificate
+with:
+  password-op-reference: op://My Vault/My Certificate/password
+  certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
+  keychain-name: signing.keychain
+  keychain-password: h3ll0w0rld
+```
+
 ## [install-ci-ssh-key](https://github.com/shapehq/actions/blob/main/install-ci-ssh-key/action.yml)
 
 Install the CI's SSH key.
@@ -58,6 +81,15 @@ Installs Shape's default enterprise distribution certificate in the keychain.
 ```yml
 name: Install Enterprise Distribution Certificate
 uses: ./.actions/install-enterprise-distribution-certificate
+```
+
+The action makes the keychain the default keychain on the system. You can disable this as shown below.
+
+```yml
+name: Install Enterprise Distribution Certificate
+uses: ./.actions/install-enterprise-distribution-certificate
+with:
+  set-default-keychain: false
 ```
 
 You may optionally specify the name of the keychain to install the certificate and the password of that keychain.
