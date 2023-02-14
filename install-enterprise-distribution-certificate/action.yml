@@ -16,9 +16,9 @@ runs:
       run: |
         CERTIFICATE_PASSWORD=$(op read "op://GitHub Actions/Enterprise Distribution Certificate/password")
         CERTIFICATE_FILE_PATH=$(uuidgen).p12
-        INPUT_KEYCHAIN_PASSWORD_VALUE="{{ inputs.keychain-password }}"
+        INPUT_KEYCHAIN_PASSWORD_VALUE="${{ inputs.keychain-password }}"
         KEYCHAIN_PASSWORD="${INPUT_KEYCHAIN_PASSWORD_VALUE:-$(uuidgen)}"
-        KEYCHAIN_NAME="{{ inputs.keychain-name }}"
+        KEYCHAIN_NAME="${{ inputs.keychain-name }}"
         KEYCHAIN_PATH="/Users/$(whoami)/Library/Keychains/${KEYCHAIN_NAME}"
         KEYCHAIN_DB_PATH="${KEYCHAIN_PATH}-db"
         op read --out-file $CERTIFICATE_FILE_PATH "op://GitHub Actions/Enterprise Distribution Certificate/Certificate.p12"
