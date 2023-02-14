@@ -40,6 +40,29 @@ with:
   certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
 ```
 
+The action makes the keychain the default keychain on the system. You can disable this as shown below.
+
+```yml
+name: Install Certificate
+uses: ./.actions/install-certificate
+with:
+  password-op-reference: op://My Vault/My Certificate/password
+  certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
+  set-default-keychain: false
+```
+
+You may optionally specify the name of the keychain to install the certificate and the password of that keychain.
+
+```yml
+name: Install Certificate
+uses: ./.actions/install-certificate
+with:
+  password-op-reference: op://My Vault/My Certificate/password
+  certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
+  keychain-name: signing.keychain
+  keychain-password: h3ll0w0rld
+```
+
 ## [install-ci-ssh-key](https://github.com/shapehq/actions/blob/main/install-ci-ssh-key/action.yml)
 
 Install the CI's SSH key.
@@ -58,7 +81,7 @@ with:
   filename: ci
 ```
 
-You can use the [install-ssh-key](https://github.com/shapehq/actions/edit/main/README.md#install-ssh-key) action to install a specified SSH key.
+Use the [install-ssh-key](https://github.com/shapehq/actions/edit/main/README.md#install-ssh-key) action to install a specified SSH key.
 
 ## [install-enterprise-distribution-certificate](https://github.com/shapehq/actions/blob/main/install-enterprise-distribution-certificate/action.yml)
 
@@ -69,7 +92,26 @@ name: Install Enterprise Distribution Certificate
 uses: ./.actions/install-enterprise-distribution-certificate
 ```
 
-You can use the [install-certificate](https://github.com/shapehq/actions/edit/main/README.md#install-certificate) action to install a specified certificate.
+The action makes the keychain the default keychain on the system. You can disable this as shown below.
+
+```yml
+name: Install Enterprise Distribution Certificate
+uses: ./.actions/install-enterprise-distribution-certificate
+with:
+  set-default-keychain: false
+```
+
+You may optionally specify the name of the keychain to install the certificate and the password of that keychain.
+
+```yml
+name: Install Enterprise Distribution Certificate
+uses: ./.actions/install-enterprise-distribution-certificate
+with:
+  keychain-name: signing.keychain
+  keychain-password: h3ll0w0rld
+```
+
+Use the [install-certificate](https://github.com/shapehq/actions/edit/main/README.md#install-certificate) action to install a specified certificate.
 
 ## [install-enterprise-distribution-provisioning-profile](https://github.com/shapehq/actions/blob/main/install-enterprise-distribution-provisioning-profile/action.yml)
 
