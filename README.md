@@ -19,6 +19,15 @@ with:
 
 Note that we use the deploy key stored in the `ACTIONS_REPOSITORY_DEPLOY_KEY` secret as SSH key when cloning this repository. This is necessary as we should use the [install-ci-ssh-key](https://github.com/shapehq/actions/edit/main/README.md#install-ci-ssh-key) in this repository to install our SSH key but we also need a key to clone this repository. All private repositories in Shape has access to the `ACTIONS_REPOSITORY_DEPLOY_KEY` secret.
 
+## [install-appiconannotator](https://github.com/shapehq/actions/blob/main/install-appiconannotator/action.yml)
+
+Installs [appiconannotator](https://github.com/shapehq/appiconannotator).
+
+```yml
+name: Install appiconannotator
+uses: ./.actions/install-appiconannotator
+```
+
 ## [install-certificate](https://github.com/shapehq/actions/blob/main/install-certificate/action.yml)
 
 Installs the specified certificate in the keychain.

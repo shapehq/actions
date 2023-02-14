@@ -1,0 +1,15 @@
+name: Install appiconannotator
+description: Installs appiconannotator
+author: Simon B. Støvrings
+runs:
+  using: composite
+  steps:
+    - name: Install ImageMagick
+      run: brew install imagemagick
+      shell: bash
+    - name: Install Ghostscript
+      run: brew install ghostscript
+      shell: bash
+    - name: Install appiconannotator
+      run: npm install -g git+ssh://git@github.com:shapehq/appiconannotator.git
+      shell: bash
