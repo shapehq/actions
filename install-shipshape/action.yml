@@ -15,5 +15,5 @@ runs:
     - name: Setup Shipshape Activation Code
       run: |
         SHIPSHAPE_ACTIVATION_CODE=$(op read "${{ inputs.op-reference }}")
-        echo '{"ship_activation_code":"${SHIPSHAPE_ACTIVATION_CODE}"}' > ~/shape-dev.config
+        echo '{"ship_activation_code":"'${SHIPSHAPE_ACTIVATION_CODE}'"}' > ~/shape-dev.config
       shell: bash
