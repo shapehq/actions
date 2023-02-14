@@ -34,7 +34,7 @@ runs:
         security import $CERTIFICATE_FILE_PATH -k "$KEYCHAIN_NAME" -f pkcs12 -A -T /usr/bin/codesign -T /usr/bin/security -P $CERTIFICATE_PASSWORD
         security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
-        if [ "${{ inputs.set-default-keychain }}" = true ] ; then
+        if [ "${{ inputs.set-default-keychain }}" = true ]; then
           security default-keychain -s $KEYCHAIN_PATH
         fi
         rm $CERTIFICATE_FILE_PATH
