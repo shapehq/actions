@@ -1,6 +1,6 @@
 # Actions
 
-This repository contains actions to be used with [GitHub Actions](https://github.com/features/actions) internally at Shape.
+This repository contains actions to be used with [GitHub Actions](https://github.com/features/actions) internally at Shape. Please refer to [this article](https://shapedk.atlassian.net/wiki/spaces/SHAPE/pages/3640262736/GitHub+Actions+Runners) for the details on getting started with our self-hosted GitHub Actions runner.
 
 ## Getting Started
 
