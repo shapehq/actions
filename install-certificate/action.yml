@@ -31,8 +31,8 @@ runs:
         KEYCHAIN_NAME="${{ inputs.keychain-name }}"
         KEYCHAIN_PATH="/Users/$(whoami)/Library/Keychains/${KEYCHAIN_NAME}"
         KEYCHAIN_DB_PATH="${KEYCHAIN_PATH}-db"
-        echo "KEYCHAIN_PASSWORD=${KEYCHAIN_PASSWORD}"
-        if [ -z "$KEYCHAIN_PASSWORD" ]; then
+        echo "CERTIFICATE_PASSWORD=${CERTIFICATE_PASSWORD}"
+        if [ -z "$CERTIFICATE_PASSWORD" ]; then
           echo "The password for the certificate cannot be empty."
           exit 1
         fi
