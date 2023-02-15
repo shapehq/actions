@@ -31,6 +31,10 @@ runs:
         KEYCHAIN_NAME="${{ inputs.keychain-name }}"
         KEYCHAIN_PATH="/Users/$(whoami)/Library/Keychains/${KEYCHAIN_NAME}"
         KEYCHAIN_DB_PATH="${KEYCHAIN_PATH}-db"
+        if [ -z "$CERTIFICATE_PASSWORD" ]; then
+          echo "The password for the certificate cannot be empty."
+          exit 1
+        fi
         op read --out-file $CERTIFICATE_FILE_PATH "${{ inputs.certificate-op-reference }}"
         if [ ! -f "$KEYCHAIN_DB_PATH" ]; then
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
