@@ -40,6 +40,8 @@ with:
   certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
 ```
 
+Note that you must supply a password. Empty passwords are not supported.
+
 The action makes the keychain the default keychain on the system. You can disable this as shown below.
 
 ```yml
