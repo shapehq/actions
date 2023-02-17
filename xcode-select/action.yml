@@ -11,7 +11,7 @@ runs:
     - name: Select Xcode Version
       run: |
         APPLICATIONS_DIR=/Applications
-        XCODE_VERSION=$(echo "${{ inputs.version }}" | xargs")
+        XCODE_VERSION=$(echo "${{ inputs.version }}" | xargs)
         SAFE_XCODE_VERSION=$(echo "${XCODE_VERSION}" | sed "s/ /_/g")
         XCODE_PATH="${APPLICATIONS_DIR}/Xcode_${SAFE_XCODE_VERSION}.app"
         if [ -d "$XCODE_PATH" ]; then
