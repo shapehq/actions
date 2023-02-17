@@ -155,7 +155,7 @@ with:
   op-reference: op://My Vault/My Shipshape Activation Code/password
 ```
 
-## [install-ssh-key](https://github.com/shapehq/actions/tree/main/install-ssh-key)
+## [install-ssh-key](https://github.com/shapehq/actions/tree/main/install-ssh-key/action.yml)
 
 Installs an SSH key.
 
@@ -174,4 +174,24 @@ uses: ./.actions/install-ssh-key
 with:
   op-reference: op://My Vault/My SSH Key/ssh-key
   filename: my_key
+```
+
+## [xcode-select](https://github.com/shapehq/actions/tree/main/xcode-select/action.yml)
+
+Selects a version of Xcode.
+
+```yml
+name: Select Xcode Version
+uses: ./.actions/xcode-select
+with:
+  version: 14.2
+```
+
+The action can also be used to select a beta version of Xcode.
+
+```yml
+name: Select Xcode Version
+uses: ./.actions/xcode-select
+with:
+  version: 14.3 Beta
 ```
