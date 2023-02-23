@@ -14,7 +14,7 @@ runs:
   steps:
     - name: Slack
       run: |
-        web_hook=$(op read "${op-webhook-reference}")
+        web_hook=$(op read "${{ inputs.op-webhook-reference }}")
         job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
         cd .actions/post-slack-message/Slacker
