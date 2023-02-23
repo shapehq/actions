@@ -18,5 +18,5 @@ runs:
         job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
         cd .actions/post-slack-message/Slacker
-        swift run Slacker "${{ inputs.channel }}" "${{ inputs.message }}" "${{ github.workflow }}" "${{ runner.name }}" "${job_url}" "${web_hook}"
+        swift run Slacker "${{ inputs.channel }}" "${{ inputs.message }}" "${{ github.workflow }}" "${{ runner.name }}" "${{ github.ref_name }}" "${{ github.ref_type }}" "${{ github.actor }}" "${job_url}" "${web_hook}"
       shell: bash

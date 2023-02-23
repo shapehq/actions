@@ -15,6 +15,15 @@ struct Slacker: AsyncParsableCommand {
     @Argument(help: "Runner")
     var runner: String
     
+    @Argument(help: "GitHub ref name")
+    var refName: String
+    
+    @Argument(help: "GitHub ref type")
+    var refType: String
+
+    @Argument(help: "Started by")
+    var actor: String
+    
     @Argument(help: "Job URL")
     var jobUrl: String
     
@@ -31,6 +40,8 @@ struct Slacker: AsyncParsableCommand {
                 .sectionFields(fields: [
                     SlackText(type: .markdown, text: "*Workflow:*\n\(workflow)"),
                     SlackText(type: .markdown, text: "*Runner:*\n\(runner)"),
+                    SlackText(type: .markdown, text: "*\(refType.capitalized):*\n\(refName)"),
+                    SlackText(type: .markdown, text: "*Started by:*\n\(actor)"),
                 ]),
                 .actions(actions: [
                     SlackAction(
