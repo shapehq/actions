@@ -1,0 +1,17 @@
+name: post-slack-message
+inputs:
+  channel:
+    required: true
+  message:
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Slack
+      run: |
+        web_hook=$(op read "op://GitHub Actions/Slack Webhook/url")
+        job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+        cd .actions/post-slack-message/Slacker
+        swift run Slacker "${{ inputs.channel }}" "${{ inputs.message }}" "${{ github.workflow }}" "${{ runner.name }}" "${job_url}" "${web_hook}"
+      shell: bash
