@@ -1,15 +1,20 @@
 name: post-slack-message
 inputs:
   channel:
+    description: Slack channel to post message in
     required: true
   message:
+    description: Message to post
+    required: true
+  op-webhook-reference:
+    description: Slack webhook reference
     required: true
 runs:
   using: composite
   steps:
     - name: Slack
       run: |
-        web_hook=$(op read "op://GitHub Actions/Slack Webhook/url")
+        web_hook=$(op read "${op-webhook-reference}")
         job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
         cd .actions/post-slack-message/Slacker
