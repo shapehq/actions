@@ -14,7 +14,7 @@ runs:
   steps:
     - name: Notify
       run: |
-        slack_token=$(op read "${op-slack-token-reference}")
+        slack_token=$(op read "${{ inputs.op-slack-token-reference }}")
         job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
         cd .github/actions/notify-slack/Slacker
