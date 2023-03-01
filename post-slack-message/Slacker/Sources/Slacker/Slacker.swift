@@ -22,17 +22,22 @@ struct Slacker: AsyncParsableCommand {
     var refType: String
 
     @Argument(help: "Started by")
-    var actor: String
+    var startedBy: String
     
     @Argument(help: "Job URL")
     var jobUrl: String
     
-    @Argument(help: "Slack Webhook")
-    var slackWebhook: String
+    @Argument(help: "Slack Access Token")
+    var slackAccessToken: String
     
     func run() async throws {
-        let url = URL(string: slackWebhook)!
-        var urlRequest = URLRequest(url: url)
+        // Prepare request
+        var urlRequest = URLRequest(url: URL(string: "https://slack.com/api/chat.postMessage")!)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.setValue("Bearer \(slackAccessToken)", forHTTPHeaderField: "Authorization")
+        
+        // Prepare body
         let slackRequest = SlackMessage(
             channel: slackChannel,
             blocks: [
@@ -41,7 +46,7 @@ struct Slacker: AsyncParsableCommand {
                     SlackText(type: .markdown, text: "*Workflow:*\n\(workflow)"),
                     SlackText(type: .markdown, text: "*Runner:*\n\(runner)"),
                     SlackText(type: .markdown, text: "*\(refType.capitalized):*\n\(refName)"),
-                    SlackText(type: .markdown, text: "*Started by:*\n\(actor)"),
+                    SlackText(type: .markdown, text: "*Started by:*\n\(startedBy)"),
                 ]),
                 .actions(actions: [
                     SlackAction(
@@ -58,17 +63,20 @@ struct Slacker: AsyncParsableCommand {
                 ])
             ]
         )
-        urlRequest.httpMethod = "POST"
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpBody = try JSONEncoder().encode(slackRequest)
-
-        let (_, response) = try await URLSession.shared.data(for: urlRequest)
-        if let httpResponse = response as? HTTPURLResponse {
-            print("HTTP Status: \(httpResponse.statusCode)")
+        
+        do {
+            let (_, response) = try await URLSession.shared.data(for: urlRequest)
+            if let httpResponse = response as? HTTPURLResponse {
+                print("HTTP Status: \(httpResponse.statusCode)")
+            } else {
+                print("Request succeeded? Unknown response")
+            }
+        } catch {
+            print("Request failed: \(error)")
         }
     }
 }
-
 
 struct SlackMessage: Encodable {
     let channel: String

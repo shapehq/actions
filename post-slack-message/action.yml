@@ -1,4 +1,4 @@
-name: post-slack-message
+name: Post Slack Message
 inputs:
   channel:
     description: Slack channel to post message in
@@ -6,17 +6,17 @@ inputs:
   message:
     description: Message to post
     required: true
-  op-webhook-reference:
-    description: Slack webhook reference
+  op-slack-token-reference:
+    description: Slack access token reference
     required: true
 runs:
   using: composite
   steps:
-    - name: Slack
+    - name: Notify
       run: |
-        web_hook=$(op read "${{ inputs.op-webhook-reference }}")
+        slack_token=$(op read "${op-slack-token-reference}")
         job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
-        cd .actions/post-slack-message/Slacker
-        swift run Slacker "${{ inputs.channel }}" "${{ inputs.message }}" "${{ github.workflow }}" "${{ runner.name }}" "${{ github.ref_name }}" "${{ github.ref_type }}" "${{ github.actor }}" "${job_url}" "${web_hook}"
+        cd .github/actions/notify-slack/Slacker
+        swift run Slacker "${{ inputs.channel }}" "${{ inputs.message }}" "${{ github.workflow }}" "${{ runner.name }}" "${{ github.ref_name }}" "${{ github.ref_type }}" "${{ github.actor }}" "${job_url}" "${slack_token}"
       shell: bash
