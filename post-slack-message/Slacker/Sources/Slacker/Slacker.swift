@@ -11,7 +11,7 @@ struct Slacker: AsyncParsableCommand {
     @Option(parsing: .upToNextOption)
     var fields: [Field]
     
-    func run() async throws {      
+    func run() async throws {
         // Prepare request
         var urlRequest = URLRequest(url: URL(string: "https://slack.com/api/chat.postMessage")!)
         urlRequest.httpMethod = "POST"
@@ -42,14 +42,28 @@ struct Slacker: AsyncParsableCommand {
         urlRequest.httpBody = try JSONEncoder().encode(slackRequest)
         
         do {
-            let (_, response) = try await URLSession.shared.data(for: urlRequest)
+            let (data, response) = try await URLSession.shared.data(for: urlRequest)
             if let httpResponse = response as? HTTPURLResponse {
-                print("HTTP Status: \(httpResponse.statusCode)")
+                if httpResponse.statusCode == 200 {
+                    print("✅ Succeeded with status \(httpResponse.statusCode)")
+                } else {
+                    print("💥 Failed with status \(httpResponse.statusCode)")
+                }
             } else {
-                print("Request succeeded? Unknown response")
+                print("❓ HTTP Status is unknown")
+            }
+            
+            do {
+                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                    print("\(json)")
+                } else {
+                    print("💥 Response body is not JSON 🫠")
+                }
+            } catch {
+                print("💥 Failed to deserialize response data: \(error)")
             }
         } catch {
-            print("Request failed: \(error)")
+            print("💥 Request failed: \(error)")
         }
     }
 }
