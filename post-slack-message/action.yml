@@ -12,11 +12,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Notify
+    - name: Post to Slack
       run: |
         slack_token=$(op read "${{ inputs.op-slack-token-reference }}")
         job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
-        cd .github/actions/notify-slack/Slacker
+        cd Slacker
         swift run Slacker "${{ inputs.channel }}" "${{ inputs.message }}" "${{ github.workflow }}" "${{ runner.name }}" "${{ github.ref_name }}" "${{ github.ref_type }}" "${{ github.actor }}" "${job_url}" "${slack_token}"
       shell: bash
