@@ -163,6 +163,37 @@ with:
   filename: my_key
 ```
 
+## [post-slack-message](https://github.com/shapehq/actions/tree/main/post-slack-message/action.yml)
+
+Posts a message to Slack.
+
+```yml
+name: Post to Slack
+uses: shapehq/actions/post-slack-message@main
+with:
+  channel: "#my-channel"
+  message: "Started a new build of Project X for App Store 🏃‍♀️"
+  op-slack-token-reference: op://My Vault/My Slack Token/token
+```
+
+The action will automatically add the following details to the Slack message:
+* Workflow name
+* Runner name
+* Branch name
+* GitHub profile of the person who started the job
+
+If you wish to only post to Slack if the jobs fails you can use the `failure()` status check function:
+
+```yml
+name: Post failure to Slack
+if: ${{ failure() }}
+uses: shapehq/actions/post-slack-message@main
+with:
+  channel: "#my-channel"
+  message: "Project X build for App Store failed 💥"
+  op-slack-token-reference: op://My Vault/My Slack Token/token
+```
+
 ## [xcode-select](https://github.com/shapehq/actions/tree/main/xcode-select/action.yml)
 
 Selects a version of Xcode.
