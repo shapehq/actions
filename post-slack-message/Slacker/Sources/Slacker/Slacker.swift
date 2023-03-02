@@ -11,12 +11,7 @@ struct Slacker: AsyncParsableCommand {
     @Option(parsing: .upToNextOption)
     var fields: [Field]
     
-    func run() async throws {
-        print(channel)
-        print(message)
-        print(jobUrl)
-        print(fields)
-        
+    func run() async throws {      
         // Prepare request
         var urlRequest = URLRequest(url: URL(string: "https://slack.com/api/chat.postMessage")!)
         urlRequest.httpMethod = "POST"
