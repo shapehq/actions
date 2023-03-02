@@ -9,9 +9,23 @@ struct Slacker: AsyncParsableCommand {
     @Option var jobUrl: String
     
     @Option(parsing: .upToNextOption)
-    var fields: [Field]
+    var fields: [Field] = []
     
     func run() async throws {
+        // Validate parameters
+        guard !channel.isEmpty else {
+            Slacker.exit(withError: ValidationError("💥 You must specify a Slack channel"))
+        }
+        guard !token.isEmpty else {
+            Slacker.exit(withError: ValidationError("💥 You must specify a Slack access token"))
+        }
+        guard !message.isEmpty else {
+            Slacker.exit(withError: ValidationError("💥 You must specify a message to display in Slack"))
+        }
+        guard !jobUrl.isEmpty else {
+            Slacker.exit(withError: ValidationError("💥 You must specify the GitHub Actions job url"))
+        }
+        
         // Prepare request
         var urlRequest = URLRequest(url: URL(string: "https://slack.com/api/chat.postMessage")!)
         urlRequest.httpMethod = "POST"
@@ -41,128 +55,22 @@ struct Slacker: AsyncParsableCommand {
         )
         urlRequest.httpBody = try JSONEncoder().encode(slackRequest)
         
+        // Fire request and print result
         do {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
-            if let httpResponse = response as? HTTPURLResponse {
-                if httpResponse.statusCode == 200 {
-                    print("✅ Succeeded with status \(httpResponse.statusCode)")
-                } else {
-                    print("💥 Failed with status \(httpResponse.statusCode)")
-                }
-            } else {
-                print("❓ HTTP Status is unknown")
-            }
-            
             do {
-                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                    print("\(json)")
-                } else {
-                    print("💥 Response body is not JSON 🫠")
+                let slackResponse = try JSONDecoder().decode(SlackAPIResponse.self, from: data)
+                switch slackResponse {
+                case .success:
+                    print("🟢 [\(response.httpStatusCode)] Succesfully sent Slack message")
+                case .failure(let errorMessage):
+                    print("🔴 [\(response.httpStatusCode)] Failed to sent Slack message with error: \(errorMessage)")
                 }
             } catch {
-                print("💥 Failed to deserialize response data: \(error)")
+                print("⁉️ [\(response.httpStatusCode)] Failed to deserialize Slack response with error: \(error)")
             }
         } catch {
             print("💥 Request failed: \(error)")
         }
-    }
-}
-
-// MARK: Arguments
-
-struct Field: ExpressibleByArgument {
-    let title: String
-    let value: String
-
-    init?(argument: String) {
-        let components = argument.split(separator: ":")
-        assert(components.count == 2, "A SlackField must be composed of a title and a value separated by a colon. Example: 'Branch:main'")
-        title = String(components[0])
-        value = String(components[1])
-    }
-}
-
-// MARK: Slack API Models
-
-struct SlackMessage: Encodable {
-    let channel: String
-    let blocks: [SlackBlock]
-}
-
-enum SlackBlock {
-    case sectionText(text: SlackText)
-    case sectionFields(fields: [SlackText])
-    case actions(actions: [SlackAction])
-}
-
-extension SlackBlock: Encodable {
-    enum CodingKeys: CodingKey {
-        case type
-        case text
-        case fields
-        case elements
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        switch self {
-        case .sectionText(let text):
-            try container.encode("section", forKey: .type)
-            try container.encode(text, forKey: .text)
-        case .sectionFields(let fields):
-            try container.encode("section", forKey: .type)
-            try container.encode(fields, forKey: .fields)
-        case .actions(let actions):
-            try container.encode("actions", forKey: .type)
-            try container.encode(actions, forKey: .elements)
-        }
-    }
-}
-
-struct SlackText: Encodable {
-    enum TextType: String, Encodable {
-        case plain = "plain_text"
-        case markdown = "mrkdwn"
-    }
-    
-    let type: TextType
-    let text: String
-}
-
-struct SlackAction: Encodable {
-    enum ActionType: String, Encodable {
-        case button
-    }
-    
-    struct ActionText: Encodable {
-        enum TextType: String, Encodable {
-            case plain = "plain_text"
-            case markdown = "mrkdwn"
-        }
-        
-        let type: TextType
-        let text: String
-        let emoji: Bool
-    }
-    
-    let type: ActionType
-    let text: ActionText
-    let value: String
-    let url: String
-    let actionId: String
-    
-    enum CodingKeys: String, CodingKey {
-        case type
-        case text
-        case value
-        case url
-        case actionId = "action_id"
-    }
-}
-
-extension SlackText {
-    init(field: Field) {
-        type = .markdown
-        text = "*\(field.title)*:\n\(field.value)"
     }
 }
