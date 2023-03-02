@@ -3,51 +3,32 @@ import Foundation
 
 @main
 struct Slacker: AsyncParsableCommand {
-    @Argument(help: "Slack channel")
-    var slackChannel: String
+    @Option var channel: String
+    @Option var token: String
+    @Option var message: String
+    @Option var jobUrl: String
     
-    @Argument(help: "Message")
-    var message: String
-    
-    @Argument(help: "Workflow")
-    var workflow: String
-    
-    @Argument(help: "Runner")
-    var runner: String
-    
-    @Argument(help: "GitHub ref name")
-    var refName: String
-    
-    @Argument(help: "GitHub ref type")
-    var refType: String
-
-    @Argument(help: "Started by")
-    var startedBy: String
-    
-    @Argument(help: "Job URL")
-    var jobUrl: String
-    
-    @Argument(help: "Slack Access Token")
-    var slackAccessToken: String
+    @Option(parsing: .upToNextOption)
+    var fields: [Field]
     
     func run() async throws {
+        print(channel)
+        print(message)
+        print(jobUrl)
+        print(fields)
+        
         // Prepare request
         var urlRequest = URLRequest(url: URL(string: "https://slack.com/api/chat.postMessage")!)
         urlRequest.httpMethod = "POST"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.setValue("Bearer \(slackAccessToken)", forHTTPHeaderField: "Authorization")
+        urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
         // Prepare body
         let slackRequest = SlackMessage(
-            channel: slackChannel,
+            channel: channel,
             blocks: [
                 .sectionText(text: SlackText(type: .markdown, text: message)),
-                .sectionFields(fields: [
-                    SlackText(type: .markdown, text: "*Workflow:*\n\(workflow)"),
-                    SlackText(type: .markdown, text: "*Runner:*\n\(runner)"),
-                    SlackText(type: .markdown, text: "*\(refType.capitalized):*\n\(refName)"),
-                    SlackText(type: .markdown, text: "*Started by:*\n\(startedBy)"),
-                ]),
+                .sectionFields(fields: fields.map { SlackText(field: $0) }),
                 .actions(actions: [
                     SlackAction(
                         type: .button,
@@ -77,6 +58,22 @@ struct Slacker: AsyncParsableCommand {
         }
     }
 }
+
+// MARK: Arguments
+
+struct Field: ExpressibleByArgument {
+    let title: String
+    let value: String
+
+    init?(argument: String) {
+        let components = argument.split(separator: ":")
+        assert(components.count == 2, "A SlackField must be composed of a title and a value separated by a colon. Example: 'Branch:main'")
+        title = String(components[0])
+        value = String(components[1])
+    }
+}
+
+// MARK: Slack API Models
 
 struct SlackMessage: Encodable {
     let channel: String
@@ -151,5 +148,12 @@ struct SlackAction: Encodable {
         case value
         case url
         case actionId = "action_id"
+    }
+}
+
+extension SlackText {
+    init(field: Field) {
+        type = .markdown
+        text = "*\(field.title)*:\n\(field.value)"
     }
 }
