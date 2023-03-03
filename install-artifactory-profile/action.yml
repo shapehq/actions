@@ -8,6 +8,6 @@ runs:
       run: |
         mkdir -p ~/.gradle
         echo "\n" >> ~/.gradle/gradle.properties
-        echo "shape_consumer_username={{ op://GitHub Actions/JFrog Artifactory/username  }}" | op inject >> ~/.gradle/gradle.properties
-        echo "shape_consumer_password={{ op://GitHub Actions/JFrog Artifactory/password  }}" | op inject >> ~/.gradle/gradle.properties
+        echo "shape_consumer_username={{ op://25dt53lxtmov37u7s4b72weu3a/ofy7qo7ejdvdjxuopb4db3astu/username  }}" | op inject >> ~/.gradle/gradle.properties
+        echo "shape_consumer_password={{ op://25dt53lxtmov37u7s4b72weu3a/ofy7qo7ejdvdjxuopb4db3astu/password  }}" | op inject >> ~/.gradle/gradle.properties
       shell: bash
