@@ -1,0 +1,13 @@
+name: Install JFrog Artifactory profile
+description: Installs the JFrog Artifactory CI profile credentials
+author: Gerard Sala
+runs:
+  using: composite
+  steps:
+    - name: Install Artifactory profile
+      run: |
+        mkdir -p ~/.gradle
+        echo "\n" >> ~/.gradle/gradle.properties
+        echo "shape_consumer_username={{ op://25dt53lxtmov37u7s4b72weu3a/ofy7qo7ejdvdjxuopb4db3astu/username  }}" | op inject >> ~/.gradle/gradle.properties
+        echo "shape_consumer_password={{ op://25dt53lxtmov37u7s4b72weu3a/ofy7qo7ejdvdjxuopb4db3astu/password  }}" | op inject >> ~/.gradle/gradle.properties
+      shell: bash
