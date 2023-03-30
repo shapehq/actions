@@ -14,30 +14,47 @@ struct TranslationChecker: AsyncParsableCommand {
     @Option var jobUrl: String
     
     func run() async throws {
-        let locales = locales.components(separatedBy: ",")
-        let localesMissingTranslations = try await verifyTranslationProgress(for: locales)
-        
-        if !localesMissingTranslations.isEmpty {
-            let totalMissingTranslations = localesMissingTranslations.reduce(into: Int()) { partialResult, status in
-                partialResult += status.untranslated
-            }
-            print("🔴 There are \(totalMissingTranslations) missing translations")
+        do {
+            let locales = locales.components(separatedBy: ",")
+            let localesMissingTranslations = try await verifyTranslationProgress(for: locales)
             
+            if !localesMissingTranslations.isEmpty {
+                let totalMissingTranslations = localesMissingTranslations.reduce(into: Int()) { partialResult, status in
+                    partialResult += status.untranslated
+                }
+                print("🔴 There are \(totalMissingTranslations) missing translations")
+                
+                let slacker = Slacker(
+                    channel: channel,
+                    token: token,
+                    message: "*⚠️ Detected \(totalMissingTranslations) missing translations in build started on GitHub Actions ⚠️*",
+                    fields: [
+                        Field(title: "App", value: appName),
+                        Field(title: "Version", value: appVersion),
+                        Field(title: "Workflow", value: workflow),
+                        Field(title: "Locales", value: localesMissingTranslations.map { $0.locale }.joined(separator: ", ")),
+                    ],
+                    action: .viewJob(jobUrl: jobUrl)
+                )
+                try await slacker.execute()
+            } else {
+                print("🟢 There are no missing translations")
+            }
+        } catch {
+            // If translation check fails we post it on Slack
             let slacker = Slacker(
                 channel: channel,
                 token: token,
-                message: "*⚠️ Detected \(totalMissingTranslations) missing translations in build started on GitHub Actions ⚠️*",
+                message: "*💥 Loco translation verification for build started on GitHub Actions failed 💥*",
                 fields: [
                     Field(title: "App", value: appName),
                     Field(title: "Version", value: appVersion),
                     Field(title: "Workflow", value: workflow),
-                    Field(title: "Locales", value: localesMissingTranslations.map { $0.locale }.joined(separator: ", ")),
+                    Field(title: "Locales", value: locales),
                 ],
                 action: .viewJob(jobUrl: jobUrl)
             )
             try await slacker.execute()
-        } else {
-            print("🟢 There are no missing translations")
         }
     }
     
