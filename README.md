@@ -203,6 +203,19 @@ with:
   op-slack-token-reference: op://My Vault/My Slack Token/token
 ```
 
+## [verify-loco-translations](https://github.com/shapehq/actions/tree/main/verify-loco-translations/action.yml)
+
+Checks if there are missing translations in the Localize.biz and posts a warning to Slack.
+
+```yml
+name: Verify Loco Translations
+  uses: shapehq/actions/verify-loco-translations@main
+  with:
+    channel: "#my-channel"
+    op-slack-token-reference: op://My Vault/My Slack Token/token
+    op-loco-api-key-reference: op://My Vault/My Loco API Key/key
+```
+
 ## [xcode-select](https://github.com/shapehq/actions/tree/main/xcode-select/action.yml)
 
 Selects a version of Xcode.
