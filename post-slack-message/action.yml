@@ -15,6 +15,7 @@ runs:
     - name: Post to Slack
       run: |
         slack_token=$(op read "${{ inputs.op-slack-token-reference }}")
+        echo slack_token
         job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
         cd "${{ github.action_path }}/Slacker"        
