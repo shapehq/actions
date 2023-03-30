@@ -1,29 +1,37 @@
-import ArgumentParser
+//
+//  Slacker.swift
+//
+//
+//  Created by Mathias Emil Mortensen on 30/03/2023.
+//
+
 import Foundation
 
-@main
-struct Slacker: AsyncParsableCommand {
-    @Option var channel: String
-    @Option var token: String
-    @Option var message: String
-    @Option var jobUrl: String
+public struct Slacker {
+    let channel: String
+    let token: String
+    let message: String
+    let fields: [Field]
+    let action: Action?
     
-    @Option(parsing: .upToNextOption)
-    var fields: [Field] = []
+    public init(channel: String, token: String, message: String, fields: [Field] = [], action: Action? = nil) {
+        self.channel = channel
+        self.token = token
+        self.message = message
+        self.fields = fields
+        self.action = action
+    }
     
-    func run() async throws {
+    public func execute() async throws {
         // Validate parameters
         guard !channel.isEmpty else {
-            Slacker.exit(withError: ValidationError("💥 You must specify a Slack channel"))
+            throw SlackerError.missingChannel            
         }
         guard !token.isEmpty else {
-            Slacker.exit(withError: ValidationError("💥 You must specify a Slack access token"))
+            throw SlackerError.missingToken
         }
         guard !message.isEmpty else {
-            Slacker.exit(withError: ValidationError("💥 You must specify a message to display in Slack"))
-        }
-        guard !jobUrl.isEmpty else {
-            Slacker.exit(withError: ValidationError("💥 You must specify the GitHub Actions job url"))
+            throw SlackerError.missingMessage
         }
         
         // Prepare request
@@ -32,13 +40,19 @@ struct Slacker: AsyncParsableCommand {
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
-        // Prepare body
-        let slackRequest = SlackMessage(
-            channel: channel,
-            blocks: [
-                .sectionText(text: SlackText(type: .markdown, text: message)),
-                .sectionFields(fields: fields.map { SlackText(field: $0) }),
-                .actions(actions: [
+        // Prepare blocks
+        var blocks: [SlackBlock] = [
+            .sectionText(text: SlackText(type: .markdown, text: message)),
+        ]
+        
+        if !fields.isEmpty {
+            blocks.append(.sectionFields(fields: fields.map { SlackText(field: $0) }))
+        }
+        
+        if let action {
+            switch action {
+            case .viewJob(let jobUrl):
+                blocks.append(.actions(actions: [
                     SlackAction(
                         type: .button,
                         text: SlackAction.ActionText(
@@ -50,9 +64,12 @@ struct Slacker: AsyncParsableCommand {
                         url: jobUrl,
                         actionId: "view_logs"
                     )
-                ])
-            ]
-        )
+                ]))
+            }
+        }
+        
+        // Request
+        let slackRequest = SlackMessage(channel: channel, blocks: blocks)
         urlRequest.httpBody = try JSONEncoder().encode(slackRequest)
         
         // Fire request and print result

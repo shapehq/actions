@@ -4,29 +4,21 @@
 import PackageDescription
 
 let package = Package(
-    name: "Slacker",
+    name: "TranslationChecker",
     platforms: [
         .macOS(.v11)
     ],
-    products: [
-        .library(
-            name: "SlackerCore",
-            targets: ["SlackerCore"]
-        )
-    ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0"),
+        .package(name: "Slacker", path: "../../post-slack-message/Slacker"),
     ],
     targets: [
-        .target(
-            name: "SlackerCore"
-        ),
         .executableTarget(
-            name: "SlackerCLI",
+            name: "TranslationChecker",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                .byNameItem(name: "SlackerCore", condition: .none)
+                .product(name: "SlackerCore", package: "Slacker")
             ]
-        )
+        ),
     ]
 )
