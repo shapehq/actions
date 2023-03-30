@@ -22,7 +22,7 @@ let package = Package(
             name: "SlackerCore"
         ),
         .executableTarget(
-            name: "SlackerCLI",
+            name: "Slacker",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .byNameItem(name: "SlackerCore", condition: .none)
