@@ -15,7 +15,7 @@ struct TranslationChecker: AsyncParsableCommand {
     
     func run() async throws {
         do {
-            let locales = locales.components(separatedBy: ",")
+            let locales = locales.components(separatedBy: ", ")
             let localesMissingTranslations = try await verifyTranslationProgress(for: locales)
             
             if !localesMissingTranslations.isEmpty {
