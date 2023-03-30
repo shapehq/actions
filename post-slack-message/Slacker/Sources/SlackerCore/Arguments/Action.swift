@@ -9,4 +9,5 @@ import Foundation
 
 public enum Action {
     case viewJob(jobUrl: String)
+    case custom(id: String, name: String, url: String)
 }

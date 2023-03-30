@@ -9,13 +9,6 @@ inputs:
   op-loco-api-key-reference:
     description: Loco api key reference
     required: true
-  locales:
-    description: Locales the app is translated into
-    required: true
-  app-name:
-    required: true
-  app-version:
-    required: true
 runs:
   using: composite
   steps:
@@ -26,5 +19,5 @@ runs:
         job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
         cd "${{ github.action_path }}/TranslationChecker"
-        swift run TranslationChecker --channel "${{ inputs.channel }}" --token "${slack_token}" --loco-api-key "${loco_api_key}" --locales "${{ inputs.locales }}" --app-name "${{ inputs.app-name }}" --app-version "${{ inputs.app-version }}" --workflow "${{ github.workflow }}" --job-url "${job_url}"
+        swift run TranslationChecker --channel "${{ inputs.channel }}" --token "${slack_token}" --loco-api-key "${loco_api_key}" --workflow "${{ github.workflow }}" --job-url "${job_url}"
       shell: bash

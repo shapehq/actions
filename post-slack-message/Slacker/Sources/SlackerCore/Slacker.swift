@@ -65,6 +65,20 @@ public struct Slacker {
                         actionId: "view_logs"
                     )
                 ]))
+            case .custom(let id, let name, let url):
+                blocks.append(.actions(actions: [
+                    SlackAction(
+                        type: .button,
+                        text: SlackAction.ActionText(
+                            type: .plain,
+                            text: name,
+                            emoji: true
+                        ),
+                        value: id,
+                        url: url,
+                        actionId: id
+                    )
+                ]))
             }
         }
         
