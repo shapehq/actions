@@ -205,7 +205,7 @@ with:
 
 ## [verify-loco-translations](https://github.com/shapehq/actions/tree/main/verify-loco-translations/action.yml)
 
-Checks if there are missing translations in the Localize.biz and posts a warning to Slack.
+Checks if there are missing translations in the Localize.biz project and posts a warning to Slack.
 
 ```yml
 name: Verify Loco Translations
