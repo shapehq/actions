@@ -172,6 +172,30 @@ with:
   filename: my_key
 ```
 
+## [loco-translation-status-checker](https://github.com/shapehq/actions/tree/main/loco-translation-status-checker/action.yml)
+
+Checks if there are missing translations in the Localize.biz project throws error.
+
+```yml
+name: Verify Loco Translations
+  uses: shapehq/actions/loco-translation-status-checker@main
+  with:
+    op-loco-api-key-reference: op://My Vault/My Loco API Key/key
+```
+
+## [loco-translation-status-poster](https://github.com/shapehq/actions/tree/main/loco-translation-status-poster/action.yml)
+
+Checks if there are missing translations in the Localize.biz project and posts warning to Slack.
+
+```yml
+name: Verify Loco Translations and Post to Slack
+  uses: shapehq/actions/loco-translation-status-poster@main
+  with:
+    channel: "#my-channel"
+    op-slack-token-reference: op://My Vault/My Slack Token/token
+    op-loco-api-key-reference: op://My Vault/My Loco API Key/key
+```
+
 ## [post-slack-message](https://github.com/shapehq/actions/tree/main/post-slack-message/action.yml)
 
 Posts a message to Slack.
@@ -201,19 +225,6 @@ with:
   channel: "#my-channel"
   message: "Project X build for App Store failed 💥"
   op-slack-token-reference: op://My Vault/My Slack Token/token
-```
-
-## [verify-loco-translations](https://github.com/shapehq/actions/tree/main/verify-loco-translations/action.yml)
-
-Checks if there are missing translations in the Localize.biz project and posts a warning to Slack.
-
-```yml
-name: Verify Loco Translations
-  uses: shapehq/actions/verify-loco-translations@main
-  with:
-    channel: "#my-channel"
-    op-slack-token-reference: op://My Vault/My Slack Token/token
-    op-loco-api-key-reference: op://My Vault/My Loco API Key/key
 ```
 
 ## [xcode-select](https://github.com/shapehq/actions/tree/main/xcode-select/action.yml)
