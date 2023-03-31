@@ -1,4 +1,4 @@
-name: Check Translations
+name: Post Loco Translation Status
 inputs:
   channel:
     description: Slack channel to post message in
@@ -12,12 +12,12 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Check Translations
+    - name: Post Status
       run: |
         slack_token=$(op read "${{ inputs.op-slack-token-reference }}")
         loco_api_key=$(op read "${{ inputs.op-loco-api-key-reference }}")
         job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
-        cd "${{ github.action_path }}/TranslationChecker"
-        swift run TranslationChecker --channel "${{ inputs.channel }}" --token "${slack_token}" --loco-api-key "${loco_api_key}" --workflow "${{ github.workflow }}" --job-url "${job_url}"
+        cd "${{ github.action_path }}/LocoTranslationStatusPoster"
+        swift run LocoTranslationStatusPoster --channel "${{ inputs.channel }}" --token "${slack_token}" --loco-api-key "${loco_api_key}" --workflow "${{ github.workflow }}" --started-by "${{ github.actor }}" --job-url "${job_url}"
       shell: bash

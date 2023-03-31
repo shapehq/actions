@@ -1,10 +1,3 @@
-//
-//  SlackerCLI.swift
-//  
-//
-//  Created by Mathias Emil Mortensen on 30/03/2023.
-//
-
 import ArgumentParser
 import Foundation
 import SlackerCore

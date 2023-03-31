@@ -1,20 +1,13 @@
-//
-//  LocoProject.swift
-//  
-//
-//  Created by Mathias Emil Mortensen on 30/03/2023.
-//
-
 import Foundation
 
-struct LocoProject: Decodable {
+public struct LocoProject: Decodable {
     let project: Project
     
-    var name: String {
+    public var name: String {
         project.name
     }
     
-    var url: String {
+    public var url: String {
         project.url
     }
 }
