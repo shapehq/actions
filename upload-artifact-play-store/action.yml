@@ -1,0 +1,11 @@
+name: "Upload artifacts to PlayStore"
+description: "Uploads an APK or AAB to a PlayStore internal test"
+author: "Gerard Sala"
+inputs:
+  milliseconds: # change this
+    required: true
+    description: "input description here"
+    default: "default value if applicable"
+runs:
+  using: "node16"
+  main: "dist/index.js"
