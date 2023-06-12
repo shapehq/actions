@@ -41,7 +41,7 @@ async function publishApp(
 
 async function createEdit(publisher: Publisher, packageName: string): Promise<string> {
   core.info(`Creating new Edit for ${packageName}`);
-  const result = await publisher.edits.insert({ packageName });
+  const result = await publisher.edits.insert({ packageName: packageName });
   if (result.status != 200) {
     throw Error(result.statusText);
   }

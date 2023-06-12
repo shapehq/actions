@@ -70,7 +70,7 @@ function publishApp(packageName, serviceAccountKeyPath, bundlePath, proguardMapp
 function createEdit(publisher, packageName) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info(`Creating new Edit for ${packageName}`);
-        const result = yield publisher.edits.insert({ packageName });
+        const result = yield publisher.edits.insert({ packageName: packageName });
         if (result.status != 200) {
             throw Error(result.statusText);
         }
