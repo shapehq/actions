@@ -40,7 +40,7 @@ async function publishApp(
 }
 
 async function createEdit(publisher: Publisher, packageName: string): Promise<string> {
-  core.debug(`Creating new Edit for ${packageName}`);
+  core.info(`Creating new Edit for ${packageName}`);
   const result = await publisher.edits.insert({ packageName });
   if (result.status != 200) {
     throw Error(result.statusText);
@@ -48,7 +48,7 @@ async function createEdit(publisher: Publisher, packageName: string): Promise<st
   if (!result.data.id) {
     throw Error("Something went wrong.");
   }
-  core.debug(`Created new Edit for ${packageName} - Expires at ${String(result.data.expiryTimeSeconds)}`);
+  core.info(`Created new Edit for ${packageName} - Expires at ${String(result.data.expiryTimeSeconds)}`);
   return result.data.id;
 }
 
@@ -137,7 +137,7 @@ async function commitEdit(publisher: Publisher, editId: string, packageName: str
 }
 
 async function uploadBundle(publisher: Publisher, editId: string, packageName: string, bundleReleaseFile: string): Promise<Bundle> {
-  core.debug(`Uploading App Bundle @ ${bundleReleaseFile}`);
+  core.info(`Uploading App Bundle @ ${bundleReleaseFile}`);
   const res = await publisher.edits.bundles.upload({
     packageName: packageName,
     editId: editId,
@@ -150,7 +150,7 @@ async function uploadBundle(publisher: Publisher, editId: string, packageName: s
 }
 
 async function uploadApk(publisher: Publisher, editId: string, packageName: string, apkReleaseFile: string): Promise<Apk> {
-  core.debug(`Uploading APK @ ${apkReleaseFile}`);
+  core.info(`Uploading APK @ ${apkReleaseFile}`);
   const res = await publisher.edits.apks.upload({
     packageName: packageName,
     editId: editId,
@@ -170,7 +170,7 @@ async function uploadProguardMappingFile(
   mappingFile: string
 ) {
   if (mappingFile != undefined && mappingFile.length > 0) {
-    core.debug(`Uploading Proguard mapping file @ ${mappingFile}`);
+    core.info(`Uploading Proguard mapping file @ ${mappingFile}`);
     await publisher.edits.deobfuscationfiles.upload({
       packageName: packageName,
       editId: editId,
