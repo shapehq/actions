@@ -236,7 +236,7 @@ name: Upload to Google Play
 uses: shapehq/actions/upload-artifact-play-store@main
 with:
   serviceAccountKeyPath: play_service_account.json
-  packageName: com.eample.app
+  packageName: com.example.app
   bundlePath: app/build/outputs/bundle/release/app-release.aab
 ```
 
