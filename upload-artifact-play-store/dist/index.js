@@ -50,7 +50,7 @@ function createAuthClient(serviceAccountKeyPath) {
         });
     });
 }
-function publishApp(packageName, serviceAccountKeyPath, bundlePath, proguardMappingFilePath) {
+function publishApp(serviceAccountKeyPath, packageName, bundlePath, proguardMappingFilePath) {
     return __awaiter(this, void 0, void 0, function* () {
         const authClient = yield createAuthClient(serviceAccountKeyPath);
         const publisher = google.androidpublisher({
@@ -69,7 +69,7 @@ function publishApp(packageName, serviceAccountKeyPath, bundlePath, proguardMapp
 }
 function createEdit(publisher, packageName) {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info(`Creating new Edit for ${packageName}`);
+        core.info(`Creating new Edit for "${packageName}"`);
         const result = yield publisher.edits.insert({ packageName: packageName });
         if (result.status != 200) {
             throw Error(result.statusText);
@@ -77,7 +77,7 @@ function createEdit(publisher, packageName) {
         if (!result.data.id) {
             throw Error("Something went wrong.");
         }
-        core.info(`Created new Edit for ${packageName} - Expires at ${String(result.data.expiryTimeSeconds)}`);
+        core.info(`- Created new Edit for "${packageName}" - Expires at ${String(result.data.expiryTimeSeconds)}`);
         return result.data.id;
     });
 }
@@ -103,17 +103,18 @@ function validateSelectedTrack(publisher, editId, packageName, track = "internal
             });
             throw Error(`Track "${track}" could not be found. Available tracks are: ${allTrackNames.toString()}`);
         }
+        core.info(`- Track "${track} is valid"`);
     });
 }
 function uploadReleaseFiles(publisher, editId, packageName, releaseFile) {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info(`Uploading ${releaseFile}`);
+        core.info(`Uploading release file"`);
         if (releaseFile.endsWith(".apk")) {
             // Upload APK, or throw when something goes wrong
             const apk = yield uploadApk(publisher, editId, packageName, releaseFile);
             if (!apk.versionCode)
                 throw Error("Failed to upload APK.");
-            core.info(`Uploaded APK with version code ${apk.versionCode}`);
+            core.info(`- Uploaded APK with version code "${apk.versionCode}"`);
             return apk.versionCode;
         }
         else if (releaseFile.endsWith(".aab")) {
@@ -121,7 +122,7 @@ function uploadReleaseFiles(publisher, editId, packageName, releaseFile) {
             const bundle = yield uploadBundle(publisher, editId, packageName, releaseFile);
             if (!bundle.versionCode)
                 throw Error("Failed to upload bundle.");
-            core.info(`Uploaded bundle with version code ${bundle.versionCode}`);
+            core.info(`- Uploaded bundle with version code ${bundle.versionCode}`);
             return bundle.versionCode;
         }
         else {
@@ -147,6 +148,7 @@ function updateTrack(publisher, editId, packageName, versionCode, track = "inter
                 ],
             },
         });
+        core.info(`- Updated track "${track}"`);
         return res.data;
     });
 }
@@ -158,7 +160,7 @@ function commitEdit(publisher, editId, packageName) {
             packageName: packageName,
         });
         if (res.data.id) {
-            core.info(`Successfully committed ${res.data.id}`);
+            core.info(`- Successfully committed edit "${res.data.id}"`);
             return res.data.id;
         }
         else {
@@ -168,7 +170,7 @@ function commitEdit(publisher, editId, packageName) {
 }
 function uploadBundle(publisher, editId, packageName, bundleReleaseFile) {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info(`Uploading App Bundle @ ${bundleReleaseFile}`);
+        core.info(`Uploading App Bundle @ "${bundleReleaseFile}"`);
         const res = yield publisher.edits.bundles.upload({
             packageName: packageName,
             editId: editId,
@@ -182,7 +184,7 @@ function uploadBundle(publisher, editId, packageName, bundleReleaseFile) {
 }
 function uploadApk(publisher, editId, packageName, apkReleaseFile) {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info(`Uploading APK @ ${apkReleaseFile}`);
+        core.info(`Uploading APK @ "${apkReleaseFile}"`);
         const res = yield publisher.edits.apks.upload({
             packageName: packageName,
             editId: editId,
@@ -197,7 +199,7 @@ function uploadApk(publisher, editId, packageName, apkReleaseFile) {
 function uploadProguardMappingFile(publisher, editId, packageName, versionCode, mappingFile) {
     return __awaiter(this, void 0, void 0, function* () {
         if (mappingFile != undefined && mappingFile.length > 0) {
-            core.info(`Uploading Proguard mapping file @ ${mappingFile}`);
+            core.info(`Uploading Proguard mapping file @ "${mappingFile}"`);
             yield publisher.edits.deobfuscationfiles.upload({
                 packageName: packageName,
                 editId: editId,

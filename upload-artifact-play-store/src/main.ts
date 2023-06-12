@@ -17,10 +17,10 @@ async function createAuthClient(serviceAccountKeyPath: string): Promise<GoogleAu
 }
 
 async function publishApp(
-  packageName: string,
   serviceAccountKeyPath: string,
+  packageName: string,
   bundlePath: string,
-  proguardMappingFilePath: string
+  proguardMappingFilePath: string | undefined
 ): Promise<void> {
   const authClient = await createAuthClient(serviceAccountKeyPath);
   const publisher = google.androidpublisher({
@@ -40,7 +40,7 @@ async function publishApp(
 }
 
 async function createEdit(publisher: Publisher, packageName: string): Promise<string> {
-  core.info(`Creating new Edit for ${packageName}`);
+  core.info(`Creating new Edit for "${packageName}"`);
   const result = await publisher.edits.insert({ packageName: packageName });
   if (result.status != 200) {
     throw Error(result.statusText);
@@ -48,7 +48,7 @@ async function createEdit(publisher: Publisher, packageName: string): Promise<st
   if (!result.data.id) {
     throw Error("Something went wrong.");
   }
-  core.info(`Created new Edit for ${packageName} - Expires at ${String(result.data.expiryTimeSeconds)}`);
+  core.info(`- Created new Edit for "${packageName}" - Expires at ${String(result.data.expiryTimeSeconds)}`);
   return result.data.id;
 }
 
@@ -74,21 +74,22 @@ async function validateSelectedTrack(publisher: Publisher, editId: string, packa
     });
     throw Error(`Track "${track}" could not be found. Available tracks are: ${allTrackNames.toString()}`);
   }
+  core.info(`- Track "${track} is valid"`);
 }
 
 async function uploadReleaseFiles(publisher: Publisher, editId: string, packageName: string, releaseFile: string): Promise<number> {
-  core.info(`Uploading ${releaseFile}`);
+  core.info(`Uploading release file"`);
   if (releaseFile.endsWith(".apk")) {
     // Upload APK, or throw when something goes wrong
     const apk = await uploadApk(publisher, editId, packageName, releaseFile);
     if (!apk.versionCode) throw Error("Failed to upload APK.");
-    core.info(`Uploaded APK with version code ${apk.versionCode}`);
+    core.info(`- Uploaded APK with version code "${apk.versionCode}"`);
     return apk.versionCode;
   } else if (releaseFile.endsWith(".aab")) {
     // Upload AAB, or throw when something goes wrong
     const bundle = await uploadBundle(publisher, editId, packageName, releaseFile);
     if (!bundle.versionCode) throw Error("Failed to upload bundle.");
-    core.info(`Uploaded bundle with version code ${bundle.versionCode}`);
+    core.info(`- Uploaded bundle with version code ${bundle.versionCode}`);
     return bundle.versionCode;
   } else {
     // Throw if file extension is not right
@@ -118,6 +119,7 @@ async function updateTrack(
       ],
     },
   });
+  core.info(`- Updated track "${track}"`);
   return res.data;
 }
 
@@ -129,7 +131,7 @@ async function commitEdit(publisher: Publisher, editId: string, packageName: str
   });
 
   if (res.data.id) {
-    core.info(`Successfully committed ${res.data.id}`);
+    core.info(`- Successfully committed edit "${res.data.id}"`);
     return res.data.id;
   } else {
     return Promise.reject(res.status);
@@ -137,7 +139,7 @@ async function commitEdit(publisher: Publisher, editId: string, packageName: str
 }
 
 async function uploadBundle(publisher: Publisher, editId: string, packageName: string, bundleReleaseFile: string): Promise<Bundle> {
-  core.info(`Uploading App Bundle @ ${bundleReleaseFile}`);
+  core.info(`Uploading App Bundle @ "${bundleReleaseFile}"`);
   const res = await publisher.edits.bundles.upload({
     packageName: packageName,
     editId: editId,
@@ -150,7 +152,7 @@ async function uploadBundle(publisher: Publisher, editId: string, packageName: s
 }
 
 async function uploadApk(publisher: Publisher, editId: string, packageName: string, apkReleaseFile: string): Promise<Apk> {
-  core.info(`Uploading APK @ ${apkReleaseFile}`);
+  core.info(`Uploading APK @ "${apkReleaseFile}"`);
   const res = await publisher.edits.apks.upload({
     packageName: packageName,
     editId: editId,
@@ -170,7 +172,7 @@ async function uploadProguardMappingFile(
   mappingFile: string
 ) {
   if (mappingFile != undefined && mappingFile.length > 0) {
-    core.info(`Uploading Proguard mapping file @ ${mappingFile}`);
+    core.info(`Uploading Proguard mapping file @ "${mappingFile}"`);
     await publisher.edits.deobfuscationfiles.upload({
       packageName: packageName,
       editId: editId,
