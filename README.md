@@ -227,6 +227,19 @@ with:
   op-slack-token-reference: op://My Vault/My Slack Token/token
 ```
 
+## [upload-artifact-play-store](https://github.com/shapehq/actions/tree/main/upload-artifact-play-store/action.yml)
+
+Uploads a release build (.apk or .aab) to the internal track of the Play Store.
+
+```yml
+name: Upload to Google Play
+uses: shapehq/actions/upload-artifact-play-store@main
+with:
+  serviceAccountKeyPath: play_service_account.json
+  packageName: com.eample.app
+  bundlePath: app/build/outputs/bundle/release/app-release.aab
+```
+
 ## [xcode-select](https://github.com/shapehq/actions/tree/main/xcode-select/action.yml)
 
 Selects a version of Xcode.
