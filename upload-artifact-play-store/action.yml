@@ -1,0 +1,19 @@
+name: "Upload artifacts to PlayStore"
+description: "Uploads an APK or AAB to a PlayStore internal test"
+author: "Gerard Sala"
+inputs:
+  serviceAccountKeyPath:
+    required: true
+    description: "File path to the Google Play service account key"
+  packageName:
+    required: true
+    description: "Package name (application id)"
+  bundlePath:
+    required: true
+    description: "File path to the release file to be uploaded (.apk/.aab)"
+  proguardMappingFilePath:
+    required: false
+    description: "File path to a Proguard/R8 mapping file to be uploaded in addition to an APK"
+runs:
+  using: "node16"
+  main: "dist/index.js"
