@@ -1,0 +1,23 @@
+name: Post Loco Translation Status
+inputs:
+  channel:
+    description: Slack channel to post message in
+    required: true  
+  op-slack-token-reference:
+    description: Slack access token reference
+    required: true
+  op-loco-api-key-reference:
+    description: Loco api key reference
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Post Status
+      run: |
+        slack_token=$(op read "${{ inputs.op-slack-token-reference }}")
+        loco_api_key=$(op read "${{ inputs.op-loco-api-key-reference }}")
+        job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+        cd "${{ github.action_path }}/LocoTranslationStatusPoster"
+        swift run LocoTranslationStatusPoster --channel "${{ inputs.channel }}" --token "${slack_token}" --loco-api-key "${loco_api_key}" --workflow "${{ github.workflow }}" --started-by "${{ github.actor }}" --job-url "${job_url}"
+      shell: bash

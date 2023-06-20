@@ -1,0 +1,14 @@
+name: Check Loco Translation Status
+inputs:
+  op-loco-api-key-reference:
+    description: Loco api key reference
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Check Status
+      run: |
+        loco_api_key=$(op read "${{ inputs.op-loco-api-key-reference }}")
+        cd "${{ github.action_path }}/LocoTranslationStatusChecker"
+        swift run LocoTranslationStatusChecker --loco-api-key "${loco_api_key}"
+      shell: bash

@@ -1,5 +1,6 @@
 import ArgumentParser
 import Foundation
+import SlackerCore
 
 @main
 struct Slacker: AsyncParsableCommand {
@@ -12,65 +13,22 @@ struct Slacker: AsyncParsableCommand {
     var fields: [Field] = []
     
     func run() async throws {
-        // Validate parameters
-        guard !channel.isEmpty else {
-            Slacker.exit(withError: ValidationError("💥 You must specify a Slack channel"))
-        }
-        guard !token.isEmpty else {
-            Slacker.exit(withError: ValidationError("💥 You must specify a Slack access token"))
-        }
-        guard !message.isEmpty else {
-            Slacker.exit(withError: ValidationError("💥 You must specify a message to display in Slack"))
-        }
-        guard !jobUrl.isEmpty else {
-            Slacker.exit(withError: ValidationError("💥 You must specify the GitHub Actions job url"))
-        }
-        
-        // Prepare request
-        var urlRequest = URLRequest(url: URL(string: "https://slack.com/api/chat.postMessage")!)
-        urlRequest.httpMethod = "POST"
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        
-        // Prepare body
-        let slackRequest = SlackMessage(
-            channel: channel,
-            blocks: [
-                .sectionText(text: SlackText(type: .markdown, text: message)),
-                .sectionFields(fields: fields.map { SlackText(field: $0) }),
-                .actions(actions: [
-                    SlackAction(
-                        type: .button,
-                        text: SlackAction.ActionText(
-                            type: .plain,
-                            text: "View Logs",
-                            emoji: true
-                        ),
-                        value: "view_logs",
-                        url: jobUrl,
-                        actionId: "view_logs"
-                    )
-                ])
-            ]
-        )
-        urlRequest.httpBody = try JSONEncoder().encode(slackRequest)
-        
-        // Fire request and print result
+        let slacker = SlackerCore.Slacker(channel: channel, token: token, message: message, fields: fields.map { $0.field }, action: .viewJob(jobUrl: jobUrl))
         do {
-            let (data, response) = try await URLSession.shared.data(for: urlRequest)
-            do {
-                let slackResponse = try JSONDecoder().decode(SlackAPIResponse.self, from: data)
-                switch slackResponse {
-                case .success:
-                    print("🟢 [\(response.httpStatusCode)] Succesfully sent Slack message")
-                case .failure(let errorMessage):
-                    print("🔴 [\(response.httpStatusCode)] Failed to sent Slack message with error: \(errorMessage)")
-                }
-            } catch {
-                print("⁉️ [\(response.httpStatusCode)] Failed to deserialize Slack response with error: \(error)")
+            try await slacker.execute()
+        } catch let error as SlackerError {
+            switch error {
+            case .missingChannel:
+                Slacker.exit(withError: ValidationError("💥 You must specify a Slack channel"))
+            case .missingToken:
+                Slacker.exit(withError: ValidationError("💥 You must specify a Slack access token"))
+            case .missingMessage:
+                Slacker.exit(withError: ValidationError("💥 You must specify a message to display in Slack"))
+            case .missingJobUrl:
+                Slacker.exit(withError: ValidationError("💥 You must specify the GitHub Actions job url"))
             }
         } catch {
-            print("💥 Request failed: \(error)")
+            Slacker.exit(withError: ValidationError("💥 Unknown error"))
         }
     }
 }
