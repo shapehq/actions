@@ -1,7 +1,7 @@
 import {SemanticVersionParser} from "../src/SemanticVersion/SemanticVersionParser"
 import {XcodeVersionParserLive} from "../src/XcodeVersion/XcodeVersionParserLive"
 
-test("It parses xcodeVersion number with major only", () => {
+test("It parses XcodeVersion with major only", () => {
   const filePath = "/Users/runner/Applications/Xcode 14.app"
   const parser = new XcodeVersionParserLive(new SemanticVersionParser())
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -11,7 +11,7 @@ test("It parses xcodeVersion number with major only", () => {
   expect(xcodeVersion?.version.patch).toBeNull()
 })
 
-test("It parses xcodeVersion number with major and minor", () => {
+test("It parses XcodeVersion with major and minor", () => {
   const filePath = "/Users/runner/Applications/Xcode 14.3.app"
   const parser = new XcodeVersionParserLive(new SemanticVersionParser())
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -21,7 +21,7 @@ test("It parses xcodeVersion number with major and minor", () => {
   expect(xcodeVersion?.version.patch).toBeNull()
 })
 
-test("It parses xcodeVersion number with major, minor, and patch", () => {
+test("It parses XcodeVersion with major, minor, and patch", () => {
   const filePath = "/Users/runner/Applications/Xcode 14.3.1.app"
   const parser = new XcodeVersionParserLive(new SemanticVersionParser())
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -31,7 +31,7 @@ test("It parses xcodeVersion number with major, minor, and patch", () => {
   expect(xcodeVersion?.version.patch).toEqual(1)
 })
 
-test("It parses xcodeVersion number of beta xcodeVersion", () => {
+test("It parses XcodeVersion for beta version", () => {
   const filePath = "/Users/runner/Applications/Xcode 15 beta.app"
   const parser = new XcodeVersionParserLive(new SemanticVersionParser())
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -48,7 +48,7 @@ test("It returns null for other apps", () => {
   expect(xcodeVersion).toBeNull()
 })
 
-test("It returns null when xcodeVersion number is absent", () => {
+test("It returns null when version number is absent", () => {
   const filePath = "/Users/runner/Applications/Xcode.app"
   const parser = new XcodeVersionParserLive(new SemanticVersionParser())
   const xcodeVersion = parser.parseFilePath(filePath)
