@@ -240,7 +240,6 @@ with:
   bundlePath: app/build/outputs/bundle/release/app-release.aab
 ```
 
-## [xcode-select](https://github.com/shapehq/actions/tree/main/xcode-select/action.yml)
 ## [xcode-select](https://github.com/shapehq/actions/tree/main/xcode-select)
 
 Selects a version of Xcode.
