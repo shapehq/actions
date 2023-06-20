@@ -1,26 +1,22 @@
-name: Select Xcode Version
-description: Selects a version of Xcode.
-author: Simon B. Støvring
+name: Install 1Password CLI
+description: Downloads and installs the 1Password CLI.
+branding:
+  icon: download
+  color: blue
 inputs:
-  version:
-    description: Version of Xcode to select.
+  skip-if-installed:
+    description: Skip installing the CLI if it is already installed. Not that this is independent of which version is already installed. If another version than the specified version is installed and this parameter is set to true, the CLI will not be installed.
     required: true
+    default: false
+  version-number:
+    description: The version of the CLI to install.
+    required: true
+  system:
+    description: The system to download the CLI for. Valid options are macos, freebsd, linux, openbsd, and windows.
+    required: false
+  architecture:
+    description: The architecture to download the CLI for. Valid options are universal, 386, amd64, and arm.
+    required: false
 runs:
-  using: composite
-  steps:
-    - name: Select Xcode Version
-      run: |
-        APPLICATIONS_DIR=/Applications
-        XCODE_VERSION=$(echo "${{ inputs.version }}" | xargs)
-        SAFE_XCODE_VERSION=$(echo "${XCODE_VERSION}" | sed "s/ /_/g")
-        XCODE_PATH="${APPLICATIONS_DIR}/Xcode_${SAFE_XCODE_VERSION}.app"
-        if [ -d "$XCODE_PATH" ]; then
-          sudo xcode-select -s $XCODE_PATH/Contents/Developer
-        else
-          echo "Xcode ${XCODE_VERSION} was not found. The following versions of Xcode are available:"
-          ls "${APPLICATIONS_DIR}" \
-            | grep '^Xcode_' \
-            | sed -e "s/^Xcode_//" -e "s/.app$//" -e "s/^/- /" -e "s/_/ /g"
-          exit 1
-        fi
-      shell: bash
+  using: node16
+  main: dist/index.js
