@@ -71,3 +71,22 @@ test("It selects an Xcode version", async () => {
   await action.run(options)
   expect(selector.selectedFilePath).toEqual("/Users/runner/Applications/Xcode 14.3.1.app")
 })
+
+test("It logs message after selecting Xcode version", async () => {
+  const logger = new LoggerMock()
+  const repository = new XcodeVersionRepositoryMock()
+  repository.addXcodeVersion(14, 3, 1)
+  const selector = new XcodeSelectorMock()
+  const action = new Action(
+    new StateStoreMock(),
+    logger,
+    new SemanticVersionParser(),
+    repository,
+    new XcodeVersionMatcher(repository),
+    selector
+  )
+  const options = new ActionOptionsMock("14.3.1")
+  await action.run(options)
+  expect(logger.latestLogMessage).not.toBeNull()
+  expect(logger.latestLogMessage).toContain("Xcode 14.3.1")
+})
