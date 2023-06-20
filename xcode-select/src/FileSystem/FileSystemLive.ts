@@ -8,6 +8,10 @@ export class FileSystemLive implements FileSystem {
   }
   
   listContentsOfDir(dirPath: string): string[] {
-    return fs.readdirSync(dirPath)
+    if (fs.existsSync(dirPath)) {
+      return fs.readdirSync(dirPath)
+    } else {
+      return []
+    }
   }
 }
