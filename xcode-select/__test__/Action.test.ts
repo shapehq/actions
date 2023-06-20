@@ -1,6 +1,7 @@
 import {Action} from "../src/Action"
 import {ActionOptionsMock} from "./mock/ActionOptionsMock"
 import {StateStoreMock} from "./mock/StateStoreMock"
+import {LoggerMock} from "./mock/LoggerMock"
 import {SemanticVersionParser} from "../src/SemanticVersion/SemanticVersionParser"
 import {XcodeVersionRepositoryMock} from "./mock/XcodeVersionRepositoryMock"
 import {XcodeVersionMatcher} from "../src/XcodeVersion/XcodeVersionMatcher"
@@ -12,6 +13,7 @@ test("It enters post-phase after running main-phase", async () => {
   repository.addXcodeVersion(14, 3)
   const action = new Action(
     stateStore,
+    new LoggerMock(),
     new SemanticVersionParser(),
     repository,
     new XcodeVersionMatcher(repository),
@@ -28,6 +30,7 @@ test("It throws when given invalid version", async () => {
   repository.addXcodeVersion(14, 3)
   const action = new Action(
     new StateStoreMock(),
+    new LoggerMock(),
     new SemanticVersionParser(),
     repository,
     new XcodeVersionMatcher(repository),
@@ -42,6 +45,7 @@ test("It throws error when Xcode version not found", async () => {
   repository.addXcodeVersion(14, 3)
   const action = new Action(
     new StateStoreMock(),
+    new LoggerMock(),
     new SemanticVersionParser(),
     repository,
     new XcodeVersionMatcher(repository),
@@ -57,6 +61,7 @@ test("It selects an Xcode version", async () => {
   const selector = new XcodeSelectorMock()
   const action = new Action(
     new StateStoreMock(),
+    new LoggerMock(),
     new SemanticVersionParser(),
     repository,
     new XcodeVersionMatcher(repository),

@@ -1,6 +1,8 @@
 import * as core from "@actions/core"
 import {Action} from "./Action"
 import {StateStore} from "./StateStore/StateStore"
+import {Logger} from "./Logger/Logger"
+import {LoggerLive} from "./Logger/LoggerLive"
 import {KeyValueStateStore} from "./StateStore/KeyValueStateStore"
 import {CommandRunner} from "./CommandRunner/CommandRunner"
 import {CommandRunnerLive} from "./CommandRunner/CommandRunnerLive"
@@ -19,6 +21,7 @@ export class CompositionRoot {
   static getAction(): Action {
     return new Action(
       this.getStateStore(),
+      this.getLogger(),
       this.getSemanticVersionParser(),
       this.getXcodeRepository(),
       this.getXcodeVersionMatcher(),
@@ -59,5 +62,9 @@ export class CompositionRoot {
   
   private static getFileSystem(): FileSystem {
     return new FileSystemLive()
+  }
+  
+  private static getLogger(): Logger {
+    return new LoggerLive()
   }
 }

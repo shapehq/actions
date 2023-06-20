@@ -1,4 +1,5 @@
 import {StateStore} from "./StateStore/StateStore"
+import {Logger} from "./Logger/Logger"
 import {SemanticVersionParser} from "./SemanticVersion/SemanticVersionParser"
 import {XcodeVersionRepository} from "./XcodeVersion/XcodeVersionRepository"
 import {XcodeVersionMatcher} from "./XcodeVersion/XcodeVersionMatcher"
@@ -10,6 +11,7 @@ export interface ActionOptions {
 
 export class Action {
   private stateStore: StateStore
+  private logger: Logger
   private semanticVersionParser: SemanticVersionParser
   private xcodeVersionRepository: XcodeVersionRepository
   private xcodeVersionMatcher: XcodeVersionMatcher
@@ -17,12 +19,14 @@ export class Action {
   
   constructor(
     stateStore: StateStore,
+    logger: Logger,
     semanticVersionParser: SemanticVersionParser,
     xcodeVersionRepository: XcodeVersionRepository,
     xcodeVersionMatcher: XcodeVersionMatcher,
     xcodeSelector: XcodeSelector
   ) {
     this.stateStore = stateStore
+    this.logger = logger
     this.semanticVersionParser = semanticVersionParser
     this.xcodeVersionRepository = xcodeVersionRepository
     this.xcodeVersionMatcher = xcodeVersionMatcher
@@ -57,5 +61,6 @@ export class Action {
       )
     }
     await this.xcodeSelector.select(matchingXcodeVersion.filePath)
+    this.logger.log(matchingXcodeVersion.name + " was selected.")
   }
 }
