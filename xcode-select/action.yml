@@ -1,22 +1,12 @@
-name: Install 1Password CLI
-description: Downloads and installs the 1Password CLI.
+name: Select Xcode Versions
+description: Selects a version of Xcode.
 branding:
-  icon: download
+  icon: smartphone
   color: blue
 inputs:
-  skip-if-installed:
-    description: Skip installing the CLI if it is already installed. Not that this is independent of which version is already installed. If another version than the specified version is installed and this parameter is set to true, the CLI will not be installed.
+  version:
+    description: The version of Xcode to install.
     required: true
-    default: false
-  version-number:
-    description: The version of the CLI to install.
-    required: true
-  system:
-    description: The system to download the CLI for. Valid options are macos, freebsd, linux, openbsd, and windows.
-    required: false
-  architecture:
-    description: The architecture to download the CLI for. Valid options are universal, 386, amd64, and arm.
-    required: false
 runs:
   using: node16
   main: dist/index.js
