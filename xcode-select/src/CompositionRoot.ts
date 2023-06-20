@@ -29,6 +29,10 @@ export class CompositionRoot {
     )
   }
   
+  static getLogger(): Logger {
+    return new LoggerLive()
+  }
+  
   private static getStateStore(): StateStore {
     return new KeyValueStateStore(core)
   }
@@ -62,9 +66,5 @@ export class CompositionRoot {
   
   private static getFileSystem(): FileSystem {
     return new FileSystemLive()
-  }
-  
-  private static getLogger(): Logger {
-    return new LoggerLive()
   }
 }
