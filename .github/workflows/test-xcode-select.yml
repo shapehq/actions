@@ -1,0 +1,26 @@
+name: Test xcode-select
+on:
+  workflow_dispatch: {}
+  pull_request:
+    branches: [main]
+    paths:
+      - xcode-select/**
+jobs:
+  test:
+    name: Test xcode-select
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Navigate to xcode-select
+        run: cd xcode-select
+      - name: Install Dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Test
+        run: npm test
