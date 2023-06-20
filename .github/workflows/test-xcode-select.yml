@@ -16,11 +16,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Navigate to xcode-select
-        run: cd xcode-select
       - name: Install Dependencies
+        working-directory: xcode-select
         run: npm install
       - name: Build
+        working-directory: xcode-select
         run: npm run build
       - name: Test
+        working-directory: xcode-select
         run: npm test
