@@ -55,8 +55,8 @@ export class Action {
         .map(e => "- " + e.name)
         .join("\n")
       throw new Error(
-        "Xcode " + options.version + " was not found. "
-        + "The following versions of Xcode are available:\n\n"
+        "Xcode " + options.version + " was not found.\n\n"
+        + "The following versions of Xcode are available:\n"
         + installedXcodeNames
       )
     }
