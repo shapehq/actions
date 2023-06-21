@@ -9,6 +9,8 @@ test("It parses XcodeVersion with major only", () => {
   expect(xcodeVersion?.version.major).toEqual(14)
   expect(xcodeVersion?.version.minor).toBeNull()
   expect(xcodeVersion?.version.patch).toBeNull()
+  expect(xcodeVersion?.isBeta).toBeFalsy()
+  expect(xcodeVersion?.betaNumber).toBeNull()
 })
 
 test("It parses XcodeVersion with major and minor", () => {
@@ -19,6 +21,8 @@ test("It parses XcodeVersion with major and minor", () => {
   expect(xcodeVersion?.version.major).toEqual(14)
   expect(xcodeVersion?.version.minor).toEqual(3)
   expect(xcodeVersion?.version.patch).toBeNull()
+  expect(xcodeVersion?.isBeta).toBeFalsy()
+  expect(xcodeVersion?.betaNumber).toBeNull()
 })
 
 test("It parses XcodeVersion with major, minor, and patch", () => {
@@ -29,6 +33,8 @@ test("It parses XcodeVersion with major, minor, and patch", () => {
   expect(xcodeVersion?.version.major).toEqual(14)
   expect(xcodeVersion?.version.minor).toEqual(3)
   expect(xcodeVersion?.version.patch).toEqual(1)
+  expect(xcodeVersion?.isBeta).toBeFalsy()
+  expect(xcodeVersion?.betaNumber).toBeNull()
 })
 
 test("It parses XcodeVersion for beta version", () => {
@@ -39,6 +45,20 @@ test("It parses XcodeVersion for beta version", () => {
   expect(xcodeVersion?.version.major).toEqual(15)
   expect(xcodeVersion?.version.minor).toBeNull()
   expect(xcodeVersion?.version.patch).toBeNull()
+  expect(xcodeVersion?.isBeta).toBeTruthy()
+  expect(xcodeVersion?.betaNumber).toBeNull()
+})
+
+test("It parses XcodeVersion for 2nd beta version", () => {
+  const filePath = "/Users/runner/Applications/Xcode_15.0.0_Beta.2.app"
+  const parser = new XcodeVersionParserLive(new SemanticVersionParser())
+  const xcodeVersion = parser.parseFilePath(filePath)
+  expect(xcodeVersion?.name).toEqual("Xcode 15.0.0 Beta 2")
+  expect(xcodeVersion?.version.major).toEqual(15)
+  expect(xcodeVersion?.version.minor).toEqual(0)
+  expect(xcodeVersion?.version.patch).toEqual(0)
+  expect(xcodeVersion?.isBeta).toBeTruthy()
+  expect(xcodeVersion?.betaNumber).toEqual(2)
 })
 
 test("It returns null for other apps", () => {
