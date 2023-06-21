@@ -61,6 +61,6 @@ export class Action {
       )
     }
     await this.xcodeSelector.select(matchingXcodeVersion.filePath)
-    this.logger.log(matchingXcodeVersion.name + " was selected.")
+    this.logger.log("'" + matchingXcodeVersion.name + "' was selected.")
   }
 }
