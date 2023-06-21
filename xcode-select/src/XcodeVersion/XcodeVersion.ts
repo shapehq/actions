@@ -24,7 +24,7 @@ export class XcodeVersion {
   }
   
   get name(): string {
-    let str = "Xcode " + this.version.displayString
+    let str = "Xcode '" + this.version.displayString + "'"
     if (this.isBeta) {
       str += " Beta"
     }
