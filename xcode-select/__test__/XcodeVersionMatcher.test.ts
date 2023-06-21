@@ -4,7 +4,7 @@ import {XcodeVersionMatcher} from "../src/XcodeVersion/XcodeVersionMatcher"
 
 test("It returns null when repository is empty", () => {
   const repository = new XcodeVersionRepositoryMock()
-  const needle: SemanticVersion = {major: 14, minor: null, patch: null}
+  const needle = new SemanticVersion(14, null, null)
   const matcher = new XcodeVersionMatcher(repository)
   const xcodeVersion = matcher.findXcodeVersion(needle)
   expect(xcodeVersion).toBeNull()
@@ -16,7 +16,7 @@ test("It finds version based on major component", () => {
   repository.addXcodeVersion(14, 3, 1)
   repository.addXcodeVersion(14, 3)
   repository.addXcodeVersion(13, 4, 1)
-  const needle: SemanticVersion = {major: 14, minor: null, patch: null}
+  const needle = new SemanticVersion(14, null, null)
   const matcher = new XcodeVersionMatcher(repository)
   const xcodeVersion = matcher.findXcodeVersion(needle)
   expect(xcodeVersion).not.toBeNull()
@@ -33,7 +33,7 @@ test("It finds version based on major and minor components", () => {
   repository.addXcodeVersion(14, 3, 1)
   repository.addXcodeVersion(14, 3)
   repository.addXcodeVersion(13, 4, 1)
-  const needle: SemanticVersion = {major: 14, minor: 3, patch: null}
+  const needle = new SemanticVersion(14, 3, null)
   const matcher = new XcodeVersionMatcher(repository)
   const xcodeVersion = matcher.findXcodeVersion(needle)
   expect(xcodeVersion).not.toBeNull()
@@ -50,7 +50,7 @@ test("It finds version based on major, minor, and patch components", () => {
   repository.addXcodeVersion(14, 3, 1)
   repository.addXcodeVersion(14, 3)
   repository.addXcodeVersion(13, 4, 1)
-  const needle: SemanticVersion = {major: 14, minor: 3, patch: 1}
+  const needle = new SemanticVersion(14, 3, 1)
   const matcher = new XcodeVersionMatcher(repository)
   const xcodeVersion = matcher.findXcodeVersion(needle)
   expect(xcodeVersion).not.toBeNull()
@@ -67,7 +67,7 @@ test("It returns null when no version matches major, minor, and patch components
   repository.addXcodeVersion(14, 3, 1)
   repository.addXcodeVersion(14, 3)
   repository.addXcodeVersion(13, 4, 1)
-  const needle: SemanticVersion = {major: 14, minor: 3, patch: 4}
+  const needle = new SemanticVersion(14, 3, 4)
   const matcher = new XcodeVersionMatcher(repository)
   const xcodeVersion = matcher.findXcodeVersion(needle)
   expect(xcodeVersion).toBeNull()
@@ -81,7 +81,7 @@ test("It returns null when no version matches major and minor components", () =>
   repository.addXcodeVersion(14, 3, 1)
   repository.addXcodeVersion(14, 3)
   repository.addXcodeVersion(13, 4, 1)
-  const needle: SemanticVersion = {major: 14, minor: 5, patch: null}
+  const needle = new SemanticVersion(14, 5, null)
   const matcher = new XcodeVersionMatcher(repository)
   const xcodeVersion = matcher.findXcodeVersion(needle)
   expect(xcodeVersion).toBeNull()
@@ -95,8 +95,26 @@ test("It returns null when no version matches major component", () => {
   repository.addXcodeVersion(14, 3, 1)
   repository.addXcodeVersion(14, 3)
   repository.addXcodeVersion(13, 4, 1)
-  const needle: SemanticVersion = {major: 16, minor: null, patch: null}
+  const needle = new SemanticVersion(16, null, null)
   const matcher = new XcodeVersionMatcher(repository)
   const xcodeVersion = matcher.findXcodeVersion(needle)
   expect(xcodeVersion).toBeNull()
+})
+
+test("It matches a zero minor component against a null minor component in Xcode version", () => {
+  const repository = new XcodeVersionRepositoryMock()
+  repository.addXcodeVersion(15, null, null)
+  const needle = new SemanticVersion(15, 0, null)
+  const matcher = new XcodeVersionMatcher(repository)
+  const xcodeVersion = matcher.findXcodeVersion(needle)
+  expect(xcodeVersion).not.toBeNull()
+})
+
+test("It matches a zero patch component against a null patch component in Xcode version", () => {
+  const repository = new XcodeVersionRepositoryMock()
+  repository.addXcodeVersion(15, 0, null)
+  const needle = new SemanticVersion(15, 0, 0)
+  const matcher = new XcodeVersionMatcher(repository)
+  const xcodeVersion = matcher.findXcodeVersion(needle)
+  expect(xcodeVersion).not.toBeNull()
 })

@@ -90,3 +90,22 @@ test("It logs message after selecting Xcode version", async () => {
   expect(logger.latestLogMessage).not.toBeNull()
   expect(logger.latestLogMessage).toContain("Xcode 14.3.1")
 })
+
+test("It logs message after selecting beta version of Xcode", async () => {
+  const logger = new LoggerMock()
+  const repository = new XcodeVersionRepositoryMock()
+  repository.addXcodeVersion(15, null, null, true)
+  const selector = new XcodeSelectorMock()
+  const action = new Action(
+    new StateStoreMock(),
+    logger,
+    new SemanticVersionParser(),
+    repository,
+    new XcodeVersionMatcher(repository),
+    selector
+  )
+  const options = new ActionOptionsMock("15.0")
+  await action.run(options)
+  expect(logger.latestLogMessage).not.toBeNull()
+  expect(logger.latestLogMessage).toContain("Xcode 15.0.0 Beta")
+})

@@ -1,7 +1,29 @@
-export interface SemanticVersion {
-  major: number
-  minor: number | null
-  patch: number | null
+export class SemanticVersion {
+  private _major: number
+  private _minor: number | null
+  private _patch: number | null
+  
+  constructor(major: number, minor: number | null, patch: number | null) {
+    this._major = major
+    this._minor = minor
+    this._patch = patch
+  }
+  
+  get major(): number {
+    return this._major
+  }
+  
+  get minor(): number | null {
+    return this._minor
+  }
+  
+  get patch(): number | null {
+    return this._patch
+  }
+  
+  get displayString(): string {
+    return this.major + "." + (this.minor || 0) + "." + (this.patch || 0)
+  }
 }
 
 export function semanticVersionSort(lhs: SemanticVersion, rhs: SemanticVersion) {

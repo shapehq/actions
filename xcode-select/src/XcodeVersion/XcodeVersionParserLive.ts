@@ -25,10 +25,11 @@ export class XcodeVersionParserLive implements XcodeVersionParser {
       .replace(/^[^0-9]+/, "")
       // Remove anything after the version number.
       .replace(/[^0-9]+$/, "")
+    const isBeta = name.toLowerCase().endsWith("beta")
     const version = this.semanticVersionParser.parse(rawVersion)
     if (version == null) {
       return null
     }
-    return { name, filePath, version }
+    return new XcodeVersion(filePath, version, isBeta)
   }
 }

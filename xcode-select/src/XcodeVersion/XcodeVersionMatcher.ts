@@ -25,7 +25,7 @@ export class XcodeVersionMatcher {
       return candidates[0]
     }
     // Find candidate matching the minor component.
-    candidates = xcodeVersions.filter(e => e.version.minor == needle.minor)
+    candidates = xcodeVersions.filter(e => (e.version.minor || 0) == needle.minor)
     if (candidates.length == 0) {
       return null
     }
@@ -33,7 +33,7 @@ export class XcodeVersionMatcher {
       return candidates[0]
     }
     // Find candidate matching the patch component.
-    candidates = xcodeVersions.filter(e => e.version.patch == needle.patch)
+    candidates = xcodeVersions.filter(e => (e.version.patch || 0) == needle.patch)
     if (candidates.length == 0) {
       return null
     }

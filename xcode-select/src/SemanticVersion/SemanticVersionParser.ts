@@ -29,6 +29,6 @@ export class SemanticVersionParser {
         return null
       }
     }
-    return { major, minor, patch }
+    return new SemanticVersion(major, minor, patch)
   }
 }

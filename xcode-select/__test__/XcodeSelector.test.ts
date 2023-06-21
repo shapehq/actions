@@ -1,7 +1,7 @@
 import {XcodeSelectorLive} from "../src/XcodeSelector/XcodeSelectorLive"
 import {CommandRunnerMock} from "./mock/CommandRunnerMock"
 
-test("It parses version number with major only", async () => {
+test("It runs xcode-select on the command line", async () => {
   const commandRunner = new CommandRunnerMock()
   const selector = new XcodeSelectorLive(commandRunner)
   await selector.select("/Users/runner/Applications/Xcode 14.3.app")
