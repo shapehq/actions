@@ -54,3 +54,17 @@ test("It returns null when version number is absent", () => {
   const xcodeVersion = parser.parseFilePath(filePath)
   expect(xcodeVersion).toBeNull()
 })
+
+test("It replaces multiple underscores in Xcode's name", () => {
+  const filePath = "/Users/runner/Applications/Xcode_15.0.0_Beta.app"
+  const parser = new XcodeVersionParserLive(new SemanticVersionParser())
+  const xcodeVersion = parser.parseFilePath(filePath)
+  expect(xcodeVersion?.name).toEqual("Xcode 15.0.0 Beta")
+})
+
+test("It replaces multiple dashes in Xcode's name", () => {
+  const filePath = "/Users/runner/Applications/Xcode-15.0.0-Beta.app"
+  const parser = new XcodeVersionParserLive(new SemanticVersionParser())
+  const xcodeVersion = parser.parseFilePath(filePath)
+  expect(xcodeVersion?.name).toEqual("Xcode 15.0.0 Beta")
+})

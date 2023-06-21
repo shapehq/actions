@@ -17,7 +17,7 @@ export class XcodeVersionParserLive implements XcodeVersionParser {
     }
     const name = filename
       // Replace underscores and dashes with spaces.
-      .replace(/_/, " ").replace(/-/, " ")
+      .replace(/_/g, " ").replace(/-/g, " ")
       // Remove ".app" suffix
       .replace(/\.app/, "")
     const rawVersion = name
