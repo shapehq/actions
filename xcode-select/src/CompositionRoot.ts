@@ -9,6 +9,8 @@ import {CommandRunnerLive} from "./CommandRunner/CommandRunnerLive"
 import {FileSystem} from "./FileSystem/FileSystem"
 import {FileSystemLive} from "./FileSystem/FileSystemLive"
 import {SemanticVersionParser} from "./SemanticVersion/SemanticVersionParser"
+import {SemanticVersionTemplateParser} from "./SemanticVersion/SemanticVersionTemplateParser"
+import {SemanticVersionTemplateParserLive} from "./SemanticVersion/SemanticVersionTemplateParserLive"
 import {XcodeVersionMatcher} from "./XcodeVersion/XcodeVersionMatcher"
 import {XcodeVersionParser} from "./XcodeVersion/XcodeVersionParser"
 import {XcodeVersionParserLive} from "./XcodeVersion/XcodeVersionParserLive"
@@ -22,7 +24,7 @@ export class CompositionRoot {
     return new Action(
       this.getStateStore(),
       this.getLogger(),
-      this.getSemanticVersionParser(),
+      this.getSemanticVersionTemplateParser(),
       this.getXcodeRepository(),
       this.getXcodeVersionMatcher(),
       this.getXcodeSelector()
@@ -39,6 +41,10 @@ export class CompositionRoot {
   
   private static getSemanticVersionParser(): SemanticVersionParser {
     return new SemanticVersionParser()
+  }
+  
+  private static getSemanticVersionTemplateParser(): SemanticVersionTemplateParser {
+    return new SemanticVersionTemplateParserLive()
   }
   
   private static getXcodeVersionMatcher(): XcodeVersionMatcher {

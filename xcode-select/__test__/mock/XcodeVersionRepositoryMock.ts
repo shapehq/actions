@@ -9,7 +9,7 @@ export class XcodeVersionRepositoryMock implements XcodeVersionRepository {
     return this.xcodeVersions
   }
   
-  addXcodeVersion(major: number, minor: number | null = null, patch: number | null = null, isBeta: boolean = false) {
+  addXcodeVersion(major: number, minor: number = 0, patch: number = 0, isBeta: boolean = false) {
     const name = "Xcode " + [major, minor, patch].filter(e => e != null).join(".")
     const filePath = "/Users/runner/Applications/" + name + ".app"
     const version = new SemanticVersion(major, minor, patch)

@@ -1,4 +1,8 @@
-import {SemanticVersion, semanticVersionSort} from "../SemanticVersion/SemanticVersion"
+import {
+  SemanticVersionTemplate, 
+  SemanticVersionTemplatePlaceholder
+} from "../SemanticVersion/SemanticVersionTemplate"
+import {semanticVersionSort} from "../SemanticVersion/SemanticVersion"
 import {XcodeVersion} from "./XcodeVersion"
 import {XcodeVersionRepository} from "./XcodeVersionRepository"
 
@@ -9,7 +13,7 @@ export class XcodeVersionMatcher {
     this.repository = repository
   }
   
-  findXcodeVersion(needle: SemanticVersion): XcodeVersion | null {
+  findXcodeVersion(needle: SemanticVersionTemplate): XcodeVersion {
     const xcodeVersions = this.repository
       .getXcodeVersions()
       .sort((lhs, rhs) => {
@@ -19,23 +23,27 @@ export class XcodeVersionMatcher {
     // Find candidate matching the major component.
     let candidates = xcodeVersions.filter(e => e.version.major == needle.major)
     if (candidates.length == 0) {
-      return null
+      throw new Error("No version found matching " + needle.displayString)
     }
-    if (needle.minor == null) {
-      return candidates[0]
+    if (needle.minor === SemanticVersionTemplatePlaceholder) {
+      if (needle.patch === SemanticVersionTemplatePlaceholder) {
+        return candidates[0]
+      } else {
+        throw new Error("Invalid version template: " + needle.displayString + ". Patch must either be a placeholder or absent when minor is a placeholder.")
+      }
     }
     // Find candidate matching the minor component.
-    candidates = xcodeVersions.filter(e => (e.version.minor || 0) == needle.minor)
+    candidates = xcodeVersions.filter(e => e.version.minor == needle.minor)
     if (candidates.length == 0) {
-      return null
+      throw new Error("No version found matching " + needle.displayString)
     }
-    if (needle.patch == null) {
+    if (needle.patch === SemanticVersionTemplatePlaceholder) {
       return candidates[0]
     }
     // Find candidate matching the patch component.
-    candidates = xcodeVersions.filter(e => (e.version.patch || 0) == needle.patch)
+    candidates = xcodeVersions.filter(e => e.version.patch == (needle.patch || 0))
     if (candidates.length == 0) {
-      return null
+      throw new Error("No version found matching " + needle.displayString)
     }
     return candidates[0]
   }

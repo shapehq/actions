@@ -4,8 +4,8 @@ test("It parses version number with major only", () => {
   const parser = new SemanticVersionParser()
   const version = parser.parse("14")
   expect(version?.major).toEqual(14)
-  expect(version?.minor).toBeNull()
-  expect(version?.patch).toBeNull()
+  expect(version?.minor).toEqual(0)
+  expect(version?.patch).toEqual(0)
 })
 
 test("It parses version number with major and minor", () => {
@@ -13,7 +13,7 @@ test("It parses version number with major and minor", () => {
   const version = parser.parse("14.3")
   expect(version?.major).toEqual(14)
   expect(version?.minor).toEqual(3)
-  expect(version?.patch).toBeNull()
+  expect(version?.patch).toEqual(0)
 })
 
 test("It parses version number with major, minor, and patch", () => {

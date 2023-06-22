@@ -15,8 +15,8 @@ export class SemanticVersionParser {
     if (isNaN(major)) {
       return null
     }
-    let minor: number | null = null
-    let patch: number | null = null
+    let minor: number = 0
+    let patch: number = 0
     if (components.length >= 2) {
       minor = parseInt(components[1])
       if (isNaN(minor)) {
