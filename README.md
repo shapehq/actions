@@ -271,4 +271,5 @@ with:
   version: 14.x.x
 ```
 
-**Note:** It is recommended to pin against a major and minor version of Xcode and leave the patch as a placeholder. The storage on GitHub Actions runners is limited and patch versions will be deleted and replaced without any prior communication.
+> **Note**
+> It is recommended to pin against a major and minor version of Xcode and leave the patch as a placeholder. The storage on GitHub Actions runners is limited and patch versions will be deleted and replaced without any prior communication.
