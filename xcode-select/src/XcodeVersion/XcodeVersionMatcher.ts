@@ -1,0 +1,50 @@
+import {
+  SemanticVersionTemplate, 
+  SemanticVersionTemplatePlaceholder
+} from "../SemanticVersion/SemanticVersionTemplate"
+import {semanticVersionSort} from "../SemanticVersion/SemanticVersion"
+import {XcodeVersion} from "./XcodeVersion"
+import {XcodeVersionRepository} from "./XcodeVersionRepository"
+
+export class XcodeVersionMatcher {
+  private repository: XcodeVersionRepository
+  
+  constructor(repository: XcodeVersionRepository) {
+    this.repository = repository
+  }
+  
+  findXcodeVersion(needle: SemanticVersionTemplate): XcodeVersion {
+    const xcodeVersions = this.repository
+      .getXcodeVersions()
+      .sort((lhs, rhs) => {
+        return semanticVersionSort(lhs.version, rhs.version)
+      })
+      .reverse()
+    // Find candidate matching the major component.
+    let candidates = xcodeVersions.filter(e => e.version.major == needle.major)
+    if (candidates.length == 0) {
+      throw new Error("No version found matching " + needle.displayString)
+    }
+    if (needle.minor === SemanticVersionTemplatePlaceholder) {
+      if (needle.patch === SemanticVersionTemplatePlaceholder) {
+        return candidates[0]
+      } else {
+        throw new Error("Invalid version template: " + needle.displayString + ". Patch must either be a placeholder or absent when minor is a placeholder.")
+      }
+    }
+    // Find candidate matching the minor component.
+    candidates = xcodeVersions.filter(e => e.version.minor == needle.minor)
+    if (candidates.length == 0) {
+      throw new Error("No version found matching " + needle.displayString)
+    }
+    if (needle.patch === SemanticVersionTemplatePlaceholder) {
+      return candidates[0]
+    }
+    // Find candidate matching the patch component.
+    candidates = xcodeVersions.filter(e => e.version.patch == (needle.patch || 0))
+    if (candidates.length == 0) {
+      throw new Error("No version found matching " + needle.displayString)
+    }
+    return candidates[0]
+  }
+}

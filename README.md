@@ -240,22 +240,33 @@ with:
   bundlePath: app/build/outputs/bundle/release/app-release.aab
 ```
 
-## [xcode-select](https://github.com/shapehq/actions/tree/main/xcode-select/action.yml)
+## [xcode-select](https://github.com/shapehq/actions/tree/main/xcode-select)
 
-Selects a version of Xcode.
+Selects a version of Xcode. The major, minor, and patch values must all be specified, otherwise the action will throw an error.
 
-```yml
+The following will pin against the major version only, so the action may select version 14.0, 14.3, or 14.3.1.
+
+```yaml
 name: Select Xcode Version
 uses: shapehq/actions/xcode-select@main
 with:
-  version: 14.2
+  version: 14.x.x
 ```
 
-The action can also be used to select a beta version of Xcode.
+The following will pin against the major and minor version, so the action may select Xcode 14.3 or Xcode 14.3.1.
 
-```yml
+```yaml
 name: Select Xcode Version
 uses: shapehq/actions/xcode-select@main
 with:
-  version: 14.3 Beta
+  version: 14.3.x
+```
+
+The following will pin against an exact version of Xcode and will not select any other version than the one specified.
+
+```yaml
+name: Select Xcode Version
+uses: shapehq/actions/xcode-select@main
+with:
+  version: 14.3.1
 ```
