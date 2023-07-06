@@ -4,7 +4,7 @@ This repository contains actions to be used with [GitHub Actions](https://github
 
 ## Getting Started
 
-Several of these actions depend on the 1Password CLI being installed. Please use the [install-op-cli](https://github.com/simonbs/install-op-cli) action to install the 1Password CLI.
+Several of these actions depend on the 1Password CLI being installed. Please use 1Password's [install-cli-action](https://github.com/1Password/install-cli-action) action to install the 1Password CLI.
 
 ## [install-appiconannotator](https://github.com/shapehq/actions/blob/main/install-appiconannotator/action.yml)
 
