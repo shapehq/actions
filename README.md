@@ -81,6 +81,36 @@ with:
 
 Use the [install-ssh-key](https://github.com/shapehq/actions/edit/main/README.md#install-ssh-key) action to install a specified SSH key.
 
+## [install-company-development-certificate](https://github.com/shapehq/actions/blob/main/install-company-development-certificate/action.yml)
+
+Installs Shape's default company development certificate in the keychain.
+
+```yml
+name: Install Company Development Certificate
+uses: shapehq/actions/install-company-development-certificate@main
+```
+
+The action makes the keychain the default keychain on the system. You can disable this as shown below.
+
+```yml
+name: Install Company Development Certificate
+uses: shapehq/actions/install-company-development-certificate@main
+with:
+  set-default-keychain: false
+```
+
+You may optionally specify the name of the keychain to install the certificate and the password of that keychain.
+
+```yml
+name: Install Company Development Certificate
+uses: shapehq/actions/install-company-development-certificate@main
+with:
+  keychain-name: signing.keychain
+  keychain-password: h3ll0w0rld
+```
+
+Use the [install-certificate](https://github.com/shapehq/actions/edit/main/README.md#install-certificate) action to install a specified certificate.
+
 ## [install-enterprise-distribution-certificate](https://github.com/shapehq/actions/blob/main/install-enterprise-distribution-certificate/action.yml)
 
 Installs Shape's default enterprise distribution certificate in the keychain.
