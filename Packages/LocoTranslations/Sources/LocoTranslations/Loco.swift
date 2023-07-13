@@ -1,5 +1,8 @@
 import Foundation
 import SHPUtilities
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 public struct Loco {
     let locoAPIKey: String
