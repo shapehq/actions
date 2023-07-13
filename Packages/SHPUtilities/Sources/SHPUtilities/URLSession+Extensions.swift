@@ -3,38 +3,26 @@ import Foundation
 import FoundationNetworking
 #endif
 
-//public extension URLSession {
-//
-//    func execute(request: URLRequest) throws -> Data {
-//        // Uses semaphore to halt execution until request has finished to ensure command line tool doesn't finish instantly.
-//        let semaphore = DispatchSemaphore(value: 0)
-//
-//        var data: Data?
-//        var error: Error?
-//        let task = dataTask(with: request) { responseData, _, responseError in
-//            data = responseData
-//            error = responseError
-//
-//            // Signal request completed to continue
-//            semaphore.signal()
-//        }
-//
-//        // Resumes the request
-//        task.resume()
-//
-//        // Halts execution until semaphore receives signal that we are done
-//        semaphore.wait()
-//
-//        if let data {
-//            return data
-//        } else if let error {
-//            throw error
-//        } else {
-//            throw InternalAPIError.unknownError
-//        }
-//    }
-//}
-//
-//enum InternalAPIError: Error {
-//    case unknownError
-//}
+// async/await is not available to URLSession in Linux so we create an extension ourselves.
+public extension URLSession {
+    
+    func execute(request: URLRequest) async throws -> Data {
+        return try await withCheckedThrowingContinuation { continuation in
+            dataTask(with: request) { data, _, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                guard let data = data else {
+                    continuation.resume(throwing: InternalAPIError.missingResponseData)
+                    return
+                }
+                continuation.resume(returning: data)
+            }.resume()
+        }
+    }
+}
+
+enum InternalAPIError: Error {
+    case missingResponseData
+}

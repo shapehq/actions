@@ -90,7 +90,7 @@ public struct Slacker {
         let slackRequest = SlackMessage(channel: channel, blocks: blocks)
         urlRequest.httpBody = try JSONEncoder().encode(slackRequest)
         
-        let data = try await URLSession.shared.asyncData(from: urlRequest)
+        let data = try await URLSession.shared.execute(request: urlRequest)
         let slackResponse = try JSONDecoder().decode(SlackAPIResponse.self, from: data)
         switch slackResponse {
         case .success:
@@ -99,26 +99,4 @@ public struct Slacker {
             throw SlackAPIError(message: "🔴 Failed to sent Slack message with error: \(errorMessage)")
         }
     }
-}
-
-extension URLSession {
-    func asyncData(from request: URLRequest) async throws -> Data {
-        return try await withCheckedThrowingContinuation { continuation in
-            dataTask(with: request) { data, _, error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                    return
-                }
-                guard let data = data else {
-                    continuation.resume(throwing: URLSessionAsyncErrors.missingResponseData)
-                    return
-                }
-                continuation.resume(returning: data)
-            }.resume()
-        }
-    }
-}
-
-public enum URLSessionAsyncErrors: Error {
-    case invalidUrlResponse, missingResponseData
 }
