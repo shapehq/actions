@@ -26,7 +26,7 @@ public struct Slacker {
         self.action = action
     }
     
-    public func execute() throws {
+    public func execute() async throws {
         // Validate parameters
         guard !channel.isEmpty else {
             throw SlackerError.missingChannel
@@ -90,7 +90,8 @@ public struct Slacker {
         let slackRequest = SlackMessage(channel: channel, blocks: blocks)
         urlRequest.httpBody = try JSONEncoder().encode(slackRequest)
         
-        let data = try URLSession.shared.execute(request: urlRequest)
+//        let data = try URLSession.shared.execute(request: urlRequest)
+        let data = try await asyncData(from: urlRequest)
         let slackResponse = try JSONDecoder().decode(SlackAPIResponse.self, from: data)
         switch slackResponse {
         case .success:
@@ -103,6 +104,24 @@ public struct Slacker {
     func asyncData(from request: URLRequest) async throws -> Data {
         return try await withCheckedThrowingContinuation { continuation in
             URLSession.shared.dataTask(with: request) { data, _, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                guard let data = data else {
+                    continuation.resume(throwing: URLSessionAsyncErrors.missingResponseData)
+                    return
+                }
+                continuation.resume(returning: data)
+            }.resume()
+        }
+    }
+}
+
+extension URLSession {
+    func asyncData(from request: URLRequest) async throws -> Data {
+        return try await withCheckedThrowingContinuation { continuation in
+            dataTask(with: request) { data, _, error in
                 if let error = error {
                     continuation.resume(throwing: error)
                     return

@@ -15,7 +15,7 @@ struct Slacker: AsyncParsableCommand {
     func run() async throws {
         let slacker = SlackerCore.Slacker(channel: channel, token: token, message: message, fields: fields.map { $0.field }, action: .viewJob(jobUrl: jobUrl))
         do {
-            try slacker.execute()
+            try await slacker.execute()
         } catch let error as SlackerError {
             switch error {
             case .missingChannel:
