@@ -8,7 +8,7 @@ struct TranslationStatusChecker: AsyncParsableCommand {
     
     func run() async throws {
         do {
-            let numOfMissingTranslations = try Loco(locoAPIKey: locoAPIKey).fetchNumOfMissingTranslations()
+            let numOfMissingTranslations = try await Loco(locoAPIKey: locoAPIKey).fetchNumOfMissingTranslations()
             if numOfMissingTranslations == 0 {
                 print("🟢 There are no missing translations")
             } else {

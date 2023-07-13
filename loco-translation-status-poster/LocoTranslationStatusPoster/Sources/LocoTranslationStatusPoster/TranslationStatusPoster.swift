@@ -15,14 +15,14 @@ struct TranslationStatusPoster: AsyncParsableCommand {
     func run() async throws {
         let loco = Loco(locoAPIKey: locoAPIKey)
         do {
-            let locales = try loco.fetchLocales()
+            let locales = try await loco.fetchLocales()
             let localesMissingTranslations = locales.filter { $0.progress.untranslated > 0 }
             
             if localesMissingTranslations.isEmpty {
                 print("🟢 There are no missing translations")
             } else {
                 // Fetch Loco project
-                let project = try loco.fetchProject()
+                let project = try await loco.fetchProject()
                 
                 // Sum up missing translations
                 let numOfMissingTranslations = locales.reduce(into: Int()) { partialResult, locale in
@@ -42,7 +42,7 @@ struct TranslationStatusPoster: AsyncParsableCommand {
                     ],
                     action: .custom(id: "loco", name: "Open Loco", url: project.url)
                 )
-                try slacker.execute()
+                try await slacker.execute()
             }
         } catch {
             // If translation check fails we post it on Slack
@@ -55,7 +55,7 @@ struct TranslationStatusPoster: AsyncParsableCommand {
                 ],
                 action: .viewJob(jobUrl: jobUrl)
             )
-            try slacker.execute()
+            try await slacker.execute()
         }
     }
 }
