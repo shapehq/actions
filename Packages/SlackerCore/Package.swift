@@ -15,10 +15,14 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(name: "SHPUtilities", path: "../../Packages/SHPUtilities"),
     ],
     targets: [
         .target(
-            name: "SlackerCore"
+            name: "SlackerCore",
+            dependencies: [
+                .byNameItem(name: "SHPUtilities", condition: .none),
+            ]
         ),
     ]
 )

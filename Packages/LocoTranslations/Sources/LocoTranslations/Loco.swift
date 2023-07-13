@@ -1,4 +1,8 @@
 import Foundation
+import SHPUtilities
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 public struct Loco {
     let locoAPIKey: String
@@ -21,7 +25,7 @@ public struct Loco {
         urlRequest.httpMethod = "GET"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let (data, _) = try await URLSession.shared.data(for: urlRequest)
+        let data = try await URLSession.shared.execute(request: urlRequest)
         do {
             return try JSONDecoder().decode([LocoLocale].self, from: data)
         } catch {
@@ -35,7 +39,7 @@ public struct Loco {
         urlRequest.httpMethod = "GET"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let (data, _) = try await URLSession.shared.data(for: urlRequest)
+        let data = try await URLSession.shared.execute(request: urlRequest)
         do {
             return try JSONDecoder().decode(LocoProject.self, from: data)
         } catch {

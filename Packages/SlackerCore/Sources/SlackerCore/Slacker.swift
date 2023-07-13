@@ -6,6 +6,10 @@
 //
 
 import Foundation
+import SHPUtilities
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 public struct Slacker {
     let channel: String
@@ -25,7 +29,7 @@ public struct Slacker {
     public func execute() async throws {
         // Validate parameters
         guard !channel.isEmpty else {
-            throw SlackerError.missingChannel            
+            throw SlackerError.missingChannel
         }
         guard !token.isEmpty else {
             throw SlackerError.missingToken
@@ -86,22 +90,13 @@ public struct Slacker {
         let slackRequest = SlackMessage(channel: channel, blocks: blocks)
         urlRequest.httpBody = try JSONEncoder().encode(slackRequest)
         
-        // Fire request and print result
-        do {
-            let (data, response) = try await URLSession.shared.data(for: urlRequest)
-            do {
-                let slackResponse = try JSONDecoder().decode(SlackAPIResponse.self, from: data)
-                switch slackResponse {
-                case .success:
-                    print("🟢 [\(response.httpStatusCode)] Succesfully sent Slack message")
-                case .failure(let errorMessage):
-                    print("🔴 [\(response.httpStatusCode)] Failed to sent Slack message with error: \(errorMessage)")
-                }
-            } catch {
-                print("⁉️ [\(response.httpStatusCode)] Failed to deserialize Slack response with error: \(error)")
-            }
-        } catch {
-            print("💥 Request failed: \(error)")
+        let data = try await URLSession.shared.execute(request: urlRequest)
+        let slackResponse = try JSONDecoder().decode(SlackAPIResponse.self, from: data)
+        switch slackResponse {
+        case .success:
+            print("🟢 Succesfully sent Slack message")
+        case .failure(let errorMessage):
+            throw SlackAPIError(message: "🔴 Failed to sent Slack message with error: \(errorMessage)")
         }
     }
 }

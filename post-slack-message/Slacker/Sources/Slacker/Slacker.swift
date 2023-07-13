@@ -28,7 +28,7 @@ struct Slacker: AsyncParsableCommand {
                 Slacker.exit(withError: ValidationError("💥 You must specify the GitHub Actions job url"))
             }
         } catch {
-            Slacker.exit(withError: ValidationError("💥 Unknown error"))
+            Slacker.exit(withError: error)
         }
     }
 }
