@@ -92,6 +92,7 @@ public struct Slacker {
         
 //        let data = try URLSession.shared.execute(request: urlRequest)
         let data = try await asyncData(from: urlRequest)
+//        let data = try await URLSession.shared.asyncData(from: urlRequest)
         let slackResponse = try JSONDecoder().decode(SlackAPIResponse.self, from: data)
         switch slackResponse {
         case .success:
@@ -118,23 +119,23 @@ public struct Slacker {
     }
 }
 
-extension URLSession {
-    func asyncData(from request: URLRequest) async throws -> Data {
-        return try await withCheckedThrowingContinuation { continuation in
-            dataTask(with: request) { data, _, error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                    return
-                }
-                guard let data = data else {
-                    continuation.resume(throwing: URLSessionAsyncErrors.missingResponseData)
-                    return
-                }
-                continuation.resume(returning: data)
-            }.resume()
-        }
-    }
-}
+//extension URLSession {
+//    func asyncData(from request: URLRequest) async throws -> Data {
+//        return try await withCheckedThrowingContinuation { continuation in
+//            dataTask(with: request) { data, _, error in
+//                if let error = error {
+//                    continuation.resume(throwing: error)
+//                    return
+//                }
+//                guard let data = data else {
+//                    continuation.resume(throwing: URLSessionAsyncErrors.missingResponseData)
+//                    return
+//                }
+//                continuation.resume(returning: data)
+//            }.resume()
+//        }
+//    }
+//}
 
 public enum URLSessionAsyncErrors: Error {
     case invalidUrlResponse, missingResponseData
