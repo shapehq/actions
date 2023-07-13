@@ -12,4 +12,17 @@ public enum SlackerError: Error {
     case missingToken
     case missingMessage
     case missingJobUrl
+    case apiError(error: SlackAPIError)
+}
+
+public struct SlackAPIError: Error, CustomStringConvertible {
+    let message: String
+    
+    public var description: String {
+        message
+    }
+    
+    public init(message: String) {
+        self.message = message
+    }
 }

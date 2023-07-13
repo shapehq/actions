@@ -14,9 +14,7 @@ struct Slacker: AsyncParsableCommand {
     
     func run() async throws {
         let slacker = SlackerCore.Slacker(channel: channel, token: token, message: message, fields: fields.map { $0.field }, action: .viewJob(jobUrl: jobUrl))
-        do {
-            try slacker.execute()
-        } catch let error as SlackerError {
+        slacker.execute { error in
             switch error {
             case .missingChannel:
                 Slacker.exit(withError: ValidationError("💥 You must specify a Slack channel"))
@@ -26,9 +24,9 @@ struct Slacker: AsyncParsableCommand {
                 Slacker.exit(withError: ValidationError("💥 You must specify a message to display in Slack"))
             case .missingJobUrl:
                 Slacker.exit(withError: ValidationError("💥 You must specify the GitHub Actions job url"))
+            case .apiError(let slackError):
+                Slacker.exit(withError: slackError)
             }
-        } catch {
-            Slacker.exit(withError: ValidationError("💥 Unknown error"))
         }
     }
 }
