@@ -1,4 +1,5 @@
 import Foundation
+import SHPUtilities
 
 public struct Loco {
     let locoAPIKey: String
@@ -7,8 +8,8 @@ public struct Loco {
         self.locoAPIKey = locoAPIKey
     }
     
-    public func fetchNumOfMissingTranslations() async throws -> Int {
-        let locales = try await fetchLocales()
+    public func fetchNumOfMissingTranslations() throws -> Int {
+        let locales = try fetchLocales()
         
         // Sum up missing translations
         return locales.reduce(into: Int()) { partialResult, locale in
@@ -16,12 +17,12 @@ public struct Loco {
         }
     }
     
-    public func fetchLocales() async throws -> [LocoLocale] {
+    public func fetchLocales() throws -> [LocoLocale] {
         var urlRequest = URLRequest(url: URL(string: "https://localise.biz/api/locales?key=\(locoAPIKey)")!)
         urlRequest.httpMethod = "GET"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let (data, _) = try await URLSession.shared.data(for: urlRequest)
+        let data = try URLSession.shared.execute(request: urlRequest)
         do {
             return try JSONDecoder().decode([LocoLocale].self, from: data)
         } catch {
@@ -30,12 +31,12 @@ public struct Loco {
         }
     }
     
-    public func fetchProject() async throws -> LocoProject {
+    public func fetchProject() throws -> LocoProject {
         var urlRequest = URLRequest(url: URL(string: "https://localise.biz/api/auth/verify?key=\(locoAPIKey)")!)
         urlRequest.httpMethod = "GET"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let (data, _) = try await URLSession.shared.data(for: urlRequest)
+        let data = try URLSession.shared.execute(request: urlRequest)
         do {
             return try JSONDecoder().decode(LocoProject.self, from: data)
         } catch {

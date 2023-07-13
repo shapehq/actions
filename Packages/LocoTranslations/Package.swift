@@ -15,10 +15,14 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(name: "SHPUtilities", path: "../../Packages/SHPUtilities"),
     ],
     targets: [
         .target(
-            name: "LocoTranslations"
+            name: "LocoTranslations",
+            dependencies: [
+                .byNameItem(name: "SHPUtilities", condition: .none)
+            ]
         ),
     ]
 )
