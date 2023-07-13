@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SHPUtilities
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
@@ -25,19 +26,16 @@ public struct Slacker {
         self.action = action
     }
     
-    public func execute(completionHandler: @escaping ((SlackerError) -> Void)) {
+    public func execute() throws {
         // Validate parameters
         guard !channel.isEmpty else {
-            completionHandler(SlackerError.missingChannel)
-            return
+            throw SlackerError.missingChannel
         }
         guard !token.isEmpty else {
-            completionHandler(SlackerError.missingToken)
-            return
+            throw SlackerError.missingToken
         }
         guard !message.isEmpty else {
-            completionHandler(SlackerError.missingMessage)
-            return
+            throw SlackerError.missingMessage
         }
         
         // Prepare request
@@ -90,43 +88,15 @@ public struct Slacker {
         
         // Request
         let slackRequest = SlackMessage(channel: channel, blocks: blocks)
-        urlRequest.httpBody = try! JSONEncoder().encode(slackRequest)
+        urlRequest.httpBody = try JSONEncoder().encode(slackRequest)
         
-        // Uses semaphore to halt execution until request has finished to ensure command line tool doesn't finish instantly.
-        let semaphore = DispatchSemaphore(value: 0)
-        
-        // Fire request and print result
-        let task = URLSession.shared.dataTask(with: urlRequest) { data, response, error in
-            if let error {
-                let error = SlackAPIError(message: "💥 Request failed: \(error)")
-                completionHandler(SlackerError.apiError(error: error))
-            } else if let data, let response {
-                do {
-                    let slackResponse = try JSONDecoder().decode(SlackAPIResponse.self, from: data)
-                    switch slackResponse {
-                    case .success:
-                        print("🟢 [\(response.httpStatusCode)] Succesfully sent Slack message")
-                    case .failure(let errorMessage):
-                        let error = SlackAPIError(message: "🔴 [\(response.httpStatusCode)] Failed to sent Slack message with error: \(errorMessage)")
-                        completionHandler(SlackerError.apiError(error: error))
-                    }
-                } catch {
-                    let error = SlackAPIError(message: "⁉️ [\(response.httpStatusCode)] Failed to deserialize Slack response with error: \(error)")
-                    completionHandler(SlackerError.apiError(error: error))
-                }
-            } else {
-                let error = SlackAPIError(message: "💥 Request failed with unknown error 🫠")
-                completionHandler(SlackerError.apiError(error: error))
-            }
-            
-            // Signal request completed to continue
-            semaphore.signal()
+        let data = try URLSession.shared.execute(request: urlRequest)
+        let slackResponse = try JSONDecoder().decode(SlackAPIResponse.self, from: data)
+        switch slackResponse {
+        case .success:
+            print("🟢 Succesfully sent Slack message")
+        case .failure(let errorMessage):
+            throw SlackAPIError(message: "🔴 Failed to sent Slack message with error: \(errorMessage)")
         }
-        
-        // Resumes the request
-        task.resume()
-        
-        // Halts execution until semaphore receives signal that we are done
-        semaphore.wait()
     }
 }
