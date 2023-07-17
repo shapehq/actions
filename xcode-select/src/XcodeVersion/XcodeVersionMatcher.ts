@@ -33,7 +33,7 @@ export class XcodeVersionMatcher {
       }
     }
     // Find candidate matching the minor component.
-    candidates = xcodeVersions.filter(e => e.version.minor == needle.minor)
+    candidates = candidates.filter(e => e.version.minor == needle.minor)
     if (candidates.length == 0) {
       throw new Error("No version found matching " + needle.displayString)
     }
@@ -41,7 +41,7 @@ export class XcodeVersionMatcher {
       return candidates[0]
     }
     // Find candidate matching the patch component.
-    candidates = xcodeVersions.filter(e => e.version.patch == (needle.patch || 0))
+    candidates = candidates.filter(e => e.version.patch == (needle.patch || 0))
     if (candidates.length == 0) {
       throw new Error("No version found matching " + needle.displayString)
     }
