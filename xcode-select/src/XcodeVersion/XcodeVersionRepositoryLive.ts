@@ -18,7 +18,7 @@ export class XcodeVersionRepositoryLive implements XcodeVersionRepository {
       path.join("/", "Applications"),
       path.join(this.fileSystem.homeDir, "Applications")
     ]
-    return dirPaths
+    const xcodeVersions = dirPaths
       .reduce((result: string[], dirPath: string) => {
         return result.concat(this.fileSystem.listContentsOfDir(dirPath))
       }, [])
@@ -30,5 +30,19 @@ export class XcodeVersionRepositoryLive implements XcodeVersionRepository {
           return []
         }
       })
+    // Ensure we have no duplicate Xcode versions.
+    let result: XcodeVersion[] = []
+    for (const xcodeVersion of xcodeVersions) {
+      let existing = result.filter(e => {
+        return e.version.major == xcodeVersion.version.major
+          && e.version.minor === xcodeVersion.version.minor
+          && e.version.patch === xcodeVersion.version.patch
+          && e.betaNumber === xcodeVersion.betaNumber
+      })
+      if (existing.length == 0) {
+        result.push(xcodeVersion)
+      }
+    }
+    return result
   }
 }
