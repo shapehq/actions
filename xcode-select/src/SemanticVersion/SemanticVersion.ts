@@ -26,7 +26,7 @@ export class SemanticVersion {
   }
 }
 
-export function semanticVersionSort(lhs: SemanticVersion, rhs: SemanticVersion) {
+export function semanticVersionSort(lhs: SemanticVersion, rhs: SemanticVersion): number {
   if (lhs.major < rhs.major) {
     return -1
   } else if (lhs.major > rhs.major) {

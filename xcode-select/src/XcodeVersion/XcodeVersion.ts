@@ -1,4 +1,5 @@
 import {SemanticVersion} from "../SemanticVersion/SemanticVersion"
+import {semanticVersionSort} from "../SemanticVersion/SemanticVersion"
 
 export class XcodeVersion {
   private _filePath: string
@@ -43,5 +44,27 @@ export class XcodeVersion {
       }
     }
     return str
+  }
+}
+
+export function xcodeVersionSort(lhs: XcodeVersion, rhs: XcodeVersion): number {
+  const sort = semanticVersionSort(lhs.version, rhs.version)
+  if (sort !== 0) {
+    return sort
+  }
+  if (lhs.isBeta && !rhs.isBeta) {
+    return -1
+  } else if (!lhs.isBeta && rhs.isBeta) {
+    return 1
+  } else if (lhs.isBeta && rhs.isBeta && lhs.betaNumber != null && rhs.betaNumber != null) {
+    if (lhs.betaNumber < rhs.betaNumber) {
+      return -1
+    } else if (lhs.betaNumber > rhs.betaNumber) {
+      return 1
+    } else {
+      return 0
+    }
+  } else {
+    return 0
   }
 }

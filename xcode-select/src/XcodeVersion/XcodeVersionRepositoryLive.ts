@@ -3,6 +3,7 @@ import {FileSystem} from "../FileSystem/FileSystem"
 import {XcodeVersion} from "./XcodeVersion"
 import {XcodeVersionParser} from "./XcodeVersionParser"
 import {XcodeVersionRepository} from "./XcodeVersionRepository"
+import {xcodeVersionSort} from "../XcodeVersion/XcodeVersion"
 
 export class XcodeVersionRepositoryLive implements XcodeVersionRepository {
   private fileSystem: FileSystem
@@ -43,6 +44,6 @@ export class XcodeVersionRepositoryLive implements XcodeVersionRepository {
         result.push(xcodeVersion)
       }
     }
-    return result
+    return result.sort(xcodeVersionSort)
   }
 }
