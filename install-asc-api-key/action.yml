@@ -1,0 +1,31 @@
+name: Installs App Store Connect API Key
+inputs:
+  op-asc-key-issuer-id-reference:
+    required: true
+  op-asc-key-id-reference:
+    required: true
+  op-asc-key-file-reference:
+    required: true
+  output-asc-key-file-path:
+    required: true
+outputs:
+  issuer-id:
+    value: ${{ steps.read.outputs.issuer_id }}
+  key-id:
+    value: ${{ steps.read.outputs.key_id }}
+runs:
+  using: composite
+  steps:
+    - id: read
+      run: |
+        # Read issuer id
+        issuer_id=$(op read "${{ inputs.op-asc-key-issuer-id-reference }}")
+        echo "issuer_id=${issuer_id}" >> $GITHUB_OUTPUT
+
+        # Read key id
+        key_id=$(op read "${{ inputs.op-asc-key-id-reference }}")
+        echo "key_id=${key_id}" >> $GITHUB_OUTPUT
+
+        # Read key file
+        op read --out-file ${{ inputs.output-asc-key-file-path }} "${{ inputs.op-asc-key-file-reference }}"
+      shell: bash
