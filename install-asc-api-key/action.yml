@@ -27,5 +27,5 @@ runs:
         echo "key_id=${key_id}" >> $GITHUB_OUTPUT
 
         # Read key file
-        op read --out-file ${{ inputs.ouput-asc-key-file-path }} "${{ inputs.op-asc-key-file-reference }}"
+        op read --out-file ${{ inputs.output-asc-key-file-path }} "${{ inputs.op-asc-key-file-reference }}"
       shell: bash
