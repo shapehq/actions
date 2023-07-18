@@ -24,6 +24,32 @@ name: Install JFrog Artifactory profile
 uses: shapehq/actions/install-artifactory-profile@main
 ```
 
+## [install-asc-api-key](https://github.com/shapehq/actions/tree/main/install-asc-api-key/action.yml)
+
+Installs a App Store Connect API Key file on runner to the specified file path and outputs issuer and key id.
+
+```yml
+name: Install ASC API Key
+id: install-asc-key
+uses: ./.github/actions/install-asc-api-key
+with:
+  op-asc-key-issuer-id-reference: op://My Vault/My App Store Connect API Key/Issuer ID
+  op-asc-key-id-reference: op://My Vault/My App Store Connect API Key/Key ID
+  op-asc-key-file-reference: op://My Vault/My App Store Connect API Key/AuthKey.p8
+  output-asc-key-file-path: ~/asc-api-key.p8
+```
+
+Pass issuer id, key id and path to the ASC API Key to Fastlane.
+
+```yml
+name: Fastlane
+run: bundle exec fastlane build_appstore
+env:          
+  ASC_API_KEY_ISSUER_ID: ${{ steps.install-asc-key.outputs.issuer-id }}
+  ASC_API_KEY_ID: ${{ steps.install-asc-key.outputs.key-id }}
+  ASC_API_KEY: ~/asc-api-key.p8
+```
+
 ## [install-certificate](https://github.com/shapehq/actions/blob/main/install-certificate/action.yml)
 
 Installs the specified certificate in the keychain.
@@ -225,32 +251,6 @@ with:
   channel: "#my-channel"
   message: "Project X build for App Store failed 💥"
   op-slack-token-reference: op://My Vault/My Slack Token/token
-```
-
-## [prepare-asc-api-key](https://github.com/shapehq/actions/tree/main/prepare-asc-api-key/action.yml)
-
-Prepares a App Store Connect API Key for Fastlane by saving API Key file to specified file path and outputs issuer and key id.
-
-```yml
-name: Prepare ASC API Key
-id: prepare-asc-key
-uses: ./.github/actions/prepare-asc-api-key
-with:
-  op-asc-key-issuer-id-reference: op://My Vault/My App Store Connect API Key/Issuer ID
-  op-asc-key-id-reference: op://My Vault/My App Store Connect API Key/Key ID
-  op-asc-key-file-reference: op://My Vault/My App Store Connect API Key/AuthKey.p8
-  output-asc-key-file-path: ~/asc-api-key.p8
-```
-
-Pass issuer id, key id and path to the ASC API Key to Fastlane.
-
-```yml
-name: Fastlane
-run: bundle exec fastlane build_appstore
-env:          
-  ASC_API_KEY_ISSUER_ID: ${{ steps.prepare-asc-key.outputs.issuer-id }}
-  ASC_API_KEY_ID: ${{ steps.prepare-asc-key.outputs.key-id }}
-  ASC_API_KEY: ${{ env.ASC_API_KEY_FILE_PATH }}
 ```
 
 ## [upload-artifact-play-store](https://github.com/shapehq/actions/tree/main/upload-artifact-play-store/action.yml)
