@@ -58,7 +58,7 @@ The action has the following outputs:
 |issuer_id|The issuer ID.|
 |key_id|The key ID.|
 |key_filename|The name of the stored AuthKey file. This will be on the format `AuthKey_[KeyID].p8`.|
-|key_file_path|The file path to the AutKey.|
+|key_file_path|The file path to the AuthKey.|
 
 The outputs can be used to access the API key. The following example shows how the outputs can be passed to Fastlane.
 
