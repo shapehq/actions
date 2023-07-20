@@ -68,7 +68,7 @@ run: bundle exec fastlane build_appstore
 env:          
   ASC_API_KEY_ISSUER_ID: ${{ steps.install-asc-key.outputs.issuer-id }}
   ASC_API_KEY_ID: ${{ steps.install-asc-key.outputs.key-id }}
-  ASC_API_KEY: ~/asc-api-key.p8
+  ASC_API_KEY: ${{ steps.install-asc-key.outputs.key-file-path }}
 ```
 
 ## [install-certificate](https://github.com/shapehq/actions/blob/main/install-certificate/action.yml)
