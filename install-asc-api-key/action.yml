@@ -26,11 +26,14 @@ runs:
         # Read key id
         key_id=$(op read "${{ inputs.op-asc-key-id-reference }}")
         echo "key_id=${key_id}" >> $GITHUB_OUTPUT
+        
+        # Ensure output directory exists
+        mkdir -p "${{ output-asc-key-file-directory }}"
 
         # Read key file
         key_filename="AuthKey_${key_id}.p8"
-        key_file_path="${{ inputs.op-asc-key-file-reference }}/${key_filename}"
-        op read --out-file ${{ inputs.output-asc-key-file-directory }} "${key_file_path}"
+        key_file_path="${{ output-asc-key-file-directory }}/${key_filename}"
+        op read --out-file "${key_file_path}" "${{ op-asc-key-file-reference }}"
         echo "key_filename=${key_filename}" >> $GITHUB_OUTPUT
         echo "key_file_path=${key_file_path}" >> $GITHUB_OUTPUT
       shell: bash
