@@ -6,8 +6,9 @@ inputs:
     required: true
   op-asc-key-file-reference:
     required: true
-  output-asc-key-file-path:
-    required: true
+  output-asc-key-file-directory:
+    required: false
+    default: .
 outputs:
   issuer-id:
     value: ${{ steps.read.outputs.issuer_id }}
@@ -27,5 +28,9 @@ runs:
         echo "key_id=${key_id}" >> $GITHUB_OUTPUT
 
         # Read key file
-        op read --out-file ${{ inputs.output-asc-key-file-path }} "${{ inputs.op-asc-key-file-reference }}"
+        key_filename="AuthKey_${key_id}.p8"
+        key_file_path="${{ inputs.op-asc-key-file-reference }}/${key_filename}"
+        op read --out-file ${{ inputs.output-asc-key-file-directory }} "${key_file_path}"
+        echo "key_filename=${key_filename}" >> $GITHUB_OUTPUT
+        echo "key_file_path=${key_file_path}" >> $GITHUB_OUTPUT
       shell: bash
