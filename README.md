@@ -160,7 +160,7 @@ Use the [install-certificate](https://github.com/shapehq/actions/edit/main/READM
 
 ## [install-enterprise-distribution-provisioning-profile](https://github.com/shapehq/actions/blob/main/install-enterprise-distribution-provisioning-profile/action.yml)
 
-Installs Shape's default provisioning profile for enterprise distribution.
+Installs Shape's default provisioning profile for enterprise distribution. The provisioning profile is named 'Shape 2020'.
 
 ```yml
 name: Install Enterprise Distribution Provisioning Profile
