@@ -108,6 +108,26 @@ with:
   keychain-password: h3ll0w0rld
 ```
 
+The keychain will be created with a random password if no password is specified. Therefore you will need to specify a password when installing multiple certificates into the same keychain. You may consider using the `uuidgen` command to create a random password as shown below.
+
+```yml
+- name: Generate Keychain Password
+  id: generate-keychain-password
+  run: echo "password=$(uuidgen)" >> $GITHUB_OUTPUT
+- name: Install First Certificate
+  uses: shapehq/actions/install-certificate@main
+  with:
+    password-op-reference: op://My Vault/First Certificate/password
+    certificate-op-reference: op://My Vault/First Certificate/Certificate.p12
+    keychain-password: ${{ steps.generate-keychain-password.outputs.password }}
+- name: Install Second Certificate
+  uses: shapehq/actions/install-certificate@main
+  with:
+    password-op-reference: op://My Vault/Second Certificate/password
+    certificate-op-reference: op://My Vault/Second Certificate/Certificate.p12
+    keychain-password: ${{ steps.generate-keychain-password.outputs.password }}
+```
+
 ## [install-ci-ssh-key](https://github.com/shapehq/actions/blob/main/install-ci-ssh-key/action.yml)
 
 Install the CI's SSH key.
