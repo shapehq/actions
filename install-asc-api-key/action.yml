@@ -6,13 +6,18 @@ inputs:
     required: true
   op-asc-key-file-reference:
     required: true
-  output-asc-key-file-path:
-    required: true
+  output-asc-key-file-directory:
+    required: false
+    default: .
 outputs:
   issuer-id:
     value: ${{ steps.read.outputs.issuer_id }}
   key-id:
     value: ${{ steps.read.outputs.key_id }}
+  key-filename:
+    value: ${{ steps.read.outputs.key_filename }}
+  key-file-path:
+    value: ${{ steps.read.outputs.key_file_path }}
 runs:
   using: composite
   steps:
@@ -25,7 +30,15 @@ runs:
         # Read key id
         key_id=$(op read "${{ inputs.op-asc-key-id-reference }}")
         echo "key_id=${key_id}" >> $GITHUB_OUTPUT
+        
+        # Ensure output directory exists
+        mkdir -p "${{ inputs.output-asc-key-file-directory }}"
 
         # Read key file
-        op read --out-file ${{ inputs.output-asc-key-file-path }} "${{ inputs.op-asc-key-file-reference }}"
+        key_filename="AuthKey_${key_id}.p8"
+        key_file_path="${{ inputs.output-asc-key-file-directory }}/${key_filename}"
+        op read --out-file "${key_file_path}" "${{ inputs.op-asc-key-file-reference }}"
+        key_full_file_path=$(readlink -f $key_file_path)
+        echo "key_filename=${key_filename}" >> $GITHUB_OUTPUT
+        echo "key_file_path=${key_full_file_path}" >> $GITHUB_OUTPUT
       shell: bash
