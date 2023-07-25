@@ -9,7 +9,7 @@ inputs:
     description: Reference to the certificate in 1Password.
     required: true
   keychain-name:
-    description: Name of the keychain to add the certificate to. The keychain will be created if it does not exist
+    description: Name of the keychain to add the certificate to. The keychain will be created if it does not exist.
     required: false
     default: build.keychain
   keychain-password:
