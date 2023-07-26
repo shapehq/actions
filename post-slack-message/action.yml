@@ -6,6 +6,10 @@ inputs:
   message:
     description: Message to post
     required: true
+  runner:
+    description: Runner to post    
+    required: false
+    default: ${{ runner.name }}
   op-slack-token-reference:
     description: Slack access token reference
     required: true
@@ -18,5 +22,5 @@ runs:
         job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
         cd "${{ github.action_path }}/Slacker"        
-        swift run Slacker --channel "${{ inputs.channel }}" --token "${slack_token}" --message "${{ inputs.message }}" --fields "Workflow:${{ github.workflow }}" "Runner:${{ runner.name }}" "Branch:${{ github.ref_name }}" "Started by:${{ github.actor }}" --job-url "${job_url}"
+        swift run Slacker --channel "${{ inputs.channel }}" --token "${slack_token}" --message "${{ inputs.message }}" --fields "Workflow:${{ github.workflow }}" "Runner:${{ inputs.runner }}" "Branch:${{ github.ref_name }}" "Started by:${{ github.actor }}" --job-url "${job_url}"
       shell: bash
