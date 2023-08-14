@@ -1,0 +1,41 @@
+name: Add comment to a Jira issue
+inputs:
+  message:
+    description: The message to post in the Jira comment
+    required: true
+  issues:
+    description: Comma separated string of Jira issue ids. Example 'OK-1879,OK-1785,OK-1734'
+    required: true
+  jira-base-url:
+    description: The URL to the Jira instance. Example https://shapedk.atlassian.net
+    required: true
+  jira-user-email:
+    description: The Jira user who should post the comment. Example ci@shape.dk
+    required: true
+  op-jira-api-token-reference:
+    description: 1Password reference to the Jira API token
+    required: true
+runs:
+  using: composite
+  steps:    
+    - name: Install 1Password CLI
+      uses: 1password/install-cli-action@v1
+      with:
+        version: 2.18.0
+    - name: Jira API token
+      id: api-token
+      run: |
+        api_token=$(op read "${{ inputs.op-jira-api-token-reference }}")
+        echo "token=$api_token" >> $GITHUB_OUTPUT
+      shell: bash
+    - name: Login to Jira
+      uses: atlassian/gajira-login@v3
+      env:
+        JIRA_BASE_URL: ${{ inputs.jira-base-url }}
+        JIRA_USER_EMAIL: ${{ inputs.jira-user-email }}
+        JIRA_API_TOKEN: ${{ steps.api-token.outputs.token }}
+    - name: Comment on issues
+      uses: shapehq/gajira-comment@feature/multiple-issues
+      with:
+        issues: ${{ inputs.issues }}
+        comment: ${{ inputs.message }}

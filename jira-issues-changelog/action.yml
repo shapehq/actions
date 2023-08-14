@@ -1,0 +1,41 @@
+name: Jira issues changelog
+description: Outputs a list of Jira issue ids included in commit messages between the latest and the previous tags.
+inputs:
+  jira-project-id:
+    required: true
+outputs:
+  issues:
+    value: ${{ steps.changelog.outputs.issues }}
+runs:
+  using: composite
+  steps:
+    - name: Get Jira issues from changelog
+      id: changelog
+      run: |
+        # Fetch all tags
+        git fetch --tags origin
+
+        # Read all tags, separate them into an array
+        all_tags=`git tag -l | wc -l`
+        
+        if [ $all_tags = 0 ]; then
+            # No tags, exit.
+            echo "Repository contains no tags. Please make a tag first."
+            exit 1        
+        else 
+            echo "Fetching commits since last tag."
+        
+            latest_tag="$(git describe --tags $(git rev-list --tags --max-count=1))"
+            previous_tag="$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))"        
+            changelog="$(git log --pretty=format:"%s  (%cd) _<%ce>_" --date=format:"%Y-%m-%d %H:%M:%S" $latest_tag...$previous_tag)"    
+        fi
+          
+        # Output collected information
+        echo "Latest tag: $latest_tag"
+        echo "Previous tag: $previous_tag"
+        
+        # Identify Jira Issue, if multiple use ',' as delimiter
+        jira_issues="$(echo "$changelog" | egrep -o '${{ inputs.jira-project-id }}-[0-9]+' | sort -uf | tr '\n' ',' | sed 's/.$//')"
+        echo "Found the following issues in the changelog: $jira_issues"
+        echo "issues=$jira_issues" >> $GITHUB_OUTPUT
+      shell: bash
