@@ -14,6 +14,9 @@ inputs:
   manifestPath:
     description: "Path to the app's AndroidManifest.xml"
     required: true
+  appIconPath:
+    description: "Path to the app icon"
+    required: true
   distributionListDefinitions:
     description: 'Distribution lists containing all available options. Expects a JSON e.g. { "List1" : ["Email1", "Email2"], "List2" : ["Email1", "Email2"] }'
     required: true
@@ -59,7 +62,7 @@ runs:
           }' > shape-app.config
         cat shape-app.config
 
-    - name: create release_notes.txt
+    - name: Create release_notes.txt
       shell: bash
       env:
         RELEASE_NOTES: ${{ inputs.releaseNotes || '' }}
@@ -70,5 +73,6 @@ runs:
     - name: Run ShipShape CLI
       shell: bash
       env:
+        ICON_PATH: ${{ inputs.appIconPath }}
         DISTRIBUTION_LISTS: ${{ inputs.distributionListTargets }}
-      run: ship publish --release-note release_notes.txt --distribution-list $DISTRIBUTION_LISTS --send-push false --send-email false --prompt false
+      run: ship publish --release-note release_notes.txt --distribution-list $DISTRIBUTION_LISTS --icon-path $ICON_PATH --send-push false --send-email false --prompt false
