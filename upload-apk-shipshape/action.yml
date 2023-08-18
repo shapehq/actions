@@ -1,0 +1,81 @@
+name: Upload APK to ShipShape
+description: Uploads an APK to our internal app distribution system
+author: Gerard Sala
+inputs:
+  projectName:
+    description: "Project name"
+    required: true
+  targetName:
+    description: "Target name"
+    required: true
+  apkPath:
+    description: "Path to the APK that will be uploaded"
+    required: true
+  manifestPath:
+    description: "Path to the app's AndroidManifest.xml"
+    required: true
+  appIconPath:
+    description: "Path to the app icon"
+    required: true
+  distributionListDefinitions:
+    description: 'Distribution lists containing all available options. Expects a JSON e.g. { "List1" : ["Email1", "Email2"], "List2" : ["Email1", "Email2"] }'
+    required: true
+  distributionListTargets:
+    description: 'Distribution lists that will get access to this upload. Expects comma-separated values e.g. "List1,List2"'
+  releaseNotes:
+    description: "Release notes"
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Check 1Password CLI Installed
+      shell: bash
+      run: op > /dev/null || echo "ONEPASSWORD_NOT_INSTALLED=true" >> $GITHUB_ENV
+
+    - name: Install 1Password CLI
+      if: ${{ env.ONEPASSWORD_NOT_INSTALLED }}
+      uses: 1password/install-cli-action@v1
+
+    - name: Install CI SSH Key
+      uses: shapehq/actions/install-ci-ssh-key@main
+
+    - name: Install Shipshape
+      uses: shapehq/actions/install-shipshape@main
+
+    - name: Create shape-app.config
+      shell: bash
+      env:
+        PROJECT_NAME: ${{ inputs.projectName }}
+        TARGET_NAME: ${{ inputs.targetName }}
+        APK_PATH: ${{ inputs.apkPath }}
+        MANIFEST_PATH: ${{ inputs.manifestPath }}
+        DISTRIBUTION_LIST_DEFINITIONS: ${{ inputs.distributionListDefinitions }}
+      run: |
+        jq -n \
+          --arg project_name "$PROJECT_NAME" \
+          --arg target_name "$TARGET_NAME" \
+          --arg android_apk_path "$APK_PATH" \
+          --arg android_manifest_path "$MANIFEST_PATH" \
+          --argjson ship_shape_distribution_lists "$DISTRIBUTION_LIST_DEFINITIONS" \
+          '{
+            project_name: $project_name,
+            target_name: $target_name,
+            android_apk_path: $android_apk_path,
+            android_manifest_path: $android_manifest_path,
+            ship_shape_distribution_lists: $ship_shape_distribution_lists
+          }' > shape-app.config
+
+    - name: Create release_notes.txt
+      shell: bash
+      env:
+        RELEASE_NOTES: ${{ inputs.releaseNotes || '' }}
+      run: |
+        echo -e $RELEASE_NOTES > release_notes.txt
+
+    - name: Run ShipShape CLI
+      shell: bash
+      env:
+        ICON_PATH: ${{ inputs.appIconPath }}
+        DISTRIBUTION_LISTS: ${{ inputs.distributionListTargets }}
+      run: ship publish --release-note release_notes.txt --distribution-list $DISTRIBUTION_LISTS --icon-path $ICON_PATH --send-push false --send-email false --prompt false
