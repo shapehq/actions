@@ -29,7 +29,12 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Check 1Password CLI Installed
+      shell: bash
+      run: op || echo "ONEPASSWORD_NOT_INSTALLED=true" >> $GITHUB_ENV
+
     - name: Install 1Password CLI
+      if: ${{ env.ONEPASSWORD_NOT_INSTALLED }}
       uses: 1password/install-cli-action@v1
 
     - name: Install CI SSH Key
