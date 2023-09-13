@@ -49,6 +49,18 @@ test("It parses XcodeVersion for beta version", () => {
   expect(xcodeVersion?.betaNumber).toBeNull()
 })
 
+test("It parses XcodeVersion for release candidate", () => {
+  const filePath = "/Users/runner/Applications/Xcode-15.0.0-Release.Candidate.app"
+  const parser = new XcodeVersionParserLive(new SemanticVersionParser())
+  const xcodeVersion = parser.parseFilePath(filePath)
+  expect(xcodeVersion?.name).toEqual("Xcode 15.0.0")
+  expect(xcodeVersion?.version.major).toEqual(15)
+  expect(xcodeVersion?.version.minor).toEqual(0)
+  expect(xcodeVersion?.version.patch).toEqual(0)
+  expect(xcodeVersion?.isBeta).toBeFalsy()
+  expect(xcodeVersion?.betaNumber).toBeNull()
+})
+
 test("It parses XcodeVersion for 2nd beta version", () => {
   const filePath = "/Users/runner/Applications/Xcode_15.0.0_Beta.2.app"
   const parser = new XcodeVersionParserLive(new SemanticVersionParser())
