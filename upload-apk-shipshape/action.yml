@@ -25,6 +25,16 @@ inputs:
   releaseNotes:
     description: "Release notes"
     required: false
+  sendEmail:
+    type: boolean
+    description: 'Send Email'
+    default: false
+    required: false
+  sendPush:
+    type: boolean
+    description: 'Send Push'
+    default: false
+    required: false
 
 runs:
   using: composite
@@ -78,4 +88,6 @@ runs:
       env:
         ICON_PATH: ${{ inputs.appIconPath }}
         DISTRIBUTION_LISTS: ${{ inputs.distributionListTargets }}
-      run: ship publish --release-note release_notes.txt --distribution-list $DISTRIBUTION_LISTS --icon-path $ICON_PATH --send-push false --send-email false --prompt false
+        SEND_PUSH: ${{ inputs.sendPush }}
+        SEND_EMAIL: ${{ inputs.sendEmail }}
+      run: ship publish --release-note release_notes.txt --distribution-list $DISTRIBUTION_LISTS --icon-path $ICON_PATH --send-push $SEND_PUSH --send-email $SEND_EMAIL --prompt false
