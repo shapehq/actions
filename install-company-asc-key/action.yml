@@ -1,0 +1,32 @@
+name: Install Company App Store Connect API Key
+inputs:
+  output-asc-key-file-directory:
+    required: false
+    default: .
+outputs:
+  key-file-path:
+    value: ${{ steps.read.outputs.key_file_path }}
+runs:
+  using: composite
+  steps:
+    - id: read
+      run: |
+        # Read issuer id
+        issuer_id=$(op read "op://GitHub Actions/Company App Store Connect API Key/Issuer ID")
+        echo "issuer_id=${issuer_id}" >> $GITHUB_OUTPUT
+
+        # Read key id
+        key_id=$(op read "op://GitHub Actions/Company App Store Connect API Key/Key ID")
+        echo "key_id=${key_id}" >> $GITHUB_OUTPUT
+        
+        # Ensure output directory exists
+        mkdir -p "${{ inputs.output-asc-key-file-directory }}"
+
+        # Read key file
+        key_filename="AuthKey_${key_id}.p8"
+        key_file_path="${{ inputs.output-asc-key-file-directory }}/${key_filename}"
+        op read --out-file "${key_file_path}" "op://GitHub Actions/Company App Store Connect API Key/AuthKey.p8"
+        key_full_file_path=$(readlink -f $key_file_path)
+        echo "key_filename=${key_filename}" >> $GITHUB_OUTPUT
+        echo "key_file_path=${key_full_file_path}" >> $GITHUB_OUTPUT
+      shell: bash
