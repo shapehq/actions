@@ -1,4 +1,4 @@
-name: Installs App Store Connect API Key
+name: Install App Store Connect API Key
 inputs:
   op-asc-key-issuer-id-reference:
     required: true
