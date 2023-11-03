@@ -4,6 +4,12 @@ inputs:
     required: false
     default: .
 outputs:
+  issuer-id:
+    value: ${{ steps.read.outputs.issuer_id }}
+  key-id:
+    value: ${{ steps.read.outputs.key_id }}
+  key-filename:
+    value: ${{ steps.read.outputs.key_filename }}
   key-file-path:
     value: ${{ steps.read.outputs.key_file_path }}
 runs:
