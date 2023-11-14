@@ -113,7 +113,10 @@ The keychain will be created with a random password if no password is specified.
 ```yml
 - name: Generate Keychain Password
   id: generate-keychain-password
-  run: echo "password=$(uuidgen)" >> $GITHUB_OUTPUT
+  run: |
+    PASSWORD=$(uuidgen)
+    echo "::add-mask::$PASSWORD"
+    echo "password=$PASSWORD" >> $GITHUB_OUTPUT
 - name: Install First Certificate
   uses: shapehq/actions/install-certificate@main
   with:
