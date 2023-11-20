@@ -14,4 +14,4 @@ if ! ${WORKING_DIRECTORY+false}; then
   cd ${WORKING_DIRECTORY}
 fi
 
-set -o pipefail && swiftlint "$@" --reporter github-actions-logging -- $changedFiles | stripPWD
+set -o pipefail && swiftlint "$@" --reporter github-actions-logging | stripPWD
