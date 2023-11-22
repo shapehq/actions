@@ -158,7 +158,7 @@ Installs our company App Store Connect API key file on the runner and outputs th
 ```yml
 name: Install Company App Store Connect API Key
 id: install-company-asc-api-key
-uses: ./.github/actions/install-company-asc-api-key
+uses: shapehq/actions/install-company-asc-api-key@main
 ```
 
 You may optionally pass the `output-asc-key-file-directory` parameter to specify the directory in which to store the AuthKey file. This defaults to the current directory.
@@ -166,7 +166,7 @@ You may optionally pass the `output-asc-key-file-directory` parameter to specify
 ```yml
 name: Install Company App Store Connect API Key
 id: install-company-asc-api-key
-uses: ./.github/actions/install-company-asc-api-key
+uses: shapehq/actions/install-company-asc-api-key@main
 with:
   output-asc-key-file-directory: ./private_keys
 ```
