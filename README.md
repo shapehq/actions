@@ -11,8 +11,8 @@ Several of these actions depend on the 1Password CLI being installed. Please use
 Installs [appiconannotator](https://github.com/shapehq/appiconannotator).
 
 ```yml
-name: Install appiconannotator
-uses: shapehq/actions/install-appiconannotator@main
+- name: Install appiconannotator
+  uses: shapehq/actions/install-appiconannotator@main
 ```
 
 ## [install-artifactory-profile](https://github.com/shapehq/actions/blob/main/install-artifactory-profile/action.yml)
@@ -20,8 +20,8 @@ uses: shapehq/actions/install-appiconannotator@main
 Installs a [JFrog Artifactory](https://artifactory.shapeapp.dk/) profile with read access to internal artifacts.
 
 ```yml
-name: Install JFrog Artifactory profile
-uses: shapehq/actions/install-artifactory-profile@main
+- name: Install JFrog Artifactory profile
+  uses: shapehq/actions/install-artifactory-profile@main
 ```
 
 ## [install-asc-api-key](https://github.com/shapehq/actions/tree/main/install-asc-api-key/action.yml)
@@ -29,26 +29,26 @@ uses: shapehq/actions/install-artifactory-profile@main
 Installs an App Store Connect API key file on the runner and outputs the issuer ID, key ID, and file path of the AuthKey file.
 
 ```yml
-name: Install App Store Connect API Key
-id: install-asc-api-key
-uses: ./.github/actions/install-asc-api-key
-with:
-  op-asc-key-issuer-id-reference: op://My Vault/My App Store Connect API Key/Issuer ID
-  op-asc-key-id-reference: op://My Vault/My App Store Connect API Key/Key ID
-  op-asc-key-file-reference: op://My Vault/My App Store Connect API Key/AuthKey.p8
+- name: Install App Store Connect API Key
+  id: install-asc-api-key
+  uses: ./.github/actions/install-asc-api-key
+  with:
+    op-asc-key-issuer-id-reference: op://My Vault/My App Store Connect API Key/Issuer ID
+    op-asc-key-id-reference: op://My Vault/My App Store Connect API Key/Key ID
+    op-asc-key-file-reference: op://My Vault/My App Store Connect API Key/AuthKey.p8
 ```
 
 You may optionally pass the `output-asc-key-file-directory` parameter to specify the directory in which to store the AuthKey file. This defaults to the current directory.
 
 ```yml
-name: Install App Store Connect API Key
-id: install-asc-api-key
-uses: ./.github/actions/install-asc-api-key
-with:
-  op-asc-key-issuer-id-reference: op://My Vault/My App Store Connect API Key/Issuer ID
-  op-asc-key-id-reference: op://My Vault/My App Store Connect API Key/Key ID
-  op-asc-key-file-reference: op://My Vault/My App Store Connect API Key/AuthKey.p8
-  output-asc-key-file-directory: ./private_keys
+- name: Install App Store Connect API Key
+  id: install-asc-api-key
+  uses: ./.github/actions/install-asc-api-key
+  with:
+    op-asc-key-issuer-id-reference: op://My Vault/My App Store Connect API Key/Issuer ID
+    op-asc-key-id-reference: op://My Vault/My App Store Connect API Key/Key ID
+    op-asc-key-file-reference: op://My Vault/My App Store Connect API Key/AuthKey.p8
+    output-asc-key-file-directory: ./private_keys
 ```
 
 The action has the following outputs:
@@ -63,12 +63,12 @@ The action has the following outputs:
 The outputs can be used to access the API key. The following example shows how the outputs can be passed to Fastlane.
 
 ```yml
-name: Fastlane
-run: bundle exec fastlane build_appstore
-env:          
-  ASC_API_KEY_ISSUER_ID: ${{ steps.install-asc-api-key.outputs.issuer-id }}
-  ASC_API_KEY_ID: ${{ steps.install-asc-api-key.outputs.key-id }}
-  ASC_API_KEY: ${{ steps.install-asc-api-key.outputs.key-file-path }}
+- name: Fastlane
+  run: bundle exec fastlane build_appstore
+  env:          
+    ASC_API_KEY_ISSUER_ID: ${{ steps.install-asc-api-key.outputs.issuer-id }}
+    ASC_API_KEY_ID: ${{ steps.install-asc-api-key.outputs.key-id }}
+    ASC_API_KEY: ${{ steps.install-asc-api-key.outputs.key-file-path }}
 ```
 
 ## [install-certificate](https://github.com/shapehq/actions/blob/main/install-certificate/action.yml)
@@ -76,11 +76,11 @@ env:
 Installs the specified certificate in the keychain.
 
 ```yml
-name: Install Certificate
-uses: shapehq/actions/install-certificate@main
-with:
-  password-op-reference: op://My Vault/My Certificate/password
-  certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
+- name: Install Certificate
+  uses: shapehq/actions/install-certificate@main
+  with:
+    password-op-reference: op://My Vault/My Certificate/password
+    certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
 ```
 
 Note that you must supply a password. Empty passwords are not supported.
@@ -88,24 +88,24 @@ Note that you must supply a password. Empty passwords are not supported.
 The action makes the keychain the default keychain on the system. You can disable this as shown below.
 
 ```yml
-name: Install Certificate
-uses: shapehq/actions/install-certificate@main
-with:
-  password-op-reference: op://My Vault/My Certificate/password
-  certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
-  set-default-keychain: false
+- name: Install Certificate
+  uses: shapehq/actions/install-certificate@main
+  with:
+    password-op-reference: op://My Vault/My Certificate/password
+    certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
+    set-default-keychain: false
 ```
 
 You may optionally specify the name of the keychain to install the certificate and the password of that keychain.
 
 ```yml
-name: Install Certificate
-uses: shapehq/actions/install-certificate@main
-with:
-  password-op-reference: op://My Vault/My Certificate/password
-  certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
-  keychain-name: signing.keychain
-  keychain-password: h3ll0w0rld
+- name: Install Certificate
+  uses: shapehq/actions/install-certificate@main
+  with:
+    password-op-reference: op://My Vault/My Certificate/password
+    certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
+    keychain-name: signing.keychain
+    keychain-password: h3ll0w0rld
 ```
 
 The keychain will be created with a random password if no password is specified. Therefore you will need to specify a password when installing multiple certificates into the same keychain. You may consider using the `uuidgen` command to create a random password as shown below.
@@ -136,17 +136,17 @@ The keychain will be created with a random password if no password is specified.
 Install the CI's SSH key.
 
 ```yml
-name: Install CI SSH Key
-uses: shapehq/actions/install-ci-ssh-key@main
+- name: Install CI SSH Key
+  uses: shapehq/actions/install-ci-ssh-key@main
 ```
 
 You may optionally specify the name of the file to store the SSH key in. Only do this if you are storing multiple SSH keys to avoid overriding an SSH key.
 
 ```yml
-name: Install CI SSH Key
-uses: shapehq/actions/install-ci-ssh-key@main
-with:
-  filename: ci
+- name: Install CI SSH Key
+  uses: shapehq/actions/install-ci-ssh-key@main
+  with:
+    filename: ci
 ```
 
 Use the [install-ssh-key](https://github.com/shapehq/actions/edit/main/README.md#install-ssh-key) action to install a specified SSH key.
@@ -156,19 +156,19 @@ Use the [install-ssh-key](https://github.com/shapehq/actions/edit/main/README.md
 Installs our company App Store Connect API key file on the runner and outputs the issuer ID, key ID, and file path of the AuthKey file.
 
 ```yml
-name: Install Company App Store Connect API Key
-id: install-company-asc-api-key
-uses: shapehq/actions/install-company-asc-api-key@main
+- name: Install Company App Store Connect API Key
+  id: install-company-asc-api-key
+  uses: shapehq/actions/install-company-asc-api-key@main
 ```
 
 You may optionally pass the `output-asc-key-file-directory` parameter to specify the directory in which to store the AuthKey file. This defaults to the current directory.
 
 ```yml
-name: Install Company App Store Connect API Key
-id: install-company-asc-api-key
-uses: shapehq/actions/install-company-asc-api-key@main
-with:
-  output-asc-key-file-directory: ./private_keys
+- name: Install Company App Store Connect API Key
+  id: install-company-asc-api-key
+  uses: shapehq/actions/install-company-asc-api-key@main
+  with:
+    output-asc-key-file-directory: ./private_keys
 ```
 
 The action has the following outputs:
@@ -183,12 +183,12 @@ The action has the following outputs:
 The outputs can be used to access the API key. The following example shows how the outputs can be passed to Fastlane.
 
 ```yml
-name: Fastlane
-run: bundle exec fastlane build_appstore
-env:          
-  ASC_API_KEY_ISSUER_ID: ${{ steps.install-asc-api-key.outputs.issuer-id }}
-  ASC_API_KEY_ID: ${{ steps.install-asc-api-key.outputs.key-id }}
-  ASC_API_KEY: ${{ steps.install-asc-api-key.outputs.key-file-path }}
+- name: Fastlane
+  run: bundle exec fastlane build_appstore
+  env:          
+    ASC_API_KEY_ISSUER_ID: ${{ steps.install-asc-api-key.outputs.issuer-id }}
+    ASC_API_KEY_ID: ${{ steps.install-asc-api-key.outputs.key-id }}
+    ASC_API_KEY: ${{ steps.install-asc-api-key.outputs.key-file-path }}
 ```
 
 Use the [install-asc-api-key](https://github.com/shapehq/actions/edit/main/README.md#install-asc-api-key) action to install a specified App Store Connect API key.
@@ -198,27 +198,27 @@ Use the [install-asc-api-key](https://github.com/shapehq/actions/edit/main/READM
 Installs Shape's default company development certificate in the keychain.
 
 ```yml
-name: Install Company Development Certificate
-uses: shapehq/actions/install-company-development-certificate@main
+- name: Install Company Development Certificate
+  uses: shapehq/actions/install-company-development-certificate@main
 ```
 
 The action makes the keychain the default keychain on the system. You can disable this as shown below.
 
 ```yml
-name: Install Company Development Certificate
-uses: shapehq/actions/install-company-development-certificate@main
-with:
-  set-default-keychain: false
+- name: Install Company Development Certificate
+  uses: shapehq/actions/install-company-development-certificate@main
+  with:
+    set-default-keychain: false
 ```
 
 You may optionally specify the name of the keychain to install the certificate and the password of that keychain.
 
 ```yml
-name: Install Company Development Certificate
-uses: shapehq/actions/install-company-development-certificate@main
-with:
-  keychain-name: signing.keychain
-  keychain-password: h3ll0w0rld
+- name: Install Company Development Certificate
+  uses: shapehq/actions/install-company-development-certificate@main
+  with:
+    keychain-name: signing.keychain
+    keychain-password: h3ll0w0rld
 ```
 
 Use the [install-certificate](https://github.com/shapehq/actions/edit/main/README.md#install-certificate) action to install a specified certificate.
@@ -228,27 +228,27 @@ Use the [install-certificate](https://github.com/shapehq/actions/edit/main/READM
 Installs Shape's default enterprise distribution certificate in the keychain.
 
 ```yml
-name: Install Enterprise Distribution Certificate
-uses: shapehq/actions/install-enterprise-distribution-certificate@main
+- name: Install Enterprise Distribution Certificate
+  uses: shapehq/actions/install-enterprise-distribution-certificate@main
 ```
 
 The action makes the keychain the default keychain on the system. You can disable this as shown below.
 
 ```yml
-name: Install Enterprise Distribution Certificate
-uses: shapehq/actions/install-enterprise-distribution-certificate@main
-with:
-  set-default-keychain: false
+- name: Install Enterprise Distribution Certificate
+  uses: shapehq/actions/install-enterprise-distribution-certificate@main
+  with:
+    set-default-keychain: false
 ```
 
 You may optionally specify the name of the keychain to install the certificate and the password of that keychain.
 
 ```yml
-name: Install Enterprise Distribution Certificate
-uses: shapehq/actions/install-enterprise-distribution-certificate@main
-with:
-  keychain-name: signing.keychain
-  keychain-password: h3ll0w0rld
+- name: Install Enterprise Distribution Certificate
+  uses: shapehq/actions/install-enterprise-distribution-certificate@main
+  with:
+    keychain-name: signing.keychain
+    keychain-password: h3ll0w0rld
 ```
 
 Use the [install-certificate](https://github.com/shapehq/actions/edit/main/README.md#install-certificate) action to install a specified certificate.
@@ -258,8 +258,8 @@ Use the [install-certificate](https://github.com/shapehq/actions/edit/main/READM
 Installs Shape's default provisioning profile for enterprise distribution. The provisioning profile is named 'Shape 2020'.
 
 ```yml
-name: Install Enterprise Distribution Provisioning Profile
-uses: shapehq/actions/install-enterprise-distribution-provisioning-profile@main
+- name: Install Enterprise Distribution Provisioning Profile
+  uses: shapehq/actions/install-enterprise-distribution-provisioning-profile@main
 ```
 
 If you are using custom entitlements in your app or you are building an app for distribution on the App Store, you will likely need to install a specific provisioning profile. Refer to the [install-provisioning-profile](https://github.com/shapehq/actions/edit/main/README.md#install-provisioning-profile) action for installing a specified provisioning profile.
@@ -269,10 +269,10 @@ If you are using custom entitlements in your app or you are building an app for 
 Installs a provisioning profile.
 
 ```yml
-name: Install Provisioning Profile
-uses: shapehq/actions/install-provisioning-profile@main
-with:
-  op-reference: op://My Vault/My Provisioning Profile/profile.mobileprovision
+- name: Install Provisioning Profile
+  uses: shapehq/actions/install-provisioning-profile@main
+  with:
+    op-reference: op://My Vault/My Provisioning Profile/profile.mobileprovision
 ```
 
 ## [install-shipshape](https://github.com/shapehq/actions/blob/main/install-shipshape/action.yml)
@@ -280,17 +280,17 @@ with:
 Installs Shipshape and sets an activation code.
 
 ```yml
-name: Install Shipshape
-uses: shapehq/actions/install-shipshape@main
+- name: Install Shipshape
+  uses: shapehq/actions/install-shipshape@main
 ```
 
 You may optionally specify an activation code to be used by Shipshape. You will likely want to use the default activation code though.
 
 ```yml
-name: Install CI SSH Key
-uses: shapehq/actions/install-shipshape@main
-with:
-  op-reference: op://My Vault/My Shipshape Activation Code/password
+- name: Install CI SSH Key
+  uses: shapehq/actions/install-shipshape@main
+  with:
+    op-reference: op://My Vault/My Shipshape Activation Code/password
 ```
 
 ## [install-ssh-key](https://github.com/shapehq/actions/tree/main/install-ssh-key/action.yml)
@@ -298,20 +298,20 @@ with:
 Installs an SSH key.
 
 ```yml
-name: Install SSH Key
-uses: shapehq/actions/install-ssh-key@main
-with:
-  op-reference: op://My Vault/My SSH Key/ssh-key
+- name: Install SSH Key
+  uses: shapehq/actions/install-ssh-key@main
+  with:
+    op-reference: op://My Vault/My SSH Key/ssh-key
 ```
 
 You may optionally specify the name of the file to store the SSH key in. Only do this if you are storing multiple SSH keys to avoid overriding an SSH key.
 
 ```yml
-name: Install SSH Key
-uses: shapehq/actions/install-ssh-key@main
-with:
-  op-reference: op://My Vault/My SSH Key/ssh-key
-  filename: my_key
+- name: Install SSH Key
+  uses: shapehq/actions/install-ssh-key@main
+  with:
+    op-reference: op://My Vault/My SSH Key/ssh-key
+    filename: my_key
 ```
 
 ## [loco-translation-status-checker](https://github.com/shapehq/actions/tree/main/loco-translation-status-checker/action.yml)
@@ -319,7 +319,7 @@ with:
 Checks if there are missing translations in the Localize.biz project throws error.
 
 ```yml
-name: Verify Loco Translations
+- name: Verify Loco Translations
   uses: shapehq/actions/loco-translation-status-checker@main
   with:
     op-loco-api-key-reference: op://My Vault/My Loco API Key/key
@@ -330,7 +330,7 @@ name: Verify Loco Translations
 Checks if there are missing translations in the Localize.biz project and posts warning to Slack.
 
 ```yml
-name: Verify Loco Translations and Post to Slack
+- name: Verify Loco Translations and Post to Slack
   uses: shapehq/actions/loco-translation-status-poster@main
   with:
     channel: "#my-channel"
@@ -343,12 +343,12 @@ name: Verify Loco Translations and Post to Slack
 Posts a message to Slack.
 
 ```yml
-name: Post to Slack
-uses: shapehq/actions/post-slack-message@main
-with:
-  channel: "#my-channel"
-  message: "Started a new build of Project X for App Store 🏃‍♀️"
-  op-slack-token-reference: op://My Vault/My Slack Token/token
+- name: Post to Slack
+  uses: shapehq/actions/post-slack-message@main
+  with:
+    channel: "#my-channel"
+    message: "Started a new build of Project X for App Store 🏃‍♀️"
+    op-slack-token-reference: op://My Vault/My Slack Token/token
 ```
 
 The action will automatically add the following details to the Slack message:
@@ -360,24 +360,24 @@ The action will automatically add the following details to the Slack message:
 If you wish to only post to Slack if the jobs fails you can use the `failure()` status check function:
 
 ```yml
-name: Post failure to Slack
-if: ${{ failure() }}
-uses: shapehq/actions/post-slack-message@main
-with:
-  channel: "#my-channel"
-  message: "Project X build for App Store failed 💥"
-  op-slack-token-reference: op://My Vault/My Slack Token/token
+- name: Post failure to Slack
+  if: ${{ failure() }}
+  uses: shapehq/actions/post-slack-message@main
+  with:
+    channel: "#my-channel"
+    message: "Project X build for App Store failed 💥"
+    op-slack-token-reference: op://My Vault/My Slack Token/token
 ```
 
 You may use the Slack token residing in the shared GitHub Actions cault to post messages.
 
 ```yml
-name: Post to Slack
-uses: shapehq/actions/post-slack-message@main
-with:
-  channel: "#my-channel"
-  message: "Started a new build of Project X for App Store 🏃‍♀️"
-  op-slack-token-reference: op://GitHub Actions/Slack Token/token
+- name: Post to Slack
+  uses: shapehq/actions/post-slack-message@main
+  with:
+    channel: "#my-channel"
+    message: "Started a new build of Project X for App Store 🏃‍♀️"
+    op-slack-token-reference: op://GitHub Actions/Slack Token/token
 ```
 
 
@@ -386,25 +386,25 @@ with:
 Runs [SwiftLint](https://github.com/realm/SwiftLint) on a codebase.
 
 ```yml
-name: SwiftLint
-uses: shapehq/actions/swiftlint@main
+- name: SwiftLint
+  uses: shapehq/actions/swiftlint@main
 ```
 
 You may optionally run SwiftLint in strict mode as shown below. This treats warnings as errors.
 
 ```yml
-name: SwiftLint
-uses: shapehq/actions/swiftlint@main
-with:
-  args: --strict
+- name: SwiftLint
+  uses: shapehq/actions/swiftlint@main
+  with:
+    args: --strict
 ```
 
 The motivation for using this over running the `swiftlint` CLI directly is that this action can be run on an Ubuntu runner.
 Consider running the `swiftlint` CLI directly if you are using a macOS runner.
 
 ```yml
-name: SwiftLint
-runs: swiftlint --quiet --strict --reporter github-actions-logging
+- name: SwiftLint
+  runs: swiftlint --quiet --strict --reporter github-actions-logging
 ```
 
 ## [upload-apk-shipshape](https://github.com/shapehq/actions/tree/main/upload-apk-shipshape/action.yml)
@@ -426,17 +426,17 @@ The action has the following inputs:
 
 Example:
 ```yml
-name: Upload to Shipshape
-uses: shapehq/actions/upload-apk-shipshape@main
-with:
-  projectName: Client
-  targetName: Client (${{ env.BUILD_TYPE }})
-  apkPath: app/build/outputs/apk/${{ env.BUILD_TYPE }}/app-${{ env.BUILD_TYPE }}.apk
-  manifestPath: app/build/intermediates/merged_manifests/${{ env.BUILD_TYPE }}/AndroidManifest.xml
-  appIconPath: shipshape_icon.png
-  distributionListDefinitions: ${{ vars.DISTRIBUTION_LISTS }}
-  distributionListTargets: ${{ github.event.inputs.DISTRIBUTION_LISTS }}
-  releaseNotes: ${{ github.event.inputs.RELEASE_NOTES }}
+- name: Upload to Shipshape
+  uses: shapehq/actions/upload-apk-shipshape@main
+  with:
+    projectName: Client
+    targetName: Client (${{ env.BUILD_TYPE }})
+    apkPath: app/build/outputs/apk/${{ env.BUILD_TYPE }}/app-${{ env.BUILD_TYPE }}.apk
+    manifestPath: app/build/intermediates/merged_manifests/${{ env.BUILD_TYPE }}/AndroidManifest.xml
+    appIconPath: shipshape_icon.png
+    distributionListDefinitions: ${{ vars.DISTRIBUTION_LISTS }}
+    distributionListTargets: ${{ github.event.inputs.DISTRIBUTION_LISTS }}
+    releaseNotes: ${{ github.event.inputs.RELEASE_NOTES }}
 ```
 
 ## [upload-artifact-play-store](https://github.com/shapehq/actions/tree/main/upload-artifact-play-store/action.yml)
@@ -444,12 +444,12 @@ with:
 Uploads a release build (.apk or .aab) to the internal track of the Play Store.
 
 ```yml
-name: Upload to Google Play
-uses: shapehq/actions/upload-artifact-play-store@main
-with:
-  serviceAccountKeyPath: play_service_account.json
-  packageName: com.example.app
-  bundlePath: app/build/outputs/bundle/release/app-release.aab
+- name: Upload to Google Play
+  uses: shapehq/actions/upload-artifact-play-store@main
+  with:
+    serviceAccountKeyPath: play_service_account.json
+    packageName: com.example.app
+    bundlePath: app/build/outputs/bundle/release/app-release.aab
 ```
 
 ## [xcode-select](https://github.com/shapehq/actions/tree/main/xcode-select)
@@ -459,28 +459,28 @@ Selects a version of Xcode. The major, minor, and patch values must all be speci
 The following will pin against the major and minor version, so the action may select Xcode 14.3 or Xcode 14.3.1.
 
 ```yaml
-name: Select Xcode Version
-uses: shapehq/actions/xcode-select@main
-with:
-  version: 14.3.x
+- name: Select Xcode Version
+  uses: shapehq/actions/xcode-select@main
+  with:
+    version: 14.3.x
 ```
 
 The following will pin against an exact version of Xcode and will not select any other version than the one specified.
 
 ```yaml
-name: Select Xcode Version
-uses: shapehq/actions/xcode-select@main
-with:
-  version: 14.3.1
+- name: Select Xcode Version
+  uses: shapehq/actions/xcode-select@main
+  with:
+    version: 14.3.1
 ```
 
 The following will pin against the major version only, so the action may select version 14.0, 14.3, or 14.3.1.
 
 ```yaml
-name: Select Xcode Version
-uses: shapehq/actions/xcode-select@main
-with:
-  version: 14.x.x
+- name: Select Xcode Version
+  uses: shapehq/actions/xcode-select@main
+  with:
+    version: 14.x.x
 ```
 
 > **Note**
