@@ -1,0 +1,6 @@
+name: SwiftLint
+description: Runs SwiftLint on a codebase
+author: Simon Støvring
+runs:
+  using: docker
+  image: Dockerfile
