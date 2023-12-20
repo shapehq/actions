@@ -369,6 +369,17 @@ with:
   op-slack-token-reference: op://My Vault/My Slack Token/token
 ```
 
+You may use the Slack token residing in the shared GitHub Actions cault to post messages.
+
+```yml
+name: Post to Slack
+uses: shapehq/actions/post-slack-message@main
+with:
+  channel: "#my-channel"
+  message: "Started a new build of Project X for App Store 🏃‍♀️"
+  op-slack-token-reference: op://GitHub Actions/Slack Token/token
+```
+
 ## [upload-apk-shipshape](https://github.com/shapehq/actions/tree/main/upload-apk-shipshape/action.yml)
 
 Uploads an APK to Shipshape.
