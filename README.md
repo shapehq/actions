@@ -378,6 +378,8 @@ with:
   channel: "#my-channel"
   message: "Started a new build of Project X for App Store 🏃‍♀️"
   op-slack-token-reference: op://GitHub Actions/Slack Token/token
+```
+
 
 ## [swiftlint](https://github.com/shapehq/actions/tree/main/swiftlint/action.yml)
 
