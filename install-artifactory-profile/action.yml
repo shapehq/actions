@@ -12,4 +12,5 @@ runs:
         echo "shape_consumer_password={{ op://25dt53lxtmov37u7s4b72weu3a/ofy7qo7ejdvdjxuopb4db3astu/password  }}" | op inject >> ~/.gradle/gradle.properties
         echo "shapeArtifactoryUsername={{ op://25dt53lxtmov37u7s4b72weu3a/o3p3rrpz4lucyxmwb6mhke2s3e/username  }}" | op inject >> ~/.gradle/gradle.properties
         echo "shapeArtifactoryPassword={{ op://25dt53lxtmov37u7s4b72weu3a/o3p3rrpz4lucyxmwb6mhke2s3e/password  }}" | op inject >> ~/.gradle/gradle.properties
+        cat templates/settings.template.xml | op inject > ~/.m2/settings.xml
       shell: bash
