@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.1.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <servers>
+        <!-- Shape JFrog Cloud -->
+        <server>
+            <username>{{ op://25dt53lxtmov37u7s4b72weu3a/o3p3rrpz4lucyxmwb6mhke2s3e/username  }}</username>
+            <password>{{ op://25dt53lxtmov37u7s4b72weu3a/o3p3rrpz4lucyxmwb6mhke2s3e/password  }}</password>
+            <id>shape-release</id>
+        </server>
+        <server>
+            <username>{{ op://25dt53lxtmov37u7s4b72weu3a/o3p3rrpz4lucyxmwb6mhke2s3e/username  }}</username>
+            <password>{{ op://25dt53lxtmov37u7s4b72weu3a/o3p3rrpz4lucyxmwb6mhke2s3e/password  }}</password>
+            <id>shape-snapshot</id>
+        </server>
+        <!-- Shape JFrog Self hosted -->
+        <!-- TODO: Remove after transition to JFrog Cloud -->
+        <server>
+            <username>{{ op://25dt53lxtmov37u7s4b72weu3a/ofy7qo7ejdvdjxuopb4db3astu/username  }}</username>
+            <password>{{ op://25dt53lxtmov37u7s4b72weu3a/ofy7qo7ejdvdjxuopb4db3astu/password  }}</password>
+            <id>central</id>
+        </server>
+        <server>
+            <username>{{ op://25dt53lxtmov37u7s4b72weu3a/ofy7qo7ejdvdjxuopb4db3astu/username  }}</username>
+            <password>{{ op://25dt53lxtmov37u7s4b72weu3a/ofy7qo7ejdvdjxuopb4db3astu/password  }}</password>
+            <id>snapshot</id>
+        </server>
+    </servers>
+    <profiles>
+        <profile>
+            <repositories>
+                <repository>
+                    <id>maven-central</id>
+                    <layout>default</layout>
+                    <url>https://repo1.maven.org/maven2</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+                <!-- Shape JFrog Cloud -->
+                <repository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <id>shape-release</id>
+                    <name>libs-release</name>
+                    <url>https://shape.jfrog.io/artifactory/shape-libs-release</url>
+                </repository>
+                <repository>
+                    <snapshots />
+                    <id>shape-snapshot</id>
+                    <name>libs-snapshot</name>
+                    <url>https://shape.jfrog.io/artifactory/shape-libs-snapshot</url>
+                </repository>
+                <!-- END // Shape JFrog Cloud -->
+                <!-- Shape JFrog Self hosted -->
+                <!-- TODO: Remove after transition to JFrog Cloud -->
+                <repository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <id>central</id>
+                    <name>libs-release</name>
+                    <url>https://artifactory.shapeapp.dk/artifactory/libs-release</url>
+                </repository>
+                <repository>
+                    <snapshots />
+                    <id>snapshot</id>
+                    <name>libs-snapshot</name>
+                    <url>https://artifactory.shapeapp.dk/artifactory/libs-snapshot</url>
+                </repository>
+                <!-- END // Shape JFrog Self hosted -->
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>maven-central</id>
+                    <layout>default</layout>
+                    <url>https://repo1.maven.org/maven2</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+                <!-- Shape JFrog Cloud -->
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <id>shape-release</id>
+                    <name>plugins-release</name>
+                    <url>https://artifactory.shapeapp.dk/artifactory/plugins-release</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <snapshots />
+                    <id>shape-snapshot</id>
+                    <name>plugins-snapshot</name>
+                    <url>https://artifactory.shapeapp.dk/artifactory/plugins-snapshot</url>
+                </pluginRepository>
+                <!-- END // Shape JFrog Cloud -->
+                <!-- Shape JFrog Self hosted -->
+                <!-- TODO: Remove after transition to JFrog Cloud -->
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <id>central</id>
+                    <name>plugins-release</name>
+                    <url>https://artifactory.shapeapp.dk/artifactory/plugins-release</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <snapshots />
+                    <id>snapshot</id>
+                    <name>plugins-snapshot</name>
+                    <url>https://artifactory.shapeapp.dk/artifactory/plugins-snapshot</url>
+                </pluginRepository>
+                <!-- END // Shape JFrog Self hosted -->
+            </pluginRepositories>
+            <id>artifactory</id>
+        </profile>
+    </profiles>
+    <activeProfiles>
+        <activeProfile>artifactory</activeProfile>
+    </activeProfiles>
+</settings>
