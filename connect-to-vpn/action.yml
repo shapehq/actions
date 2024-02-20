@@ -16,8 +16,8 @@ runs:
       shell: bash
       id: credentials_step
       run: |
-        echo "client_id=$(op read "op://cxgt2j4k5ngp7k7bqfcxvkim7m/cpec7eylxpyojten25tsly5akm/Client ID")" >> $GITHUB_OUTPUT
-        echo "client_secret=$(op read "op://cxgt2j4k5ngp7k7bqfcxvkim7m/cpec7eylxpyojten25tsly5akm/Client Secret")" >> $GITHUB_OUTPUT
+        echo "client_id=$(op read "op://25dt53lxtmov37u7s4b72weu3a/rf6g2bxlkerchywnft3jmldayq/Client ID")" >> $GITHUB_OUTPUT
+        echo "client_secret=$(op read "op://25dt53lxtmov37u7s4b72weu3a/rf6g2bxlkerchywnft3jmldayq/Client Secret")" >> $GITHUB_OUTPUT
 
     - name: Connect to Tailscale
       uses: tailscale/github-action@v2
