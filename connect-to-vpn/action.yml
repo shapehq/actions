@@ -25,10 +25,9 @@ runs:
         oauth-client-id: ${{ steps.credentials_step.outputs.client_id }}
         oauth-secret: ${{ steps.credentials_step.outputs.client_secret }}
         tags: tag:ci
-        args: --exit-node=100.69.219.67 --shields-up
+        args: --exit-node=vpn-exit-node-eu-central-1 --shields-up
 
     - name: Verify external IP address
       shell: bash
       run: |
-        echo "The current external IP address is:"
-        curl ipinfo.io/ip
+        echo "The current external IP address is: $(curl ipinfo.io/ip)"
