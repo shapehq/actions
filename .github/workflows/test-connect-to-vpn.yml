@@ -1,0 +1,17 @@
+name: Test connect-to-vpn
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [feature/connect-to-vpn]
+env:
+  OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+jobs:
+  test:
+    name: Test connect-to-vpn
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./connect-to-vpn

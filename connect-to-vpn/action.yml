@@ -1,0 +1,33 @@
+name: Connect to Tailscale VPN
+description: Connects current runner to a predefined Tailscale exit node
+author: Gerard Sala
+runs:
+  using: composite
+  steps:
+    - name: Check 1Password CLI Installed
+      shell: bash
+      run: op > /dev/null || echo "ONEPASSWORD_NOT_INSTALLED=true" >> $GITHUB_ENV
+
+    - name: Install 1Password CLI
+      if: ${{ env.ONEPASSWORD_NOT_INSTALLED }}
+      uses: 1password/install-cli-action@v1
+
+    - name: Install Tailscale OAuth App Credentials
+      shell: bash
+      id: credentials_step
+      run: |
+        echo "client_id=$(op read "op://25dt53lxtmov37u7s4b72weu3a/rf6g2bxlkerchywnft3jmldayq/Client ID")" >> $GITHUB_OUTPUT
+        echo "client_secret=$(op read "op://25dt53lxtmov37u7s4b72weu3a/rf6g2bxlkerchywnft3jmldayq/Client Secret")" >> $GITHUB_OUTPUT
+
+    - name: Connect to Tailscale
+      uses: tailscale/github-action@v2
+      with:
+        oauth-client-id: ${{ steps.credentials_step.outputs.client_id }}
+        oauth-secret: ${{ steps.credentials_step.outputs.client_secret }}
+        tags: tag:ci
+        args: --exit-node=100.69.219.67 --shields-up
+
+    - name: Verify external IP address
+      shell: bash
+      run: |
+        echo "The current external IP address is: $(curl ipinfo.io/ip)"
