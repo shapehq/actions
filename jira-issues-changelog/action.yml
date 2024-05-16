@@ -25,11 +25,11 @@ runs:
         else 
             echo "Fetching commits since last tag."
 
-            version=${{ inputs.marketing_version }}
+            version='${{ inputs.marketing_version }}'
 
             echo $version
 
-            escaped_version=$(echo $version | sed 's/\./\\./g')
+            escaped_version='$(echo $version | sed 's/\./\\./g')'
 
             echo $escaped_version
         
