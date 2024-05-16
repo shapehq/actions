@@ -1,4 +1,5 @@
 name: Add comment to a Jira issue
+description: Adds comments to a list of specified Jira issues by their specified ID's.
 inputs:
   message:
     description: The message to post in the Jira comment

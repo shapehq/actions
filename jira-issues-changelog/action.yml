@@ -1,9 +1,12 @@
 name: Jira issues changelog
-description: Outputs a list of Jira issue ids included in commit messages between the latest and the previous tags.
+description: Outputs a list of Jira issue keys mentioned in commit messages between the latest tag and the most recent tag that does not include the inputted app version.
+author: Mathias Mortensen & Marcus Mattsson
 inputs:
   jira-project-id:
+    description: The Jira project ID, e.g. "OK"
     required: true
   marketing-version:
+    description: The marketing version of the app you're building, e.g. "1.0.0"
     required: true
 outputs:
   issues:
