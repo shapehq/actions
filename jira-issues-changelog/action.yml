@@ -27,15 +27,15 @@ runs:
         else 
             echo "Fetching commits since last tag."
 
+            $ Get version
             version='${{ inputs.marketing-version }}'
-
-            echo $version
-
+            # Escape version for regex usage below
             escaped_version=$(echo $version | sed 's/\./\\./g')
-
-            echo $escaped_version
         
+            # Get latest tag
             latest_tag="$(git describe --tags $(git rev-list --tags --max-count=1))"
+
+            # Get previous tag that does not contain the current version number
             previous_tag="$(git describe --abbrev=0 --tags $(git tag -l --sort=-creatordate | grep -v $escaped_version | head -n 1))"        
             changelog="$(git log --pretty=format:"%s  (%cd) _<%ce>_" --date=format:"%Y-%m-%d %H:%M:%S" $latest_tag...$previous_tag)"    
         fi
