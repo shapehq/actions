@@ -369,6 +369,7 @@ Outputs a list of Jira issue keys included in commit messages between the latest
   uses: shapehq/actions/jira-issues-changelog@main
   with:
     jira-project-id: Jira project ID, e.g. SL
+    marketing-version: Marketing version, e.g. 1.0.0
 ```
 
 ## [loco-translation-status-checker](https://github.com/shapehq/actions/tree/main/loco-translation-status-checker/action.yml)
