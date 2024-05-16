@@ -3,6 +3,8 @@ description: Outputs a list of Jira issue ids included in commit messages betwee
 inputs:
   jira-project-id:
     required: true
+  marketing-version:
+    required: true
 outputs:
   issues:
     value: ${{ steps.changelog.outputs.issues }}
@@ -25,7 +27,7 @@ runs:
         else 
             echo "Fetching commits since last tag."
 
-            version='${{ inputs.marketing_version }}'
+            version='${{ inputs.marketing-version }}'
 
             echo $version
 
