@@ -346,7 +346,7 @@ You may optionally specify the name of the file to store the SSH key in. Only do
 
 ## [jira-comment](https://github.com/shapehq/actions/tree/main/jira-comment/action.yml)
 
-Add comment to a Jira issue.
+Adds comment to a Jira issue.
 
 ```yml
 - name: Add comment to a Jira issue
@@ -361,7 +361,7 @@ Add comment to a Jira issue.
 
 ## [jira-issues-changelog](https://github.com/shapehq/actions/tree/main/jira-issues-changelog/action.yml)
 
-Outputs a list of Jira issue keys included in commit messages between the latest and  previous tags.
+Outputs a list of Jira issue keys mentioned in commit messages between the latest tag and the most recent tag that does not include the inputted app version.
 
 ```yml
 - name: Jira issues from changelog
