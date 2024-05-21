@@ -1,20 +1,24 @@
 name: Add comment to a Jira issue
 description: Adds comments to a list of specified Jira issues by their specified ID's.
+author: Mathias Mortensen
 inputs:
   message:
     description: The message to post in the Jira comment
     required: true
+    default: This issue is included in build v. ${{ inputs.marketing-version }} (${{ github.run_number }}) available on Shipshape.
   issues:
     description: Comma separated string of Jira issue ids. Example 'OK-1879,OK-1785,OK-1734'
     required: true
   jira-base-url:
-    description: The URL to the Jira instance. Example https://shapedk.atlassian.net
+    description: The URL to the Jira instance.
     required: true
+    default: https://shapedk.atlassian.net
   jira-user-email:
-    description: The Jira user who should post the comment. Example ci@shape.dk
+    description: The Jira user who should post the comment. 
     required: true
+    default: ci@shape.dk
   op-jira-api-token-reference:
-    description: 1Password reference to the Jira API token
+    description: 1Password reference to a Jira API token
     required: true
 runs:
   using: composite

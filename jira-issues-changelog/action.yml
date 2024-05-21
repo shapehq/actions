@@ -10,6 +10,7 @@ inputs:
     required: true
 outputs:
   issues:
+    description: The list of Jira issues mentioned in the changelog
     value: ${{ steps.changelog.outputs.issues }}
 runs:
   using: composite
