@@ -344,6 +344,34 @@ You may optionally specify the name of the file to store the SSH key in. Only do
     filename: my_key
 ```
 
+## [jira-comment](https://github.com/shapehq/actions/tree/main/jira-comment/action.yml)
+
+Adds comment to a Jira issue.
+
+```yml
+- name: Add comment to a Jira issue
+  uses: shapehq/actions/jira-comment@main
+  with:
+    message: This issue is included in *Solar* v. ${{ inputs.marketing_version }} (${{ github.run_number }}) available on Shipshape.
+    issues: ${{ steps.changelog.outputs.issues }}
+    jira-base-url: https://shapedk.atlassian.net
+    jira-user-email: ci@shape.dk
+    op-jira-api-token-reference: op://My Vault/Shape CI Bot API Token for Jira credentials
+```
+
+## [jira-issues-changelog](https://github.com/shapehq/actions/tree/main/jira-issues-changelog/action.yml)
+
+Outputs a list of Jira issue keys mentioned in commit messages between the latest tag and the most recent tag that does not include the inputted app version.
+
+```yml
+- name: Jira issues from changelog
+  id: changelog
+  uses: shapehq/actions/jira-issues-changelog@main
+  with:
+    jira-project-id: Jira project ID, e.g. SL
+    marketing-version: Marketing version, e.g. 1.0.0
+```
+
 ## [loco-translation-status-checker](https://github.com/shapehq/actions/tree/main/loco-translation-status-checker/action.yml)
 
 Checks if there are missing translations in the Localize.biz project throws error.
