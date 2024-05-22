@@ -5,7 +5,6 @@ inputs:
   message:
     description: The message to post in the Jira comment
     required: true
-    default: This issue is included in build v. ${{ inputs.marketing-version }} (${{ github.run_number }}) available on Shipshape.
   issues:
     description: Comma separated string of Jira issue ids. Example 'OK-1879,OK-1785,OK-1734'
     required: true
