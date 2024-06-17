@@ -253,17 +253,6 @@ You may optionally specify the name of the keychain to install the certificate a
 
 Use the [install-certificate](https://github.com/shapehq/actions/edit/main/README.md#install-certificate) action to install a specified certificate.
 
-## [install-enterprise-distribution-provisioning-profile](https://github.com/shapehq/actions/blob/main/install-enterprise-distribution-provisioning-profile/action.yml)
-
-Installs Shape's default provisioning profile for enterprise distribution. The provisioning profile is named 'Shape 2020'.
-
-```yml
-- name: Install Enterprise Distribution Provisioning Profile
-  uses: shapehq/actions/install-enterprise-distribution-provisioning-profile@main
-```
-
-If you are using custom entitlements in your app or you are building an app for distribution on the App Store, you will likely need to install a specific provisioning profile. Refer to the [install-provisioning-profile](https://github.com/shapehq/actions/edit/main/README.md#install-provisioning-profile) action for installing a specified provisioning profile.
-
 ## [install-provisioning-profile](https://github.com/shapehq/actions/blob/main/install-provisioning-profile/action.yml)
 
 Installs a provisioning profile.
