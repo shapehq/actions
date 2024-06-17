@@ -19,7 +19,11 @@ runs:
   using: composite
   steps:
   - name: Install ImageMagick
-    run: brew install imagemagick
+    run: |
+      if ! command -v magick &> /dev/null
+      then
+        brew install imagemagick
+      fi
     shell: bash
   - name: Install Dependencies
     run: npm install
