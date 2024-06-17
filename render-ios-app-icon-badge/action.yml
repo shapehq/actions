@@ -22,7 +22,7 @@ runs:
     run: brew install pango jpeg librsvg
     shell: bash
   - name: Run Script
-    uses: ../render-ios-app-icon-badge/script
+    uses: ./../render-ios-app-icon-badge/script
     with:
       search-dir: ${{ inputs.search-dir }}
       style: ${{ inputs.style }}
