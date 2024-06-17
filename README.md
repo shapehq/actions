@@ -253,36 +253,6 @@ You may optionally specify the name of the keychain to install the certificate a
 
 Use the [install-certificate](https://github.com/shapehq/actions/edit/main/README.md#install-certificate) action to install a specified certificate.
 
-## [install-enterprise-distribution-certificate](https://github.com/shapehq/actions/blob/main/install-enterprise-distribution-certificate/action.yml)
-
-Installs Shape's default enterprise distribution certificate in the keychain.
-
-```yml
-- name: Install Enterprise Distribution Certificate
-  uses: shapehq/actions/install-enterprise-distribution-certificate@main
-```
-
-The action makes the keychain the default keychain on the system. You can disable this as shown below.
-
-```yml
-- name: Install Enterprise Distribution Certificate
-  uses: shapehq/actions/install-enterprise-distribution-certificate@main
-  with:
-    set-default-keychain: false
-```
-
-You may optionally specify the name of the keychain to install the certificate and the password of that keychain.
-
-```yml
-- name: Install Enterprise Distribution Certificate
-  uses: shapehq/actions/install-enterprise-distribution-certificate@main
-  with:
-    keychain-name: signing.keychain
-    keychain-password: h3ll0w0rld
-```
-
-Use the [install-certificate](https://github.com/shapehq/actions/edit/main/README.md#install-certificate) action to install a specified certificate.
-
 ## [install-enterprise-distribution-provisioning-profile](https://github.com/shapehq/actions/blob/main/install-enterprise-distribution-provisioning-profile/action.yml)
 
 Installs Shape's default provisioning profile for enterprise distribution. The provisioning profile is named 'Shape 2020'.
