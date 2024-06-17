@@ -22,7 +22,7 @@ async function renderBetaBadge(filePath: string, hexCurlColor?: string) {
   const innerShadowFilePath = path.join(betaResourcesDir, "inner_shadow.png")
   const outerShadowFilePath = path.join(betaResourcesDir, "outer_shadow.png")
   let curlColor: { r: number, g: number, b: number }
-  if (hexCurlColor) {
+  if (hexCurlColor && hexCurlColor.length > 0) {
     curlColor = hexToRgb(hexCurlColor)
   } else {
     curlColor = await getPixelColor(filePath, { x: imageSize.width - 1, y: 0 })
