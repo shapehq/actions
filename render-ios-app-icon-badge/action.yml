@@ -25,9 +25,11 @@ runs:
       fi
     shell: bash
   - name: Install Dependencies
+    working-directory: ${{ github.action_path }}
     run: npm install
     shell: bash
   - name: Run Script
+    working-directory: ${{ github.action_path }}
     run: |
       npx ts-node render ${{ inputs.search-dir }}\
         --style ${{ inputs.style }}\
