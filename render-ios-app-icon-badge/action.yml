@@ -23,6 +23,7 @@ runs:
     shell: bash
   - name: Install Dependencies
     run: npm install
+    shell: bash
   - name: Run Script
     run: |
       npx ts-node render ${{ inputs.search-dir }}\
