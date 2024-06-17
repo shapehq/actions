@@ -19,7 +19,7 @@ runs:
   using: composite
   steps:
   - name: Install Dependencies
-    run: brew install --quiet pango jpeg librsvg
+    run: brew install pango jpeg librsvg
     shell: bash
   - name: Run Script
     uses: ../render-ios-app-icon-badge/script
