@@ -8,7 +8,7 @@ const action = new Action({ logger: core })
 // })
 
 action.run({
-  searchDir: "/Users/simonbs/Developer/allerplay-ios",
+  searchDir: "/Users/simonbs/Developer/norlys-ios",
   style: "beta"
 }).catch(err => {
   core.setFailed(err.toString())
