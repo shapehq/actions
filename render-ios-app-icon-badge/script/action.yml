@@ -16,14 +16,5 @@ inputs:
     description: A hex color to use for the curl effect, supported when the style is "beta". Automatically selects a color based on the color of the app icon when not specified.
     required: false
 runs:
-  using: composite
-  steps:
-  - name: Install Dependencies
-    run: brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
-    shell: bash
-  - name: Run Script
-    uses: ./script/action.yml
-    with:
-      search-dir: ${{ inputs.search-dir }}
-      style: ${{ inputs.style }}
-      curl-color: ${{ inputs.curl-color }}
+  using: node20
+  main: dist/index.js
