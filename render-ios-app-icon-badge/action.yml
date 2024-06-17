@@ -31,7 +31,7 @@ runs:
   - name: Run Script
     working-directory: ${{ github.action_path }}
     run: |
-      npx ts-node render ${{ inputs.search-dir }}\
+      npx ts-node src/index.ts render ${{ inputs.search-dir }}\
         --style ${{ inputs.style }}\
         --curl-color ${{ inputs.curl-color }}
     shell: bash
