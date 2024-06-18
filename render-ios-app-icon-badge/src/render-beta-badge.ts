@@ -24,8 +24,6 @@ async function renderBetaBadge(options: { filePath: string, curlColor?: string }
   const curlHiglightsFilePath = path.join(betaResourcesDir, "curl_highlights.png")
   const curlInnerGlowFilePath = path.join(betaResourcesDir, "curl_inner_glow.png")
   const curlShadowOnGridFilePath = path.join(betaResourcesDir, "curl_shadow_on_grid.png")
-  const tmpRecoloredBackgroundImage = makeTmpFile()
-  const tmpRecoloredGridImage = makeTmpFile()
   const tmpRecoloredCurlImage = makeTmpFile()
   await recolorPixels(curlFilePath, tmpRecoloredCurlImage.filePath, curlColor)
   const layers = [
@@ -40,8 +38,6 @@ async function renderBetaBadge(options: { filePath: string, curlColor?: string }
   ]
   const targetSize = await getImageSize(options.filePath)
   await renderLayers(layers, options.filePath, targetSize)
-  tmpRecoloredBackgroundImage.cleanUp()
-  tmpRecoloredGridImage.cleanUp()
   tmpRecoloredCurlImage.cleanUp()
 }
 
