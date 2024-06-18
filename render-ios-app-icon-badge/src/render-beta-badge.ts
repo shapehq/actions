@@ -1,4 +1,3 @@
-import tmp from "tmp"
 import path from "path"
 import {
   recolorPixels,
@@ -6,40 +5,66 @@ import {
   getPixelColor,
   getImageSize
 } from "./utils/imagemagick"
-import hexToRgb from "./utils/hex-to-rgb"
+import { hexToRgb } from "./utils/hex"
+import makeTmpFile from "./utils/make-tmp-file"
 
-export default async (filePaths: string[], hexCurlColor?: string) => {
-  return await Promise.all(filePaths.map(async filePath => {
-    return await renderBetaBadge(filePath, hexCurlColor)
+export default async (options: {
+  filePaths: string[],
+  primaryBackgroundColor: string,
+  secondaryBackgroundColor: string,
+  curlColor?: string
+}) => {
+  return await Promise.all(options.filePaths.map(async filePath => {
+    return await renderBetaBadge({
+      filePath,
+      primaryBackgroundColor: options.primaryBackgroundColor,
+      secondaryBackgroundColor: options.secondaryBackgroundColor,
+      curlColor: options.curlColor
+    })
   }))
 }
 
-async function renderBetaBadge(filePath: string, hexCurlColor?: string) {
-  const imageSize = await getImageSize(filePath)
+async function renderBetaBadge(options: {
+  filePath: string,
+  primaryBackgroundColor: string,
+  secondaryBackgroundColor: string,
+  curlColor?: string
+}) {
+  const primaryBackgroundColor = hexToRgb(options.primaryBackgroundColor)
+  const secondaryBackgroundColor = hexToRgb(options.secondaryBackgroundColor)
+  const curlColor = await getCurlColor(options.filePath, options.curlColor)
   const betaResourcesDir = path.join(__dirname, "../resources/beta")
   const backgroundFilePath = path.join(betaResourcesDir, "background.png")
+  const gridFilePath = path.join(betaResourcesDir, "grid.png")
   const curlFilePath = path.join(betaResourcesDir, "curl.png")
   const innerShadowFilePath = path.join(betaResourcesDir, "inner_shadow.png")
   const outerShadowFilePath = path.join(betaResourcesDir, "outer_shadow.png")
-  let curlColor: { r: number, g: number, b: number }
-  if (hexCurlColor && hexCurlColor.length > 0) {
-    curlColor = hexToRgb(hexCurlColor)
-  } else {
-    curlColor = await getPixelColor(filePath, { x: imageSize.width - 1, y: 0 })
-  }
-  const tmpRecoloredCurlImage: {
-    name: string,
-    removeCallback: () => void
-  } = tmp.fileSync()
-  await recolorPixels(curlFilePath, tmpRecoloredCurlImage.name, curlColor)
+  const tmpRecoloredBackgroundImage = makeTmpFile()
+  const tmpRecoloredGridImage = makeTmpFile()
+  const tmpRecoloredCurlImage = makeTmpFile()
+  await recolorPixels(backgroundFilePath, tmpRecoloredBackgroundImage.filePath, primaryBackgroundColor)
+  await recolorPixels(gridFilePath, tmpRecoloredGridImage.filePath, secondaryBackgroundColor)
+  await recolorPixels(curlFilePath, tmpRecoloredCurlImage.filePath, curlColor)
   const layers = [
-    filePath,
-    backgroundFilePath,
-    tmpRecoloredCurlImage.name,
+    options.filePath,
+    tmpRecoloredBackgroundImage.filePath,
+    tmpRecoloredGridImage.filePath,
+    tmpRecoloredCurlImage.filePath,
     outerShadowFilePath,
     innerShadowFilePath
   ]
-  const targetSize = await getImageSize(filePath)
-  await renderLayers(layers, filePath, targetSize)
-  tmpRecoloredCurlImage.removeCallback()
+  const targetSize = await getImageSize(options.filePath)
+  await renderLayers(layers, options.filePath, targetSize)
+  tmpRecoloredBackgroundImage.cleanUp()
+  tmpRecoloredGridImage.cleanUp()
+  tmpRecoloredCurlImage.cleanUp()
+}
+
+async function getCurlColor(filePath: string, tintColor?: string) {
+  const imageSize = await getImageSize(filePath)
+  if (tintColor && tintColor.length > 0) {
+    return hexToRgb(tintColor)
+  } else {
+    return await getPixelColor(filePath, { x: imageSize.width - 1, y: 0 })
+  }
 }

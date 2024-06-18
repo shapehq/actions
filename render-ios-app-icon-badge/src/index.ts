@@ -15,9 +15,16 @@ program
   .command("render")
   .description("Render the iOS app icon badge")
   .argument("<search-dir>", "path to the directory")
-  .option("-s, --style <style>", "style of the badge", "beta")
-  .option("--curl-color [curl-color]", "hex color for the curl. Only used by the \"beta\" style badge")
-  .action(async (searchDir: string, options: { style: string, curlColor?: string }) => {
+  .option("--style <style>", "style of the badge", "beta")
+  .option("--primary-background-color <hex>", "the primary background color", "#b6d1eb")
+  .option("--secondary-background-color <hex>", "the secondary background color. Used for the grid lines when adding the beta badge", "#6baae3")
+  .option("--curl-color [hex]", "hex color for the curl. Only used by the \"beta\" style badge")
+  .action(async (searchDir: string, options: {
+    style: string,
+    primaryBackgroundColor: string,
+    secondaryBackgroundColor: string,
+    curlColor?: string
+  }) => {
     const absolutePath = path.resolve(searchDir)
     if (!fs.existsSync(absolutePath)) {
       console.error(`The directory ${absolutePath} does not exist.`)
@@ -34,7 +41,12 @@ program
     }
     const style = options.style || "beta"
     if (style === "beta") {
-      await renderBetaBadge(appIconFilePaths, options.curlColor)
+      await renderBetaBadge({
+        filePaths: appIconFilePaths,
+        primaryBackgroundColor: options.primaryBackgroundColor,
+        secondaryBackgroundColor: options.secondaryBackgroundColor,
+        curlColor: options.curlColor
+      })
     } else {
       console.error('Invalid style. Only "beta" is supported.')
       process.exit(1)
