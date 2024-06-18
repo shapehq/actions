@@ -1,0 +1,36 @@
+name: Render iOS App Icon Badge
+description: Renders a badge on an iOS app icon.
+branding:
+  icon: square
+  color: purple
+inputs:
+  search-directory:
+    description: The directory to search for app icons.
+    required: true
+    default: .
+  style:
+    description: The style of the badge to be applied. Currently, only "beta" is available.
+    required: true
+    default: beta
+  curl-color:
+    description: A hex color to use for the curl effect, supported when the style is "beta". Automatically selects a color based on the color of the app icon when not specified.
+    required: false
+runs:
+  using: composite
+  steps:
+  - name: Install ImageMagick
+    run: |
+      if ! command -v magick &> /dev/null; then
+        brew install imagemagick
+      fi
+    shell: bash
+  - name: Install Dependencies
+    working-directory: ${{ github.action_path }}
+    run: npm install
+    shell: bash
+  - name: Run Script
+    run: |
+      npx ts-node ${{ github.action_path }}/src/index.ts render ${{ inputs.search-directory }}\
+        --style ${{ inputs.style }}\
+        --curl-color ${{ inputs.curl-color }}
+    shell: bash
