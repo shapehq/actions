@@ -426,7 +426,7 @@ The action automatically picks an appropriate color for the curl in the top-righ
 
 To only annotate the app icon when building a specific configuration of your app, you can use GitHub Actions' `if` argument. For example, in the following snippet, the action is only run when the user has chosen to run the workflow for the Beta configuration.
 
-```
+```yml
 - name: Add Badge to App Icon
   if: ${{ inputs.configuration }} == 'Beta'
   uses: shapehq/actions/render-ios-app-icon-badge@feature/render-ios-app-icon-badge
