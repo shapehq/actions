@@ -386,7 +386,7 @@ If you wish to only post to Slack if the jobs fails you can use the `failure()` 
     op-slack-token-reference: op://My Vault/My Slack Token/token
 ```
 
-You may use the Slack token residing in the shared GitHub Actions cault to post messages.
+You may use the Slack token residing in the shared GitHub Actions vault to post messages.
 
 ```yml
 - name: Post to Slack
