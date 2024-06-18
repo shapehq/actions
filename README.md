@@ -397,6 +397,23 @@ You may use the Slack token residing in the shared GitHub Actions vault to post 
     op-slack-token-reference: op://GitHub Actions/Slack Token/token
 ```
 
+## [render-ios-app-icon-badge](https://github.com/shapehq/actions/tree/main/render-ios-app-icon-badge/action.yml)
+
+Adds a badge to an iOS app icon to indicate that the app is meant for testing purposes.
+
+```yml
+- name: Render iOS App Icon Badge
+  uses: shapehq/actions/render-ios-app-icon-badge@main
+```
+
+The action scans for app icons in the repository and automatically annotates all app icons it finds. You may optionally specify the root folder it should start scanning from, to limit the app icons to be annotated and improve performance.
+
+```yml
+- name: Render iOS App Icon Badge
+  uses: shapehq/actions/render-ios-app-icon-badge@main
+  with:
+    search-directory: 
+```
 
 ## [swiftlint](https://github.com/shapehq/actions/tree/main/swiftlint/action.yml)
 
