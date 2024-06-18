@@ -4,7 +4,7 @@ branding:
   icon: square
   color: purple
 inputs:
-  search-dir:
+  search-directory:
     description: The directory to search for app icons.
     required: true
     default: .
@@ -30,7 +30,7 @@ runs:
     shell: bash
   - name: Run Script
     run: |
-      npx ts-node ${{ github.action_path }}/src/index.ts render ${{ inputs.search-dir }}\
+      npx ts-node ${{ github.action_path }}/src/index.ts render ${{ inputs.search-directory }}\
         --style ${{ inputs.style }}\
         --curl-color ${{ inputs.curl-color }}
     shell: bash
