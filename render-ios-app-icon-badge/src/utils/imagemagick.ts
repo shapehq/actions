@@ -38,7 +38,7 @@ export async function renderLayers(
   outputPath: string, 
   targetSize: Size
 ) {
-  let command = "magick"
+  let command = `magick -size ${targetSize.width}x${targetSize.height}`
   for (let i = 0; i < imagePaths.length; i++) {
     const imagePath = imagePaths[i]
     command += ` \\( "${imagePath}" -resize ${targetSize.width}x${targetSize.height} \\)`
