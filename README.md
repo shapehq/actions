@@ -429,7 +429,7 @@ To only annotate the app icon when building a specific configuration of your app
 ```yml
 - name: Add Badge to App Icon
   if: ${{ inputs.configuration }} == 'Beta'
-  uses: shapehq/actions/render-ios-app-icon-badge@feature/render-ios-app-icon-badge
+  uses: shapehq/actions/render-ios-app-icon-badge@main
 ```
 
 ## [swiftlint](https://github.com/shapehq/actions/tree/main/swiftlint/action.yml)
