@@ -8,19 +8,13 @@ import {
 import { hexToRgb } from "./utils/hex"
 import makeTmpFile from "./utils/make-tmp-file"
 
-export default async (options: {
-  filePaths: string[],
-  curlColor?: string
-}) => {
+export default async (options: { filePaths: string[], curlColor?: string }) => {
   return await Promise.all(options.filePaths.map(async filePath => {
     return await renderBetaBadge({ filePath, curlColor: options.curlColor })
   }))
 }
 
-async function renderBetaBadge(options: {
-  filePath: string,
-  curlColor?: string
-}) {
+async function renderBetaBadge(options: { filePath: string, curlColor?: string }) {
   const curlColor = await getCurlColor(options.filePath, options.curlColor)
   const betaResourcesDir = path.join(__dirname, "../resources/beta")
   const backgroundFilePath = path.join(betaResourcesDir, "background.png")
