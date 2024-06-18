@@ -19,7 +19,11 @@ interface Size {
   readonly height: number
 }
 
-export async function recolorPixels(imagePath: string, outputPath: string, color: Color): Promise<void> {
+export async function recolorPixels(
+  imagePath: string,
+  outputPath: string, 
+  color: Color
+): Promise<void> {
   await runCommand(`
     magick "${imagePath}" \
     -alpha set \
@@ -29,7 +33,11 @@ export async function recolorPixels(imagePath: string, outputPath: string, color
   `)
 }
 
-export async function renderLayers(imagePaths: string[], outputPath: string, targetSize: Size): Promise<void> {
+export async function renderLayers(
+  imagePaths: string[], 
+  outputPath: string, 
+  targetSize: Size
+) {
   let command = "magick"
   for (let i = 0; i < imagePaths.length; i++) {
     const imagePath = imagePaths[i]
