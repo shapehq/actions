@@ -31,7 +31,7 @@ Installs an App Store Connect API key file on the runner and outputs the issuer 
 ```yml
 - name: Install App Store Connect API Key
   id: install-asc-api-key
-  uses: ./.github/actions/install-asc-api-key
+  uses: shapehq/actions/install-asc-api-key@main
   with:
     op-asc-key-issuer-id-reference: op://My Vault/My App Store Connect API Key/Issuer ID
     op-asc-key-id-reference: op://My Vault/My App Store Connect API Key/Key ID
@@ -43,7 +43,7 @@ You may optionally pass the `output-asc-key-file-directory` parameter to specify
 ```yml
 - name: Install App Store Connect API Key
   id: install-asc-api-key
-  uses: ./.github/actions/install-asc-api-key
+  uses: shapehq/actions/install-asc-api-key@main
   with:
     op-asc-key-issuer-id-reference: op://My Vault/My App Store Connect API Key/Issuer ID
     op-asc-key-id-reference: op://My Vault/My App Store Connect API Key/Key ID
@@ -253,47 +253,6 @@ You may optionally specify the name of the keychain to install the certificate a
 
 Use the [install-certificate](https://github.com/shapehq/actions/edit/main/README.md#install-certificate) action to install a specified certificate.
 
-## [install-enterprise-distribution-certificate](https://github.com/shapehq/actions/blob/main/install-enterprise-distribution-certificate/action.yml)
-
-Installs Shape's default enterprise distribution certificate in the keychain.
-
-```yml
-- name: Install Enterprise Distribution Certificate
-  uses: shapehq/actions/install-enterprise-distribution-certificate@main
-```
-
-The action makes the keychain the default keychain on the system. You can disable this as shown below.
-
-```yml
-- name: Install Enterprise Distribution Certificate
-  uses: shapehq/actions/install-enterprise-distribution-certificate@main
-  with:
-    set-default-keychain: false
-```
-
-You may optionally specify the name of the keychain to install the certificate and the password of that keychain.
-
-```yml
-- name: Install Enterprise Distribution Certificate
-  uses: shapehq/actions/install-enterprise-distribution-certificate@main
-  with:
-    keychain-name: signing.keychain
-    keychain-password: h3ll0w0rld
-```
-
-Use the [install-certificate](https://github.com/shapehq/actions/edit/main/README.md#install-certificate) action to install a specified certificate.
-
-## [install-enterprise-distribution-provisioning-profile](https://github.com/shapehq/actions/blob/main/install-enterprise-distribution-provisioning-profile/action.yml)
-
-Installs Shape's default provisioning profile for enterprise distribution. The provisioning profile is named 'Shape 2020'.
-
-```yml
-- name: Install Enterprise Distribution Provisioning Profile
-  uses: shapehq/actions/install-enterprise-distribution-provisioning-profile@main
-```
-
-If you are using custom entitlements in your app or you are building an app for distribution on the App Store, you will likely need to install a specific provisioning profile. Refer to the [install-provisioning-profile](https://github.com/shapehq/actions/edit/main/README.md#install-provisioning-profile) action for installing a specified provisioning profile.
-
 ## [install-provisioning-profile](https://github.com/shapehq/actions/blob/main/install-provisioning-profile/action.yml)
 
 Installs a provisioning profile.
@@ -427,7 +386,7 @@ If you wish to only post to Slack if the jobs fails you can use the `failure()` 
     op-slack-token-reference: op://My Vault/My Slack Token/token
 ```
 
-You may use the Slack token residing in the shared GitHub Actions cault to post messages.
+You may use the Slack token residing in the shared GitHub Actions vault to post messages.
 
 ```yml
 - name: Post to Slack
@@ -438,6 +397,40 @@ You may use the Slack token residing in the shared GitHub Actions cault to post 
     op-slack-token-reference: op://GitHub Actions/Slack Token/token
 ```
 
+## [render-ios-app-icon-badge](https://github.com/shapehq/actions/tree/main/render-ios-app-icon-badge/action.yml)
+
+Adds a badge to an iOS app icon to indicate that the app is meant for testing purposes.
+
+```yml
+- name: Render iOS App Icon Badge
+  uses: shapehq/actions/render-ios-app-icon-badge@main
+```
+
+The action scans for app icons in the repository and automatically annotates all app icons it finds. You may optionally specify the root folder it should start scanning from, to limit the app icons to be annotated and improve performance.
+
+```yml
+- name: Render iOS App Icon Badge
+  uses: shapehq/actions/render-ios-app-icon-badge@main
+  with:
+    search-directory: ./my/other/folder
+```
+
+The action automatically picks an appropriate color for the curl in the top-right corner. You may override this color by providing a hex color value to the `curl-color` argument.
+
+```yml
+- name: Render iOS App Icon Badge
+  uses: shapehq/actions/render-ios-app-icon-badge@main
+  with:
+    curl-color: #1CC866
+```
+
+To only annotate the app icon when building a specific configuration of your app, you can use GitHub Actions' `if` argument. For example, in the following snippet, the action is only run when the user has chosen to run the workflow for the Beta configuration.
+
+```yml
+- name: Add Badge to App Icon
+  if: ${{ inputs.configuration }} == 'Beta'
+  uses: shapehq/actions/render-ios-app-icon-badge@main
+```
 
 ## [swiftlint](https://github.com/shapehq/actions/tree/main/swiftlint/action.yml)
 

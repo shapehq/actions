@@ -1,0 +1,22 @@
+{
+  "name": "render-ios-app-icon-badge",
+  "version": "1.0.0",
+  "description": "xcode-select action",
+  "main": "lib/index.js",
+  "author": "Simon B. Støvring",
+  "scripts": {
+    "build": "tsc && ncc build --minify"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@vercel/ncc": "^0.34.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.2",
+    "commander": "^12.1.0",
+    "recursive-readdir": "^2.2.3",
+    "tmp": "^0.2.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^4.8.4"
+  }
+}
