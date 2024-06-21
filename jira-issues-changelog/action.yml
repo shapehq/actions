@@ -1,5 +1,5 @@
 name: Jira issues changelog
-description: Outputs a list of Jira issue keys mentioned in commit messages between the latest tag and the most recent tag that does not include the inputted app version.
+description: Outputs a list of Jira issue keys mentioned in commit messages between the current commit you are at and the most recent tag that does not include the inputted app version.
 author: Mathias Mortensen & Marcus Mattsson
 inputs:
   jira-project-id:
@@ -35,13 +35,10 @@ runs:
             version='${{ inputs.marketing-version }}'
             # Escape version for regex usage below
             escaped_version=$(echo $version | sed 's/\./\\./g')
-        
-            # Get latest tag
-            latest_tag="$(git describe --tags $(git rev-list --tags --max-count=1))"
 
-            # Get previous tag that does not contain the current version number
+            # Get latest tag that does not contain the current version number
             previous_tag="$(git describe --abbrev=0 --tags $(git tag -l --sort=-creatordate | grep -v $escaped_version | head -n 1))"        
-            changelog="$(git log --pretty=format:"%s  (%cd) _<%ce>_" --date=format:"%Y-%m-%d %H:%M:%S" $latest_tag...$previous_tag)"    
+            changelog="$(git log --pretty=format:"%s  (%cd) _<%ce>_" --date=format:"%Y-%m-%d %H:%M:%S" $previous_tag..HEAD)"
         fi
           
         # Output collected information
