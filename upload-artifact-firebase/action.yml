@@ -20,12 +20,15 @@ inputs:
     description: "Release notes for this build"
 
 runs:
-  using: ubuntu-latest
+  using: composite
   steps:
     - name: "Install Firebase tools"
+      shell: bash
       run: npm install -g firebase-tools
 
     - name: "Distribute apk"
+      shell: bash
+
       env:
         ACCESS_TOKEN: ${{ inputs.firebaseAccessToken }}
         APP_ID: ${{ inputs.appId }}
