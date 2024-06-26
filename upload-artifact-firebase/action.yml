@@ -3,21 +3,21 @@ description: "Uploads an APK to Firebase App Distribution"
 author: "Mikkel Schläger"
 
 inputs:
-  firebaseAccessToken:
+  tokenOpReference:
+    description: "1Password reference to Firebase CLI access token"
     required: true
-    description: "Firebase CLI access token"
 
   appId:
-    required: true
     description: "Firebase App ID"
+    required: true
 
   apkPath:
     description: "Path to the APK that will be uploaded"
     required: true
 
   releaseNotes:
-    required: false
     description: "Release notes for this build"
+    required: false
 
 runs:
   using: composite
@@ -26,17 +26,19 @@ runs:
       shell: bash
       run: npm install -g firebase-tools
 
+    - name: "Read Firebase access token"
+      shell: bash
+      run: FIREBASE_TOKEN=$(op read "op://REMA 1000 GitHub Actions/Firebase access token/password")
+
     - name: "Distribute apk"
       shell: bash
 
       env:
         APK_PATH: ${{ inputs.apkPath }}
-        ACCESS_TOKEN: ${{ inputs.firebaseAccessToken }}
         APP_ID: ${{ inputs.appId }}
         RELEASE_NOTES: ${{ inputs.releaseNotes }}
 
       run: |
         firebase appdistribution:distribute "$APK_PATH" \
-        --token "$ACCESS_TOKEN" \
         --app "$APP_ID" \
         --release-notes "$RELEASE_NOTES"
