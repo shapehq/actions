@@ -1,0 +1,38 @@
+name: "Upload artifact to Firebase"
+description: "Uploads an APK to Firebase App Distribution"
+author: "Mikkel Schläger"
+
+inputs:
+  firebaseAccessToken:
+    required: true
+    description: "Firebase CLI access token"
+
+  appId:
+    required: true
+    description: "Firebase App ID"
+
+  apkPath:
+    description: "Path to the APK that will be uploaded"
+    required: true
+
+  releaseNotes:
+    required: false
+    description: "Release notes for this build"
+
+runs:
+  using: ubuntu-latest
+  steps:
+    - name: "Install Firebase tools"
+      run: npm install -g firebase-tools
+
+    - name: "Distribute apk"
+      env:
+        ACCESS_TOKEN: ${{ inputs.firebaseAccessToken }}
+        APP_ID: ${{ inputs.appId }}
+        RELEASE_NOTES: ${{ inputs.releaseNotes }}
+
+      run: |
+        firebase appdistribution:distribute app-staging.apk \
+        --token $ACCESS_TOKEN \
+        --app $APP_ID \
+        --release-notes "$RELEASE_NOTES"
