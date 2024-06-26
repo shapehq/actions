@@ -40,5 +40,6 @@ runs:
 
       run: |
         firebase appdistribution:distribute "$APK_PATH" \
+        --token "$FIREBASE_TOKEN" \
         --app "$APP_ID" \
         --release-notes "$RELEASE_NOTES"
