@@ -28,7 +28,7 @@ runs:
 
     - name: "Read Firebase access token"
       shell: bash
-      run: FIREBASE_TOKEN=$(op read "op://REMA 1000 GitHub Actions/Firebase access token/password")
+      run: FIREBASE_TOKEN=$(op read "${{ inputs.tokenOpReference }}")
 
     - name: "Distribute apk"
       shell: bash
