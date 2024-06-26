@@ -30,12 +30,13 @@ runs:
       shell: bash
 
       env:
+        APK_PATH: ${{ inputs.apkPath }}
         ACCESS_TOKEN: ${{ inputs.firebaseAccessToken }}
         APP_ID: ${{ inputs.appId }}
         RELEASE_NOTES: ${{ inputs.releaseNotes }}
 
       run: |
-        firebase appdistribution:distribute app-staging.apk \
-        --token $ACCESS_TOKEN \
-        --app $APP_ID \
+        firebase appdistribution:distribute "$APK_PATH" \
+        --token "$ACCESS_TOKEN" \
+        --app "$APP_ID" \
         --release-notes "$RELEASE_NOTES"
