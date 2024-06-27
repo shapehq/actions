@@ -29,8 +29,8 @@ runs:
     - name: "Inject service credentials"
       shell: bash
       run: |
-      op read ${{ inputs.serviceCredentialsOpReference }} -o credentials.json
-      export GOOGLE_APPLICATION_CREDENTIALS=$(realpath credentials.json)
+        op read ${{ inputs.serviceCredentialsOpReference }} -o credentials.json
+        export GOOGLE_APPLICATION_CREDENTIALS=$(realpath credentials.json)
 
     - name: "Distribute apk"
       shell: bash
