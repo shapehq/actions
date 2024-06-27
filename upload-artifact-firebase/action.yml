@@ -51,5 +51,5 @@ runs:
         "$APK_PATH" \
         --app "$APP_ID" \
         --release-notes "$RELEASE_NOTES" \
-        --testers "TESTERS" \
-        --groups "GROUPS"
+        --testers "$TESTERS" \
+        --groups "$GROUPS"
