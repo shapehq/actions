@@ -3,8 +3,8 @@ description: "Uploads an APK to Firebase App Distribution"
 author: "Mikkel Schläger"
 
 inputs:
-  tokenOpReference:
-    description: "1Password reference to Firebase CLI access token"
+  serviceCredentialsOpReference:
+    description: "1Password reference to Google service account credentials json file"
     required: true
 
   appId:
@@ -26,6 +26,12 @@ runs:
       shell: bash
       run: npm install -g firebase-tools
 
+    - name: "Inject service credentials"
+      shell: bash
+      run: |
+      op read ${{ inputs.serviceCredentialsOpReference }} -o credentials.json
+      export GOOGLE_APPLICATION_CREDENTIALS=$(realpath credentials.json)
+
     - name: "Distribute apk"
       shell: bash
 
@@ -35,8 +41,6 @@ runs:
         RELEASE_NOTES: ${{ inputs.releaseNotes }}
 
       run: |
-        FIREBASE_TOKEN=$(op read "${{ inputs.tokenOpReference }}")
         firebase appdistribution:distribute "$APK_PATH" \
-        --token "$FIREBASE_TOKEN" \
         --app "$APP_ID" \
         --release-notes "$RELEASE_NOTES"
