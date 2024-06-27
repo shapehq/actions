@@ -4,7 +4,7 @@ author: "Mikkel Schläger"
 
 inputs:
   serviceCredentialsOpReference:
-    description: "1Password reference to Google service account credentials json file"
+    description: "1Password reference to Google service account credentials json file (without quotes)"
     required: true
 
   appId:
@@ -16,7 +16,15 @@ inputs:
     required: true
 
   releaseNotes:
-    description: "Release notes for this build"
+    description: "Release notes for this distribution"
+    required: false
+
+  groups:
+    description: "Comma separated list of Firebase tester group names"
+    required: false
+
+  testers:
+    description: "Comma separated email list of testers to invite"
     required: false
 
 runs:
@@ -33,10 +41,15 @@ runs:
         APK_PATH: ${{ inputs.apkPath }}
         APP_ID: ${{ inputs.appId }}
         RELEASE_NOTES: ${{ inputs.releaseNotes }}
+        TESTERS: ${{ inputs.testers }}
+        GROUPS: ${{ inputs.groups }}
 
       run: |
         op read "${{ inputs.serviceCredentialsOpReference }}" -o credentials.json
         export GOOGLE_APPLICATION_CREDENTIALS=$(realpath credentials.json)
-        firebase appdistribution:distribute "$APK_PATH" \
+        firebase appdistribution:distribute \
+        "$APK_PATH" \
         --app "$APP_ID" \
-        --release-notes "$RELEASE_NOTES"
+        --release-notes "$RELEASE_NOTES" \
+        --groups "$INPUT_GROUPS" \
+        --testers "$INPUT_TESTERS"
