@@ -27,14 +27,14 @@ runs:
         SSH_ADD_TIMEOUT=5
         op read --out-file $SSH_KEY_PATH "${{ inputs.op-reference }}"
         if [ -z "$SSH_KEY_PASSWORD" ]; then
-          set -o pipefail && timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH || true
+          set -o pipefail && timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH | true
           SSH_ADD_STATUS=$?
         else
           ASKPASS_SCRIPT=$(mktemp)
           chmod +x $ASKPASS_SCRIPT
           echo "#!/bin/bash" > $ASKPASS_SCRIPT
           echo "echo $SSH_KEY_PASSWORD" >> $ASKPASS_SCRIPT
-          set -o pipefail && DISPLAY=1 SSH_ASKPASS=$ASKPASS_SCRIPT timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH < /dev/null || true
+          set -o pipefail && DISPLAY=1 SSH_ASKPASS=$ASKPASS_SCRIPT timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH < /dev/null | true
           SSH_ADD_STATUS=$?
           rm -f $ASKPASS_SCRIPT
         fi
