@@ -284,7 +284,7 @@ You may optionally specify an activation code to be used by Shipshape. You will 
 
 ## [install-ssh-key](https://github.com/shapehq/actions/tree/main/install-ssh-key/action.yml)
 
-Installs an SSH key.
+Installs an SSH key or a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys), which is an SSH key that grants access to specific repositories.
 
 ```yml
 - name: Install SSH Key
@@ -301,6 +301,14 @@ You may optionally specify the name of the file to store the SSH key in. Only do
   with:
     op-reference: op://My Vault/My SSH Key/ssh-key
     filename: my_key
+```
+
+Attempting to install multiple SSH keys with the same name will cause the SSH key to be overwritten.
+
+When installing multiple SSH keys, you may need to specify which SSH key to use when accessing a repository. For example, you may clone a repository using a specific SSH key by setting the `GIT_SSH_COMMAND` environment variable as shown below:
+
+```bash
+GIT_SSH_COMMAND='ssh -i ~/.ssh/my_ssh_key’ git clone git@github.com:shapehq/example.git
 ```
 
 ## [jira-comment](https://github.com/shapehq/actions/tree/main/jira-comment/action.yml)
