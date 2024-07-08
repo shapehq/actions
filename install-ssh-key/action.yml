@@ -23,8 +23,10 @@ runs:
         }
         mkdir -p ~/.ssh
         SSH_KEY_PATH="$HOME/.ssh/${{ inputs.filename }}"
-        SSH_KEY_PASSWORD="${{ inputs.op-password-reference }}"
         SSH_ADD_TIMEOUT=5
+        if [[ -n "${{ inputs.op-password-reference }}" ]]; then
+          SSH_KEY_PASSWORD=$(op read "${{ inputs.op-password-reference }}")
+        fi
         op read --out-file $SSH_KEY_PATH "${{ inputs.op-reference }}"
         if [ -z "$SSH_KEY_PASSWORD" ]; then
           timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH || SSH_ADD_STATUS=$?
