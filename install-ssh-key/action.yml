@@ -38,7 +38,11 @@ runs:
         SSH_ADD_STATUS=$?
         rm $ASKPASS_SCRIPT
         if [ $SSH_ADD_STATUS -ne 0 ]; then
-          echo "Failed to add SSH key. Incorrect password or other error."
+          if [ -z "$SSH_KEY_PASSWORD" ]; then
+            echo "::error::Failed to add SSH key. No password was supplied. Is the SSH key password protected?"
+          else
+            echo "::error::Failed to add SSH key. It may be that the supplied password is incorrect."
+          fi
           exit 1
         fi
       shell: bash
