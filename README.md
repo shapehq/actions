@@ -149,7 +149,7 @@ You may optionally specify the name of the file to store the SSH key in. Only do
     filename: ci
 ```
 
-Use the [install-ssh-key](https://github.com/shapehq/actions/edit/main/README.md#install-ssh-key) action to install a specified SSH key.
+Use the [install-ssh-key](https://github.com/shapehq/actions?tab=readme-ov-file#install-ssh-key) action to install a specified SSH key.
 
 ## [install-company-asc-api-key](https://github.com/shapehq/actions/tree/main/install-company-asc-api-key/action.yml)
 
@@ -191,7 +191,7 @@ The outputs can be used to access the API key. The following example shows how t
     ASC_API_KEY: ${{ steps.install-asc-api-key.outputs.key-file-path }}
 ```
 
-Use the [install-asc-api-key](https://github.com/shapehq/actions/edit/main/README.md#install-asc-api-key) action to install a specified App Store Connect API key.
+Use the [install-asc-api-key](https://github.com/shapehq/actions?tab=readme-ov-file#install-asc-api-key) action to install a specified App Store Connect API key.
 
 ## [install-company-development-certificate](https://github.com/shapehq/actions/blob/main/install-company-development-certificate/action.yml)
 
@@ -221,7 +221,7 @@ You may optionally specify the name of the keychain to install the certificate a
     keychain-password: h3ll0w0rld
 ```
 
-Use the [install-certificate](https://github.com/shapehq/actions/edit/main/README.md#install-certificate) action to install a specified certificate.
+Use the [install-certificate](https://github.com/shapehq/actions?tab=readme-ov-file#install-certificate) action to install a specified certificate.
 
 ## [install-company-distribution-certificate](https://github.com/shapehq/actions/blob/main/install-company-distribution-certificate/action.yml)
 
@@ -251,7 +251,7 @@ You may optionally specify the name of the keychain to install the certificate a
     keychain-password: h3ll0w0rld
 ```
 
-Use the [install-certificate](https://github.com/shapehq/actions/edit/main/README.md#install-certificate) action to install a specified certificate.
+Use the [install-certificate](https://github.com/shapehq/actions?tab=readme-ov-file#install-certificate) action to install a specified certificate.
 
 ## [install-provisioning-profile](https://github.com/shapehq/actions/blob/main/install-provisioning-profile/action.yml)
 
