@@ -284,7 +284,7 @@ You may optionally specify an activation code to be used by Shipshape. You will 
 
 ## [install-ssh-key](https://github.com/shapehq/actions/tree/main/install-ssh-key/action.yml)
 
-Installs an SSH key or a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys), which is an SSH key that grants access to specific repositories.
+Installs an SSH key or a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys), which is an SSH key that grants access to a single repository.
 
 ```yml
 - name: Install SSH Key
