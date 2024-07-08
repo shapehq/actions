@@ -38,6 +38,7 @@ runs:
           SSH_ADD_STATUS=$?
           rm -f $ASKPASS_SCRIPT
         fi
+        echo $SSH_ADD_STATUS
         if [ $SSH_ADD_STATUS -ne 0 ]; then
           if [ -z "$SSH_KEY_PASSWORD" ]; then
             echo "::error::Failed to add SSH key. No password was supplied. Is the SSH key password protected?"
