@@ -293,6 +293,16 @@ Installs an SSH key or a [deploy key](https://docs.github.com/en/authentication/
     op-reference: op://My Vault/My SSH Key/ssh-key
 ```
 
+Set the `op-password-reference` input to install a password-protected SSH key.
+
+```yml
+- name: Install SSH Key
+  uses: shapehq/actions/install-ssh-key@main
+  with:
+    op-reference: op://My Vault/My SSH Key/ssh-key
+    op-password-reference: op://My Vault/My SSH Key/password
+```
+
 You may optionally specify the name of the file to store the SSH key in. Only do this if you are storing multiple SSH keys to avoid overriding an SSH key.
 
 ```yml
