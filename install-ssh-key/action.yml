@@ -24,6 +24,7 @@ runs:
         mkdir -p ~/.ssh
         SSH_KEY_PATH="$HOME/.ssh/${{ inputs.filename }}"
         SSH_ADD_TIMEOUT=5
+        SSH_ADD_STATUS=0
         if [[ -n "${{ inputs.op-password-reference }}" ]]; then
           SSH_KEY_PASSWORD=$(op read "${{ inputs.op-password-reference }}")
         fi
@@ -38,7 +39,6 @@ runs:
           DISPLAY=1 SSH_ASKPASS=$ASKPASS_SCRIPT timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH < /dev/null || SSH_ADD_STATUS=$?
           rm -f $ASKPASS_SCRIPT
         fi
-        echo $SSH_ADD_STATUS
         if [ $SSH_ADD_STATUS -ne 0 ]; then
           if [ -z "$SSH_KEY_PASSWORD" ]; then
             echo "::error::Failed to add the SSH key. No password was supplied. Is the SSH key password-protected?"
