@@ -28,7 +28,9 @@ runs:
         if [[ -n "${{ inputs.op-password-reference }}" ]]; then
           SSH_KEY_PASSWORD=$(op read "${{ inputs.op-password-reference }}")
         fi
-        op read --out-file $SSH_KEY_PATH "${{ inputs.op-reference }}"
+        ssh-add -d "$SSH_KEY_PATH" &>/dev/null
+        rm -f "$SSH_KEY_PATH"
+        op read --out-file "$SSH_KEY_PATH" "${{ inputs.op-reference }}"
         if [ -z "$SSH_KEY_PASSWORD" ]; then
           timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH || SSH_ADD_STATUS=$?
         else
