@@ -33,7 +33,7 @@ runs:
         fi
         
         # Remove the SSH key if it exists.
-        ssh-add -d "$SSH_KEY_PATH" &>/dev/null
+        ssh-add -d "$SSH_KEY_PATH" &>/dev/null || true
         rm -f "$SSH_KEY_PATH"
         
         # Load the SSH key from 1Password.
