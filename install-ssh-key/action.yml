@@ -39,9 +39,9 @@ runs:
         echo $SSH_ADD_STATUS
         if [ $SSH_ADD_STATUS -ne 0 ]; then
           if [ -z "$SSH_KEY_PASSWORD" ]; then
-            echo "::error::Failed to add SSH key. No password was supplied. Is the SSH key password protected?"
+            echo "::error::Failed to add the SSH key. No password was supplied. Is the SSH key password-protected?"
           else
-            echo "::error::Failed to add SSH key. It may be that the supplied password is incorrect."
+            echo "::error::Failed to add the SSH key. It may be that the supplied password is incorrect."
           fi
           exit 1
         fi
