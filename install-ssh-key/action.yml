@@ -17,29 +17,28 @@ runs:
   steps:
     - name: Install SSH Key
       run: |
+        #!/bin/bash
+        function timeout() {
+          perl -e 'alarm shift; exec @ARGV' "$@" > /dev/null 2>&1
+        }
         mkdir -p ~/.ssh
         SSH_KEY_PATH="$HOME/.ssh/${{ inputs.filename }}"
         SSH_KEY_PASSWORD="${{ inputs.op-password-reference }}"
+        SSH_ADD_TIMEOUT=5
         op read --out-file $SSH_KEY_PATH "${{ inputs.op-reference }}"
         if [ -z "$SSH_KEY_PASSWORD" ]; then
-          # Add SSH key without password.
-          ssh-add $SSH_KEY_PATH
+          timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH
         else
-          # Create script that echoes the password to be used by ssh-add.
           ASKPASS_SCRIPT=$(mktemp)
           chmod +x $ASKPASS_SCRIPT
           echo "#!/bin/bash" > $ASKPASS_SCRIPT
           echo "echo $SSH_KEY_PASSWORD" >> $ASKPASS_SCRIPT
-          # Add the SSH key using ssh-add. 
-          function timeout() {
-            perl -e 'alarm shift; exec @ARGV' "$@" > /dev/null 2>&1
-          }
-          DISPLAY=1 SSH_ASKPASS=$ASKPASS_SCRIPT timeout 3 ssh-add $SSH_KEY_PATH < /dev/null
-          SSH_ADD_STATUS=$?
-          rm $ASKPASS_SCRIPT
-          if [ $SSH_ADD_STATUS -ne 0 ]; then
-            echo "Failed to add SSH key. Incorrect password or other error."
-            exit 1
-          fi
+          DISPLAY=1 SSH_ASKPASS=$ASKPASS_SCRIPT timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH < /dev/null
+        fi
+        SSH_ADD_STATUS=$?
+        rm $ASKPASS_SCRIPT
+        if [ $SSH_ADD_STATUS -ne 0 ]; then
+          echo "Failed to add SSH key. Incorrect password or other error."
+          exit 1
         fi
       shell: bash
