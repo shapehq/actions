@@ -13,4 +13,5 @@ runs:
       run: |
         mkdir -p ~/.ssh
         op read --out-file ~/.ssh/${{ inputs.filename }} "op://GitHub Actions/CI SSH Private Key/ci-ssh-key"
+        ssh-add ~/.ssh/${{ inputs.filename }}
       shell: bash
