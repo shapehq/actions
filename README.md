@@ -310,7 +310,7 @@ You may optionally specify the name of the file to store the SSH key in. Only do
   uses: shapehq/actions/install-ssh-key@main
   with:
     op-reference: op://My Vault/My SSH Key/ssh-key
-    filename: my_key
+    filename: my_ssh_key
 ```
 
 Attempting to install multiple SSH keys with the same name will cause the SSH key to be overwritten.
