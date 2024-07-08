@@ -28,15 +28,16 @@ runs:
         op read --out-file $SSH_KEY_PATH "${{ inputs.op-reference }}"
         if [ -z "$SSH_KEY_PASSWORD" ]; then
           timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH
+          SSH_ADD_STATUS=$?
         else
           ASKPASS_SCRIPT=$(mktemp)
           chmod +x $ASKPASS_SCRIPT
           echo "#!/bin/bash" > $ASKPASS_SCRIPT
           echo "echo $SSH_KEY_PASSWORD" >> $ASKPASS_SCRIPT
           DISPLAY=1 SSH_ASKPASS=$ASKPASS_SCRIPT timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH < /dev/null
+          SSH_ADD_STATUS=$?
+          rm -f $ASKPASS_SCRIPT
         fi
-        SSH_ADD_STATUS=$?
-        rm $ASKPASS_SCRIPT
         if [ $SSH_ADD_STATUS -ne 0 ]; then
           if [ -z "$SSH_KEY_PASSWORD" ]; then
             echo "::error::Failed to add SSH key. No password was supplied. Is the SSH key password protected?"
