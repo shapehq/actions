@@ -39,6 +39,11 @@ runs:
         # Load the SSH key from 1Password.
         mkdir -p ~/.ssh
         op read --out-file "$SSH_KEY_PATH" "${{ inputs.op-reference }}"
+
+        # Ensure SSH agent is started.
+        if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+          eval $(ssh-agent -s)
+        fi
         
         # Install the SSH key either without a password or with one.
         if [ -z "$SSH_KEY_PASSWORD" ]; then
