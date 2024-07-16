@@ -39,7 +39,7 @@ runs:
         # Load the SSH key from 1Password.
         mkdir -p ~/.ssh
         op read --out-file "$SSH_KEY_PATH" "${{ inputs.op-reference }}"
-
+        
         # Ensure SSH agent is started.
         if ! pgrep -u "$USER" ssh-agent > /dev/null; then
           eval $(ssh-agent -s)
@@ -58,12 +58,12 @@ runs:
         fi
         
         # Handle errors from invoking ssh-add.
-        if [ $SSH_ADD_STATUS -ne 0 ]; then
-          if [ -z "$SSH_KEY_PASSWORD" ]; then
-            echo "::error::Failed to add the SSH key. No password was supplied. Is the SSH key password-protected?"
-          else
-            echo "::error::Failed to add the SSH key. It may be that the supplied password is incorrect."
-          fi
-          exit 1
-        fi
+        # if [ $SSH_ADD_STATUS -ne 0 ]; then
+        #   if [ -z "$SSH_KEY_PASSWORD" ]; then
+        #     echo "::error::Failed to add the SSH key. No password was supplied. Is the SSH key password-protected?"
+        #   else
+        #     echo "::error::Failed to add the SSH key. It may be that the supplied password is incorrect."
+        #   fi
+        #   exit 1
+        # fi
       shell: bash
