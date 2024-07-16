@@ -10,7 +10,7 @@ runs:
   using: composite
   steps:
     - name: Install CI SSH Key
-      uses: shapehq/actions/install-ssh-key@bugfix/ssh-key-ubuntu
+      uses: shapehq/actions/install-ssh-key@main
       with:
         op-reference: op://GitHub Actions/CI SSH Private Key/ci-ssh-key
         filename: ${{ inputs.filename }}
