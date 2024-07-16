@@ -47,7 +47,7 @@ runs:
         
         # Install the SSH key either without a password or with one.
         if [ -z "$SSH_KEY_PASSWORD" ]; then
-          timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH || SSH_ADD_STATUS=$?
+          ssh-add $SSH_KEY_PATH
         else
           ASKPASS_SCRIPT=$(mktemp)
           chmod +x $ASKPASS_SCRIPT
