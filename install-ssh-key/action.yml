@@ -39,13 +39,13 @@ runs:
         # Load the SSH key from 1Password.
         mkdir -p ~/.ssh
         op read --out-file "$SSH_KEY_PATH" "${{ inputs.op-reference }}"
-        
-        # Ensure SSH agent is started.
+
+        # Ensure SSH agent is started. This is needed on GitHub's Ubuntu runners but does not seem to cause troubles on macOS runners.
         eval $(ssh-agent -s)
         
         # Install the SSH key either without a password or with one.
         if [ -z "$SSH_KEY_PASSWORD" ]; then
-          ssh-add $SSH_KEY_PATH
+          timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH || SSH_ADD_STATUS=$?
         else
           ASKPASS_SCRIPT=$(mktemp)
           chmod +x $ASKPASS_SCRIPT
@@ -54,16 +54,14 @@ runs:
           DISPLAY=1 SSH_ASKPASS=$ASKPASS_SCRIPT timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH < /dev/null || SSH_ADD_STATUS=$?
           rm -f $ASKPASS_SCRIPT
         fi
-
-        echo $SSH_ADD_STATUS
         
         # Handle errors from invoking ssh-add.
-        # if [ $SSH_ADD_STATUS -ne 0 ]; then
-        #   if [ -z "$SSH_KEY_PASSWORD" ]; then
-        #     echo "::error::Failed to add the SSH key. No password was supplied. Is the SSH key password-protected?"
-        #   else
-        #     echo "::error::Failed to add the SSH key. It may be that the supplied password is incorrect."
-        #   fi
-        #   exit 1
-        # fi
+        if [ $SSH_ADD_STATUS -ne 0 ]; then
+          if [ -z "$SSH_KEY_PASSWORD" ]; then
+            echo "::error::Failed to add the SSH key. No password was supplied. Is the SSH key password-protected?"
+          else
+            echo "::error::Failed to add the SSH key. It may be that the supplied password is incorrect."
+          fi
+          exit 1
+        fi
       shell: bash
