@@ -56,6 +56,8 @@ runs:
           DISPLAY=1 SSH_ASKPASS=$ASKPASS_SCRIPT timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH < /dev/null || SSH_ADD_STATUS=$?
           rm -f $ASKPASS_SCRIPT
         fi
+
+        echo $SSH_ADD_STATUS
         
         # Handle errors from invoking ssh-add.
         # if [ $SSH_ADD_STATUS -ne 0 ]; then
