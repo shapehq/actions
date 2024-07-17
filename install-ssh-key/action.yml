@@ -40,8 +40,6 @@ runs:
         mkdir -p ~/.ssh
         op read --out-file "$SSH_KEY_PATH" "${{ inputs.op-reference }}"
 
-        echo "RUNNER_OS=${RUNNER_OS}"
-
         # Ensure SSH agent is started. This is needed on GitHub's Ubuntu runners but does not seem needed on macOS runners.
         if [ "$RUNNER_OS" != "macOS" ]; then
           eval $(ssh-agent -s)
