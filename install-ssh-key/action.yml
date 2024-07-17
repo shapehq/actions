@@ -42,8 +42,10 @@ runs:
 
         echo "RUNNER_OS=${RUNNER_OS}"
 
-        # Ensure SSH agent is started. This is needed on GitHub's Ubuntu runners but does not seem to cause troubles on macOS runners.
-        eval $(ssh-agent -s)
+        # Ensure SSH agent is started. This is needed on GitHub's Ubuntu runners but does not seem needed on macOS runners.
+        if [ "$RUNNER_OS" != "macOS" ]; then
+          eval $(ssh-agent -s)
+        fi
         
         # Install the SSH key either without a password or with one.
         if [ -z "$SSH_KEY_PASSWORD" ]; then
