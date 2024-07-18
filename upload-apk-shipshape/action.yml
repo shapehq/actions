@@ -48,7 +48,7 @@ runs:
       uses: 1password/install-cli-action@v1
 
     - name: Install CI SSH Key
-      uses: shapehq/actions/install-ci-ssh-key@bugfix/install-ci-ssh
+      uses: shapehq/actions/install-ci-ssh-key@main
 
     - name: Install Shipshape
       uses: shapehq/actions/install-shipshape@main
