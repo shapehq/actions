@@ -26,11 +26,13 @@ runs:
         SSH_KEY_PATH="$HOME/.ssh/${{ inputs.filename }}"
         SSH_ADD_TIMEOUT=5
         SSH_ADD_STATUS=0
-
+        
         # Set SSH_AUTH_SOCK for all jobs
         export SSH_AUTH_SOCK="/tmp/ssh_agent.sock"
         echo "SSH_AUTH_SOCK=${SSH_AUTH_SOCK}" >> $GITHUB_ENV
-        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+        
+        # Start the SSH agent, suppress error if already running
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null 2>&1 || true
         
         # Set password if needed.
         if [[ -n "${{ inputs.op-password-reference }}" ]]; then
