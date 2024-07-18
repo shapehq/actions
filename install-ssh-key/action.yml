@@ -27,6 +27,13 @@ runs:
         SSH_ADD_TIMEOUT=5
         SSH_ADD_STATUS=0
         
+        # Set SSH_AUTH_SOCK for all jobs
+        export SSH_AUTH_SOCK="/tmp/ssh_agent.sock"
+        echo "SSH_AUTH_SOCK=${SSH_AUTH_SOCK}" >> $GITHUB_ENV
+        
+        # Start the SSH agent, suppress error if already running
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null 2>&1 || true
+        
         # Set password if needed.
         if [[ -n "${{ inputs.op-password-reference }}" ]]; then
           SSH_KEY_PASSWORD=$(op read "${{ inputs.op-password-reference }}")
@@ -39,11 +46,6 @@ runs:
         # Load the SSH key from 1Password.
         mkdir -p ~/.ssh
         op read --out-file "$SSH_KEY_PATH" "${{ inputs.op-reference }}"
-
-        # Ensure SSH agent is started. This is needed on GitHub's Ubuntu runners but does not seem needed on macOS runners.
-        if [ "$RUNNER_OS" != "macOS" ]; then
-          eval $(ssh-agent -s)
-        fi
         
         # Install the SSH key either without a password or with one.
         if [ -z "$SSH_KEY_PASSWORD" ]; then
