@@ -76,7 +76,10 @@ runs:
             return
           }
 
-          let actionButtons = []
+          let actionButtons = [{
+            title: "View Logs",
+            url: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          }]
           try {
             actionButtons = JSON.parse(buttons)
           } catch (e) {
