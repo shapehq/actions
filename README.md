@@ -434,7 +434,7 @@ Custom fields and buttons can be added to the message as shown below. The fields
 
 ```yml
 - name: Post to Slack
-  uses: shapehq/actions/post-slack-message@enhancement/post-slack-message-with-bash
+  uses: shapehq/actions/post-slack-message@main
   with:
     channel: "#my-channel"
     message: Hello world!
