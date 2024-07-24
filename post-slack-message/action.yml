@@ -8,19 +8,130 @@ inputs:
     required: true
   runner:
     description: Runner to post    
-    required: false
+    required: true
     default: ${{ runner.name }}
   op-slack-token-reference:
     description: Slack access token reference
     required: true
+  buttons:
+    description: A JSON array of buttons
+    required: true
+    default: '[]'
+  fields:
+    description: A JSON array of fields
+    required: true
+    default: '[]'
+  add-workflow-info-fields:
+    description: A boolean that causes the default fields to be added
+    required: true
+    default: true
+  add-view-logs-button:
+    description: A boolean that causes the View Logs button to be added
+    required: true
+    default: true
 runs:
   using: composite
   steps:
-    - name: Post to Slack
+    - name: Read Slack Token
+      id: read-token
       run: |
-        slack_token=$(op read "${{ inputs.op-slack-token-reference }}")
-        job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-
-        cd "${{ github.action_path }}/Slacker"        
-        swift run Slacker --channel "${{ inputs.channel }}" --token "${slack_token}" --message "${{ inputs.message }}" --fields "Workflow:${{ github.workflow }}" "Runner:${{ inputs.runner }}" "Branch:${{ github.ref_name }}" "Started by:${{ github.actor }}" --job-url "${job_url}"
+        TOKEN=$(op read "${{ inputs.op-slack-token-reference }}")
+        echo "::add-mask::$TOKEN"
+        echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
       shell: bash
+    - name: Post to Slack
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const channel = '${{ inputs.channel }}'
+          const message = '${{ inputs.message }}'
+          const buttons = '${{ inputs.buttons }}'
+          const fields = '${{ inputs.fields }}'
+          const addWorkflowInfoFields = ${{ inputs.add-workflow-info-fields }}
+          const addViewLogsButton = ${{ inputs.add-view-logs-button }}
+          const accessToken = '${{ steps.read-token.outputs.token }}'
+
+          if (!channel || channel.length == 0) {
+            core.setFailed('Error: Channel must be specified and be non-empty.')
+            return
+          }
+          if (!message || message.length == 0) {
+            core.setFailed('Error: Message must be specified and be non-empty.')
+            return
+          }
+          if (!accessToken || accessToken.length == 0) {
+            core.setFailed('Error: Token must be specified and be non-empty.')
+            return
+          }
+
+          let allFields = []
+          if (addWorkflowInfoFields) {
+            allFields = allFields.concat([
+              { title: 'Workflow', value: process.env.GITHUB_WORKFLOW },
+              { title: 'Runner', value: '${{ inputs.runner }}' },
+              { title: 'Branch', value: process.env.GITHUB_REF_NAME },
+              { title: 'Started by', value: process.env.GITHUB_ACTOR }
+            ])
+          }
+
+          try {
+            allFields = allFields.concat(JSON.parse(fields))
+          } catch (e) {
+            core.setFailed('Error: Invalid JSON in fields input.')
+            return
+          }
+
+          let allButtons = []
+          if (addViewLogsButton) {
+            const jobURL = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            allButtons.push({ title: "View Logs", url: jobURL })
+          }
+          
+          try {
+            allButtons = allButtons.concat(JSON.parse(buttons))
+          } catch (e) {
+            core.setFailed('Error: Invalid JSON in buttons input.')
+            return
+          }
+
+          const actionElements = allButtons.map(button => ({
+            type: 'button',
+            text: { type: 'plain_text', text: button.title },
+            url: button.url
+          }))
+
+          const fieldElements = allFields.map(field => ({
+            type: 'mrkdwn',
+            text: `*${field.title}:*\n${field.value}`
+          }))
+
+          const payload = {
+            channel,
+            text: message,
+            blocks: [
+              {
+                type: 'section',
+                text: { type: 'mrkdwn', text: message }
+              },
+              ...(fieldElements.length > 0
+                ? [{ type: 'section', fields: fieldElements }]
+                : []),
+              ...(actionElements.length > 0
+                ? [{ type: 'actions', elements: actionElements }]
+                : [])
+            ]
+          }
+
+          const response = await fetch('https://slack.com/api/chat.postMessage', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          })
+
+          const responseBody = await response.json()
+          if (!response.ok || !responseBody.ok) {
+            core.setFailed(`Error posting message to Slack: ${responseBody.error}`)
+          }
