@@ -8,22 +8,26 @@ inputs:
     required: true
   runner:
     description: Runner to post    
-    required: false
+    required: true
     default: ${{ runner.name }}
   op-slack-token-reference:
     description: Slack access token reference
     required: true
   buttons:
     description: A JSON array of buttons
-    required: false
+    required: true
     default: '[]'
   fields:
     description: A JSON array of fields
-    required: false
+    required: true
     default: '[]'
   add-workflow-info-fields:
     description: A boolean that causes the default fields to be added
-    required: false
+    required: true
+    default: true
+  add-view-logs-button:
+    description: A boolean that causes the View Logs button to be added
+    required: true
     default: true
 runs:
   using: composite
@@ -43,7 +47,8 @@ runs:
           const message = '${{ inputs.message }}'
           const buttons = '${{ inputs.buttons }}'
           const fields = '${{ inputs.fields }}'
-          const addWorkflowInfoFields = ${{ inputs['add-workflow-info-fields'] }}
+          const addWorkflowInfoFields = ${{ inputs.add-workflow-info-fields }}
+          const addViewLogsButton = ${{ inputs.add-view-logs-button }}
           const accessToken = '${{ steps.read-token.outputs.token }}'
 
           if (!channel || channel.length == 0) {
@@ -76,18 +81,23 @@ runs:
             return
           }
 
-          let actionButtons = [{
-            title: "View Logs",
-            url: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          }]
+          let allButtons = []
+          if (addViewLogsButton) {
+            const jobURL = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            allButtons = allButtons.push({
+              title: "View Logs",
+              url: jobURL
+            })
+          }
+          
           try {
-            actionButtons = JSON.parse(buttons)
+            allButtons = allButtons.concat(JSON.parse(buttons))
           } catch (e) {
             core.setFailed('Error: Invalid JSON in buttons input.')
             return
           }
 
-          const actionElements = actionButtons.map(button => ({
+          const actionElements = allButtons.map(button => ({
             type: 'button',
             text: { type: 'plain_text', text: button.title },
             url: button.url
