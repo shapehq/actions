@@ -36,7 +36,7 @@ runs:
         echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
       shell: bash
     - name: Post to Slack
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         script: |
           const channel = '${{ inputs.channel }}'
@@ -46,32 +46,31 @@ runs:
           const addWorkflowInfoFields = ${{ inputs['add-workflow-info-fields'] }}
           const accessToken = '${{ steps.read-token.outputs.token }}'
 
-          if (!channel) {
+          if (!channel || channel.length == 0) {
             core.setFailed('Error: Channel must be specified and be non-empty.')
             return
           }
-          if (!message) {
+          if (!message || message.length == 0) {
             core.setFailed('Error: Message must be specified and be non-empty.')
             return
           }
-          if (!accessToken) {
+          if (!accessToken || accessToken.length == 0) {
             core.setFailed('Error: Token must be specified and be non-empty.')
             return
           }
 
-          let defaultFields = []
+          let allFields = []
           if (addWorkflowInfoFields) {
-            defaultFields = [
+            allFields = allFields.concat([
               { title: 'Workflow', value: process.env.GITHUB_WORKFLOW },
               { title: 'Runner', value: '${{ inputs.runner }}' },
               { title: 'Branch', value: process.env.GITHUB_REF_NAME },
               { title: 'Started by', value: process.env.GITHUB_ACTOR }
-            ]
+            ])
           }
 
-          let allFields = []
           try {
-            allFields = JSON.parse(fields).concat(defaultFields)
+            allFields = allFields.concat(JSON.parse(fields))
           } catch (e) {
             core.setFailed('Error: Invalid JSON in fields input.')
             return
