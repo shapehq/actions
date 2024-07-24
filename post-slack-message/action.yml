@@ -84,10 +84,7 @@ runs:
           let allButtons = []
           if (addViewLogsButton) {
             const jobURL = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            allButtons = allButtons.push({
-              title: "View Logs",
-              url: jobURL
-            })
+            allButtons.push({ title: "View Logs", url: jobURL })
           }
           
           try {
