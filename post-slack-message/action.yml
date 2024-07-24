@@ -13,14 +13,137 @@ inputs:
   op-slack-token-reference:
     description: Slack access token reference
     required: true
+  buttons:
+    description: A JSON array of buttons
+    required: false
+    default: '[]'
+  fields:
+    description: A JSON array of fields
+    required: false
+    default: '[]'
+  add-workflow-info-fields:
+    description: A boolean that causes fields with info about the workflow to be added
+    required: false
+    default: true
 runs:
   using: composite
   steps:
     - name: Post to Slack
       run: |
-        slack_token=$(op read "${{ inputs.op-slack-token-reference }}")
-        job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        CHANNEL="${{ inputs.channel }}"
+        MESSAGE="${{ inputs.message }}"
+        BUTTONS="${{ inputs.buttons }}"
+        FIELDS="${{ inputs.fields }}"
+        ADD_WORKFLOW_INFO_FIELDS=${{ inputs.add-workflow-info-fields }}
 
-        cd "${{ github.action_path }}/Slacker"        
-        swift run Slacker --channel "${{ inputs.channel }}" --token "${slack_token}" --message "${{ inputs.message }}" --fields "Workflow:${{ github.workflow }}" "Runner:${{ inputs.runner }}" "Branch:${{ github.ref_name }}" "Started by:${{ github.actor }}" --job-url "${job_url}"
+        if [ -z "$CHANNEL" ]; then
+          echo "Error: Channel must be specified and be non-empty."
+          exit 1
+        fi
+        if [ -z "$MESSAGE" ]; then
+          echo "Error: Message must be specified and be non-empty."
+          exit 1
+        fi
+        ACCESS_TOKEN=$(op read "${{ inputs.op-slack-token-reference }}")
+        if [ -z "$ACCESS_TOKEN" ]; then
+          echo "Error: Token must be specified and be non-empty."
+          exit 1
+        fi
+        
+        echo "::add-mask::$ACCESS_TOKEN"
+        
+        if $ADD_WORKFLOW_INFO_FIELDS; then
+          DEFAULT_FIELDS='[{
+            "title": "Workflow",
+            "value": "${{ github.workflow }}"
+          }, {
+            "title": "Runner",
+            "value": "${{ inputs.runner }}"
+          }, {
+            "title": "Branch",
+            "value": "${{ github.ref_name }}"
+          }, {
+            "title": "Started by",
+            "value": "${{ github.actor }}"
+          }]'
+          FIELDS=$(echo $FIELDS | jq --argjson df "$DEFAULT_FIELDS" '. + $df')
+        fi
+        
+        # Iterate over the JSON array to add action elements
+        ACTION_ELEMENTS='[]'
+        for row in $(echo "$BUTTONS" | jq -r '.[] | @base64'); do
+          _jq() {
+            echo ${row} | base64 --decode | jq -r ${1}
+          }
+          TITLE=$(_jq '.title')
+          URL=$(_jq '.url')
+          ACTION_ELEMENTS=$(echo $ACTION_ELEMENTS | jq '. + [{
+            "type": "button",
+            "text": {
+              "type": "plain_text",
+              "text": "'"$TITLE"'"
+            },
+            "url": "'"$URL"'"
+          }]')
+        done
+        
+        # Iterate over the JSON array to add fields
+        FIELD_ELEMENTS='[]'
+        for row in $(echo "$FIELDS" | jq -r '.[] | @base64'); do
+          _jq() {
+            echo ${row} | base64 --decode | jq -r ${1}
+          }
+          TITLE=$(_jq '.title')
+          VALUE=$(_jq '.value')
+          FIELD_ELEMENTS=$(echo $FIELD_ELEMENTS | jq '. + [{
+            "type": "mrkdwn",
+            "text": "*'"$TITLE"':*\n'"$VALUE"'"
+          }]')
+        done
+        
+        # Build the payload
+        PAYLOAD=$(cat <<EOF
+        {
+          "channel": "$CHANNEL",
+          "text": "$MESSAGE",
+          "blocks": [{
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "$MESSAGE"
+            }
+          }
+        EOF
+        )
+        
+        # Add the fields section only if FIELD_ELEMENTS is not empty
+        if [ $(echo $FIELD_ELEMENTS | jq 'length') -gt 0 ]; then
+          PAYLOAD+=$(cat <<EOF
+          , {
+            "type": "section",
+            "fields": $FIELD_ELEMENTS
+          }
+        EOF
+        )
+        fi
+        
+        # Add the actions block only if ACTION_ELEMENTS is not empty
+        if [ $(echo $ACTION_ELEMENTS | jq 'length') -gt 0 ]; then
+          PAYLOAD+=$(cat <<EOF
+          , {
+            "type": "actions",
+            "elements": $ACTION_ELEMENTS
+          }
+        EOF
+        )
+        fi
+        
+        # Close the JSON payload
+        PAYLOAD+=']}'
+        
+        # Send the payload to Slack
+        curl -s -X POST \
+          -H "Authorization: Bearer $ACCESS_TOKEN" \
+          -H "Content-type: application/json" \
+          --data "$PAYLOAD" https://slack.com/api/chat.postMessage
       shell: bash
