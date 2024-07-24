@@ -22,128 +22,107 @@ inputs:
     required: false
     default: '[]'
   add-workflow-info-fields:
-    description: A boolean that causes fields with info about the workflow to be added
+    description: A boolean that causes the default fields to be added
     required: false
     default: true
 runs:
   using: composite
   steps:
-    - name: Post to Slack
+    - name: Read Slack Token
+      id: read-token
       run: |
-        CHANNEL="${{ inputs.channel }}"
-        MESSAGE="${{ inputs.message }}"
-        BUTTONS="${{ inputs.buttons }}"
-        FIELDS="${{ inputs.fields }}"
-        ADD_WORKFLOW_INFO_FIELDS=${{ inputs.add-workflow-info-fields }}
-
-        if [ -z "$CHANNEL" ]; then
-          echo "Error: Channel must be specified and be non-empty."
-          exit 1
-        fi
-        if [ -z "$MESSAGE" ]; then
-          echo "Error: Message must be specified and be non-empty."
-          exit 1
-        fi
-        ACCESS_TOKEN=$(op read "${{ inputs.op-slack-token-reference }}")
-        if [ -z "$ACCESS_TOKEN" ]; then
-          echo "Error: Token must be specified and be non-empty."
-          exit 1
-        fi
-        
-        echo "::add-mask::$ACCESS_TOKEN"
-        
-        if $ADD_WORKFLOW_INFO_FIELDS; then
-          DEFAULT_FIELDS='[{
-            "title": "Workflow",
-            "value": "${{ github.workflow }}"
-          }, {
-            "title": "Runner",
-            "value": "${{ inputs.runner }}"
-          }, {
-            "title": "Branch",
-            "value": "${{ github.ref_name }}"
-          }, {
-            "title": "Started by",
-            "value": "${{ github.actor }}"
-          }]'
-          FIELDS=$(echo $FIELDS | jq --argjson df "$DEFAULT_FIELDS" '. + $df')
-        fi
-        
-        # Iterate over the JSON array to add action elements
-        ACTION_ELEMENTS='[]'
-        for row in $(echo "$BUTTONS" | jq -r '.[] | @base64'); do
-          _jq() {
-            echo ${row} | base64 --decode | jq -r ${1}
-          }
-          TITLE=$(_jq '.title')
-          URL=$(_jq '.url')
-          ACTION_ELEMENTS=$(echo $ACTION_ELEMENTS | jq '. + [{
-            "type": "button",
-            "text": {
-              "type": "plain_text",
-              "text": "'"$TITLE"'"
-            },
-            "url": "'"$URL"'"
-          }]')
-        done
-        
-        # Iterate over the JSON array to add fields
-        FIELD_ELEMENTS='[]'
-        for row in $(echo "$FIELDS" | jq -r '.[] | @base64'); do
-          _jq() {
-            echo ${row} | base64 --decode | jq -r ${1}
-          }
-          TITLE=$(_jq '.title')
-          VALUE=$(_jq '.value')
-          FIELD_ELEMENTS=$(echo $FIELD_ELEMENTS | jq '. + [{
-            "type": "mrkdwn",
-            "text": "*'"$TITLE"':*\n'"$VALUE"'"
-          }]')
-        done
-        
-        # Build the payload
-        PAYLOAD=$(cat <<EOF
-        {
-          "channel": "$CHANNEL",
-          "text": "$MESSAGE",
-          "blocks": [{
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": "$MESSAGE"
-            }
-          }
-        EOF
-        )
-        
-        # Add the fields section only if FIELD_ELEMENTS is not empty
-        if [ $(echo $FIELD_ELEMENTS | jq 'length') -gt 0 ]; then
-          PAYLOAD+=$(cat <<EOF
-          , {
-            "type": "section",
-            "fields": $FIELD_ELEMENTS
-          }
-        EOF
-        )
-        fi
-        
-        # Add the actions block only if ACTION_ELEMENTS is not empty
-        if [ $(echo $ACTION_ELEMENTS | jq 'length') -gt 0 ]; then
-          PAYLOAD+=$(cat <<EOF
-          , {
-            "type": "actions",
-            "elements": $ACTION_ELEMENTS
-          }
-        EOF
-        )
-        fi
-        
-        # Close the JSON payload
-        PAYLOAD+=']}'
-        
-        # Send the payload to Slack
-        curl -s -X POST \
-          -H "Authorization: Bearer $ACCESS_TOKEN" \
-          -H "Content-type: application/json" \
-          --data "$PAYLOAD" https://slack.com/api/chat.postMessage
+        TOKEN=$(op read "${{ inputs.op-slack-token-reference }}")
+        echo "::add-mask::$TOKEN"
+        echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
       shell: bash
+    - name: Post to Slack
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const channel = '${{ inputs.channel }}'
+          const message = '${{ inputs.message }}'
+          const buttons = '${{ inputs.buttons }}'
+          const fields = '${{ inputs.fields }}'
+          const addWorkflowInfoFields = ${{ inputs['add-workflow-info-fields'] }}
+          const accessToken = '${{ steps.read-token.outputs.token }}'
+
+          if (!channel) {
+            core.setFailed('Error: Channel must be specified and be non-empty.')
+            return
+          }
+          if (!message) {
+            core.setFailed('Error: Message must be specified and be non-empty.')
+            return
+          }
+          if (!accessToken) {
+            core.setFailed('Error: Token must be specified and be non-empty.')
+            return
+          }
+
+          let defaultFields = []
+          if (addWorkflowInfoFields) {
+            defaultFields = [
+              { title: 'Workflow', value: process.env.GITHUB_WORKFLOW },
+              { title: 'Runner', value: '${{ inputs.runner }}' },
+              { title: 'Branch', value: process.env.GITHUB_REF_NAME },
+              { title: 'Started by', value: process.env.GITHUB_ACTOR }
+            ]
+          }
+
+          let allFields = []
+          try {
+            allFields = JSON.parse(fields).concat(defaultFields)
+          } catch (e) {
+            core.setFailed('Error: Invalid JSON in fields input.')
+            return
+          }
+
+          let actionButtons = []
+          try {
+            actionButtons = JSON.parse(buttons)
+          } catch (e) {
+            core.setFailed('Error: Invalid JSON in buttons input.')
+            return
+          }
+
+          const actionElements = actionButtons.map(button => ({
+            type: 'button',
+            text: { type: 'plain_text', text: button.title },
+            url: button.url
+          }))
+
+          const fieldElements = allFields.map(field => ({
+            type: 'mrkdwn',
+            text: `*${field.title}:*\n${field.value}`
+          }))
+
+          const payload = {
+            channel,
+            text: message,
+            blocks: [
+              {
+                type: 'section',
+                text: { type: 'mrkdwn', text: message }
+              },
+              ...(fieldElements.length > 0
+                ? [{ type: 'section', fields: fieldElements }]
+                : []),
+              ...(actionElements.length > 0
+                ? [{ type: 'actions', elements: actionElements }]
+                : [])
+            ]
+          }
+
+          const response = await fetch('https://slack.com/api/chat.postMessage', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          })
+
+          const responseBody = await response.json()
+          if (!response.ok || !responseBody.ok) {
+            core.setFailed(`Error posting message to Slack: ${responseBody.error}`)
+          }
