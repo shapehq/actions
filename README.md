@@ -24,6 +24,23 @@ As a side effect, the action will upload the dSYM files as an artifact to the jo
     op-development-certificate-password-reference: op://GitHub Actions/Company Development Certificate/password
 ```
 
+You may use the `marketing-version` and `build-number` inputs to automatically set a version number and build number prior to building the project.
+
+```yml
+- name: Build and Upload to App Store Connect
+  uses: shapehq/actions/build-and-upload-to-app-store-connect@main
+  with:
+    scheme: Example
+    configuration: Debug
+    marketing-version: ${{ inputs.version_number }}
+    build-number: ${{ github.run_number }}
+    op-app-store-connect-api-key-issuer-id-reference: op://GitHub Actions/Company App Store Connect API Key/Issuer ID
+    op-app-store-connect-api-key-id-reference: op://GitHub Actions/Company App Store Connect API Key/Key ID
+    op-app-store-connect-api-key-file-reference: op://GitHub Actions/Company App Store Connect API Key/AuthKey.p8
+    op-development-certificate-reference: op://GitHub Actions/Company Development Certificate/Certificate.p12
+    op-development-certificate-password-reference: op://GitHub Actions/Company Development Certificate/password
+```
+
 The action supports the following inputs.
 
 |Name|Required|Default Value|Description|
@@ -31,7 +48,7 @@ The action supports the following inputs.
 |scheme|Yes||The Xcode project's scheme to build. This specifies which set of build settings and targets to use when building your app.|
 |configuration|Yes|Release|Specifies the build configuration that Xcode should use. Commonly set to "Release" for production builds meant for App Store distribution.|
 |marketing-version|No||The marketing version number of the app, such as "1.0.0". This sets the MARKETING_VERSION in Xcode, determining the version displayed on the App Store.|
-ibuild-number|No||An incrementing number specifying the build version, which is used to uniquely identify an archive or build sent to the App Store Connect.|
+|build-number|No||An incrementing number specifying the build version, which is used to uniquely identify an archive or build sent to the App Store Connect.|
 |testflight-internal-testing-only|Yes|false|When enabled, the build cannot be distributed via external TestFlight or the App Store. Must be either "true" or "false".|
 |op-app-store-connect-api-key-issuer-id-reference|Yes||A reference to the location in 1Password where the Issuer ID for the App Store Connect API key is stored. This ID is crucial for API interactions with App Store Connect.|
 |op-app-store-connect-api-key-id-reference|Yes||A reference to the location in 1Password where the App Store Connect API Key ID is stored, used for authentication during API requests.|
