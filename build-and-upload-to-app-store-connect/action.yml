@@ -1,0 +1,154 @@
+name: Build and Upload to App Store Connect
+inputs:
+  scheme:
+    description: The Xcode project's scheme to build. This specifies which set of build settings and targets to use when building your app.
+    required: true
+  configuration:
+    description: Specifies the build configuration that Xcode should use. Commonly set to "Release" for production builds meant for App Store distribution.
+    default: Release
+    required: true
+  marketing-version:
+    description: The marketing version number of the app, such as "1.0.0". This sets the MARKETING_VERSION in Xcode, determining the version displayed on the App Store.
+    required: false
+  build-number:
+    description: An incrementing number specifying the build version, which is used to uniquely identify an archive or build sent to the App Store Connect.
+    required: false
+  testflight-internal-testing-only:
+    description: When enabled, the build cannot be distributed via external TestFlight or the App Store. Must be either "true" or "false".
+    default: false
+    required: true
+  op-app-store-connect-api-key-issuer-id-reference:
+    description: A reference to the location in 1Password where the Issuer ID for the App Store Connect API key is stored. This ID is crucial for API interactions with App Store Connect.
+    required: true
+  op-app-store-connect-api-key-id-reference:
+    description: A reference to the location in 1Password where the App Store Connect API Key ID is stored, used for authentication during API requests.
+    required: true
+  op-app-store-connect-api-key-file-reference:
+    description: A reference to the 1Password field containing the AuthKey.p8 file, essential for establishing connections to App Store Connect.
+    required: true
+  op-development-certificate-reference:
+    description: Points to a field in 1Password where the development certificate and its corresponding private key (.p12 file) are stored, necessary for signing the app during the development phase.
+    required: true
+  op-development-certificate-password-reference:
+    description: Indicates the location in 1Password where the password for decrypting the development certificate (.p12 file) is kept.
+    required: true
+  additional-archive-args:
+    description: Additional arguments passed to xcodebuild when archiving the app.
+    required: false
+  build-directory:
+    description: Defines the directory where the build artifacts, like the final binary or intermediate files, will be stored.
+    default: .build
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Install App Store Connect API Key
+      id: install-app-store-connect-api-key
+      uses: shapehq/actions/install-asc-api-key@main
+      with:
+        op-asc-key-issuer-id-reference: ${{ inputs.op-app-store-connect-api-key-issuer-id-reference }}
+        op-asc-key-id-reference: ${{ inputs.op-app-store-connect-api-key-id-reference }}
+        op-asc-key-file-reference: ${{ inputs.op-app-store-connect-api-key-file-reference }}
+        output-asc-key-file-directory: ~/.private_keys
+    - name: Install Development Certificate
+      uses: shapehq/actions/install-certificate@main
+      with:
+        password-op-reference: ${{ inputs.op-development-certificate-password-reference }}
+        certificate-op-reference: ${{ inputs.op-development-certificate-reference }}
+    - name: Create Export Options Plist
+      id: create-export-options-plist
+      shell: bash
+      run: |
+        # Create Export Options Plist
+        if [[ "${{ inputs.testflight-internal-testing-only }}" != "true" && "${{ inputs.testflight-internal-testing-only }}" != "false" ]]; then
+          echo "Error: testflight-internal-testing-only must be 'true' or 'false'"
+          exit 1
+        fi
+        mkdir -p ${{ inputs.build-directory }}
+        FILE_PATH="${{ inputs.build-directory }}/export-options.plist"
+        cat <<EOL > $FILE_PATH
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+          <key>method</key>
+          <string>app-store</string>
+          <key>destination</key>
+          <string>export</string>
+          <key>testFlightInternalTestingOnly</key>
+          <${{ inputs.testflight-internal-testing-only }}/>
+        </dict>
+        </plist>
+        EOL
+        echo "file-path=${FILE_PATH}" >> "$GITHUB_OUTPUT"
+    - name: Set Build Number
+      shell: bash
+      if: ${{ inputs.build-number }} != ""
+      run: |
+        # Set Build Number
+        xcrun agvtool new-version ${{ inputs.build-number }}
+    - name: Archive App
+      shell: bash
+      run: |
+        # Archive App
+        CMD=$(cat <<EOF
+          xcodebuild archive\
+            -scheme ${{ inputs.scheme }}\
+            -destination generic/platform=ios\
+            -configuration ${{ inputs.configuration }}\
+            -archivePath ${{ inputs.scheme }}.xcarchive\
+            -allowProvisioningUpdates\
+            -authenticationKeyIssuerID ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
+            -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
+            -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }}
+        EOF
+        )
+        if [ -n "${{ inputs.marketing-version }}" ]; then
+          CMD="$CMD MARKETING_VERSION=${{ inputs.marketing-version }}"
+        fi
+        if [ -n "${{ inputs.additional-archive-args }}" ]; then
+          CMD="$CMD ${{ inputs.additional-archive-args }}"
+        fi
+        set -o pipefail && $CMD 2>&1 | xcbeautify --renderer github-actions
+    - name: Export IPA from Archive
+      shell: bash
+      run: |
+        # Export IPA from Archive
+        set -o pipefail &&\
+        xcodebuild -exportArchive\
+          -archivePath "${{ inputs.scheme }}.xcarchive"\
+          -exportPath ${{ inputs.build-directory }}\
+          -exportOptionsPlist "${{ steps.create-export-options-plist.outputs.file-path }}"\
+          -allowProvisioningUpdates\
+          -authenticationKeyIssuerID ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
+          -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
+          -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }} 2>&1\
+          | xcbeautify --renderer github-actions
+    - name: Archive the dSYMs
+      uses: actions/upload-artifact@v4
+      with:
+        name: dSYMs
+        path: ${{ inputs.scheme }}.xcarchive/dSYMs/*
+        if-no-files-found: error
+    - name: Find IPA
+      id: find-ipa
+      shell: bash
+      run: |
+        # Find IPA
+        IPA_FILE_PATH=$(find "${{ inputs.build-directory }}" -type f -name "*.ipa" | head -n 1)
+        if [ -n "$IPA_FILE_PATH" ]; then
+          echo "file-path=${IPA_FILE_PATH}" >> "$GITHUB_OUTPUT"
+        else
+          echo "::error title=IPA not found::No file with the .ipa extension was found in the ${{ inputs.build-directory }} folder"
+          exit 1
+        fi
+    - name: Upload IPA to App Store Connect
+      shell: bash
+      run: |
+        # Upload IPA to App Store Connect
+        xcrun altool\
+          --upload-app\
+          -t ios\
+          -f "${{ steps.find-ipa.outputs.file-path }}"\
+          --apiKey ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
+          --apiIssuer ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}
