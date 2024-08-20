@@ -58,6 +58,15 @@ The action supports the following inputs.
 |additional-archive-args|No||Additional arguments passed to xcodebuild when archiving the app.|
 |build-directory|Yes|.build|Defines the directory where the build artifacts, like the final binary or intermediate files, will be stored.|
 
+## [connect-to-vpn](https://github.com/shapehq/actions/blob/main/connect-to-vpn/action.yml)
+
+Connects the runner to our a predefined Tailscale exit node.
+
+```yml
+- name: Connect to VPN
+  uses: shapehq/actions/connect-to-vpn@main
+```
+
 ## [install-appiconannotator](https://github.com/shapehq/actions/blob/main/install-appiconannotator/action.yml)
 
 Installs [appiconannotator](https://github.com/shapehq/appiconannotator).
