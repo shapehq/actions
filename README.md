@@ -247,9 +247,9 @@ The outputs can be used to access the API key. The following example shows how t
 - name: Fastlane
   run: bundle exec fastlane build_appstore
   env:          
-    ASC_API_KEY_ISSUER_ID: ${{ steps.install-asc-api-key.outputs.issuer-id }}
-    ASC_API_KEY_ID: ${{ steps.install-asc-api-key.outputs.key-id }}
-    ASC_API_KEY: ${{ steps.install-asc-api-key.outputs.key-file-path }}
+    ASC_API_KEY_ISSUER_ID: ${{ steps.install-company-asc-api-key.outputs.issuer-id }}
+    ASC_API_KEY_ID: ${{ steps.install-company-asc-api-key.outputs.key-id }}
+    ASC_API_KEY: ${{ steps.install-company-asc-api-key.outputs.key-file-path }}
 ```
 
 Use the [install-asc-api-key](https://github.com/shapehq/actions?tab=readme-ov-file#install-asc-api-key) action to install a specified App Store Connect API key.
