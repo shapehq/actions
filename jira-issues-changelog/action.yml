@@ -27,7 +27,7 @@ runs:
         if [ $all_tags = 0 ]; then
             # No tags, exit.
             echo "Repository contains no tags. Please make a tag first."
-            exit 1        
+            exit 0
         else 
             echo "Fetching commits since last tag."
 
@@ -62,4 +62,7 @@ runs:
             echo "GITHUB_OUTPUT is not set. Outputting to console instead."
             echo "issues=$jira_issues"
         fi
+
+        # Ensure the script exits successfully
+        exit 0
       shell: bash
