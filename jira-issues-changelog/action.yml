@@ -42,7 +42,6 @@ runs:
         fi
           
         # Output collected information
-        echo "Latest tag: $latest_tag"
         echo "Previous tag: $previous_tag"
         
         # Identify Jira Issue, if multiple use ',' as delimiter
