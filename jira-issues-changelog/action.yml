@@ -46,6 +46,20 @@ runs:
         
         # Identify Jira Issue, if multiple use ',' as delimiter
         jira_issues="$(echo "$changelog" | egrep -o '${{ inputs.jira-project-id }}-[0-9]+' | sort -uf | tr '\n' ',' | sed 's/.$//')"
-        echo "Found the following issues in the changelog: $jira_issues"
-        echo "issues=$jira_issues" >> $GITHUB_OUTPUT
+
+        # Check if any Jira issues were found
+        if [ -z "$jira_issues" ]; then
+            echo "No Jira issues found in the changelog."
+            jira_issues=""
+        else
+            echo "Found the following issues in the changelog: $jira_issues"
+        fi
+
+        # Check if GITHUB_OUTPUT is set
+        if [ -n "$GITHUB_OUTPUT" ]; then
+            echo "issues=$jira_issues" >> "$GITHUB_OUTPUT"
+        else
+            echo "GITHUB_OUTPUT is not set. Outputting to console instead."
+            echo "issues=$jira_issues"
+        fi
       shell: bash
