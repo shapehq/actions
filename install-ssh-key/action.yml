@@ -9,11 +9,63 @@ inputs:
     description: Name of the file to store the key in.
     required: false
     default: id_rsa
+  op-password-reference:
+    description: Reference to the password for the SSH key in 1Password.
+    required: false
 runs:
   using: composite
   steps:
     - name: Install SSH Key
       run: |
+        # Helper function used to cause ssh-add to timeout instead of hanging indefinitely upon error.
+        function timeout() {
+          perl -e 'alarm shift; exec @ARGV' "$@" > /dev/null 2>&1
+        }
+        
+        # Configuration.
+        SSH_KEY_PATH="$HOME/.ssh/${{ inputs.filename }}"
+        SSH_ADD_TIMEOUT=5
+        SSH_ADD_STATUS=0
+        
+        # Set SSH_AUTH_SOCK for all jobs
+        export SSH_AUTH_SOCK="/tmp/ssh_agent.sock"
+        echo "SSH_AUTH_SOCK=${SSH_AUTH_SOCK}" >> $GITHUB_ENV
+        
+        # Start the SSH agent, suppress error if already running
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null 2>&1 || true
+        
+        # Set password if needed.
+        if [[ -n "${{ inputs.op-password-reference }}" ]]; then
+          SSH_KEY_PASSWORD=$(op read "${{ inputs.op-password-reference }}")
+        fi
+        
+        # Remove the SSH key if it exists.
+        ssh-add -d "$SSH_KEY_PATH" &>/dev/null || true
+        rm -f "$SSH_KEY_PATH"
+        
+        # Load the SSH key from 1Password.
         mkdir -p ~/.ssh
-        op read --out-file ~/.ssh/${{ inputs.filename }} "${{ inputs.op-reference }}"
+        op read --out-file "$SSH_KEY_PATH" "${{ inputs.op-reference }}"
+        
+        # Install the SSH key either without a password or with one.
+        if [ -z "$SSH_KEY_PASSWORD" ]; then
+          timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH || SSH_ADD_STATUS=$?
+        else
+          ASKPASS_SCRIPT=$(mktemp)
+          chmod +x $ASKPASS_SCRIPT
+          echo "#!/bin/bash" > $ASKPASS_SCRIPT
+          echo "echo $SSH_KEY_PASSWORD" >> $ASKPASS_SCRIPT
+          DISPLAY=1 SSH_ASKPASS=$ASKPASS_SCRIPT timeout $SSH_ADD_TIMEOUT ssh-add $SSH_KEY_PATH < /dev/null || SSH_ADD_STATUS=$?
+          rm -f $ASKPASS_SCRIPT
+        fi
+        
+        # Handle errors from invoking ssh-add.
+        if [ $SSH_ADD_STATUS -ne 0 ]; then
+          if [ -z "$SSH_KEY_PASSWORD" ]; then
+            echo "::error::Failed to add the SSH key. No password was supplied. Is the SSH key password-protected?"
+          else
+            echo "::error::Failed to add the SSH key. It may be that the supplied password is incorrect."
+          fi
+          exit 1
+        fi
       shell: bash
