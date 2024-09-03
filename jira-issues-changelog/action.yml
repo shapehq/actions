@@ -45,7 +45,7 @@ runs:
         echo "Previous tag: $previous_tag"
         
         # Identify Jira Issue, if multiple use ',' as delimiter
-        jira_issues="$(echo "$changelog" | egrep -o '${{ inputs.jira-project-id }}-[0-9]+' | sort -uf | tr '\n' ',' | sed 's/.$//')"
+        jira_issues=$(echo "$changelog" | egrep -o '${{ inputs.jira-project-id }}-[0-9]+' | sort -uf | tr '\n' ',' | sed 's/.$//') || true
 
         # Check if any Jira issues were found
         if [ -z "$jira_issues" ]; then
