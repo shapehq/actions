@@ -18,37 +18,34 @@ runs:
     - name: Get Jira issues from changelog
       id: changelog
       run: |
-        set -e  # Stop script on the first error
-        set -x  # Print each command for debugging
-
         # Fetch all tags
-        git fetch --tags origin || { echo "Failed to fetch tags"; exit 1; }
+        git fetch --tags origin
 
         # Read all tags, separate them into an array
-        all_tags=$(git tag -l | wc -l)
+        all_tags=`git tag -l | wc -l`
         
-        if [ "$all_tags" -eq 0 ]; then
+        if [ $all_tags = 0 ]; then
+            # No tags, exit.
             echo "Repository contains no tags. Please make a tag first."
-            exit 0  # Use exit 0 to indicate graceful exit
+            exit 0
         else 
             echo "Fetching commits since last tag."
 
             # Get version
             version='${{ inputs.marketing-version }}'
             # Escape version for regex usage below
-            escaped_version=$(echo "$version" | sed 's/\./\\./g')
+            escaped_version=$(echo $version | sed 's/\./\\./g')
 
             # Get latest tag that does not contain the current version number
-            previous_tag=$(git describe --abbrev=0 --tags $(git tag -l --sort=-creatordate | grep -v "$escaped_version" | head -n 1)) || { echo "Failed to find previous tag"; exit 0; }
-
-            changelog=$(git log --pretty=format:"%s  (%cd) _<%ce>_" --date=format:"%Y-%m-%d %H:%M:%S" "$previous_tag"..HEAD) || { echo "Failed to fetch changelog"; exit 0; }
+            previous_tag="$(git describe --abbrev=0 --tags $(git tag -l --sort=-creatordate | grep -v $escaped_version | head -n 1))"        
+            changelog="$(git log --pretty=format:"%s  (%cd) _<%ce>_" --date=format:"%Y-%m-%d %H:%M:%S" $previous_tag..HEAD)"
         fi
           
         # Output collected information
         echo "Previous tag: $previous_tag"
         
         # Identify Jira Issue, if multiple use ',' as delimiter
-        jira_issues=$(echo "$changelog" | egrep -o '${{ inputs.jira-project-id }}-[0-9]+' | sort -uf | tr '\n' ',' | sed 's/.$//') || true
+        jira_issues="$(echo "$changelog" | egrep -o '${{ inputs.jira-project-id }}-[0-9]+' | sort -uf | tr '\n' ',' | sed 's/.$//')"
 
         # Check if any Jira issues were found
         if [ -z "$jira_issues" ]; then
@@ -66,5 +63,6 @@ runs:
             echo "issues=$jira_issues"
         fi
 
-        exit 0  # Ensure the script exits successfully
+        # Ensure the script exits successfully
+        exit 0
       shell: bash
