@@ -50,6 +50,7 @@ runs:
         # Check if any Jira issues were found
         if [ -z "$jira_issues" ]; then
             echo "No Jira issues found in the changelog."
+            echo "::warning title=Warning!::No Jira issues found in the changelog"
             exit 0
         else
             echo "Found the following issues in the changelog: $jira_issues"
