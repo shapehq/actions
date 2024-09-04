@@ -56,13 +56,8 @@ runs:
             echo "Found the following issues in the changelog: $jira_issues"
         fi
 
-        # Check if GITHUB_OUTPUT is set
-        if [ -n "$GITHUB_OUTPUT" ]; then
-            echo "issues=$jira_issues" >> "$GITHUB_OUTPUT"
-        else
-            echo "GITHUB_OUTPUT is not set. Outputting to console instead."
-            echo "issues=$jira_issues"
-        fi
+        # Store found issues
+        echo "issues=$jira_issues" >> "$GITHUB_OUTPUT"
 
         # Ensure the script exits successfully
         exit 0
