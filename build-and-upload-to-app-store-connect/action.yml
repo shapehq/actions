@@ -61,10 +61,10 @@ runs:
         certificate-op-reference: ${{ inputs.op-development-certificate-reference }}
     - name: Create Export Options Plist
       id: create-export-options-plist
+      working-directory: ${{ inputs.working-directory }}
       shell: bash
       run: |
         # Create Export Options Plist
-        cd ${{ inputs.working-directory }}
         if [[ "${{ inputs.testflight-internal-testing-only }}" != "true" && "${{ inputs.testflight-internal-testing-only }}" != "false" ]]; then
           echo "Error: testflight-internal-testing-only must be 'true' or 'false'"
           exit 1
@@ -89,15 +89,15 @@ runs:
     - name: Set Build Number
       shell: bash
       if: ${{ inputs.build-number }} != ""
+      working-directory: ${{ inputs.working-directory }}
       run: |
         # Set Build Number
-        cd ${{ inputs.working-directory }}
         xcrun agvtool new-version ${{ inputs.build-number }}
     - name: Archive App
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         # Archive App
-        cd ${{ inputs.working-directory }}
         CMD=$(cat <<EOF
           xcodebuild archive\
             -scheme ${{ inputs.scheme }}\
@@ -119,9 +119,9 @@ runs:
         set -o pipefail && $CMD 2>&1 | xcbeautify --renderer github-actions
     - name: Export IPA from Archive
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         # Export IPA from Archive
-        cd ${{ inputs.working-directory }}
         set -o pipefail &&\
         xcodebuild -exportArchive\
           -archivePath "${{ inputs.scheme }}.xcarchive"\
@@ -141,9 +141,9 @@ runs:
     - name: Find IPA
       id: find-ipa
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         # Find IPA
-        cd ${{ inputs.working-directory }}
         IPA_FILE_PATH=$(find "${{ inputs.build-directory }}" -type f -name "*.ipa" | head -n 1)
         if [ -n "$IPA_FILE_PATH" ]; then
           echo "file-path=${IPA_FILE_PATH}" >> "$GITHUB_OUTPUT"
@@ -153,9 +153,9 @@ runs:
         fi
     - name: Upload IPA to App Store Connect
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         # Upload IPA to App Store Connect
-        cd ${{ inputs.working-directory }}
         xcrun altool\
           --upload-app\
           -t ios\
