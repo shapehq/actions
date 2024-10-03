@@ -39,7 +39,7 @@ inputs:
   additional-archive-args:
     description: Additional arguments passed to xcodebuild when archiving the app.
     required: false
-  build-numberdirectory:
+  build-directory:
     description: Defines the directory where the build artifacts, like the final binary or intermediate files, will be stored.
     default: .build
     required: true
