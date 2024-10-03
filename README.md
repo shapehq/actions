@@ -45,6 +45,7 @@ The action supports the following inputs.
 
 |Name|Required|Default Value|Description|
 |-|-|-|-|
+|working-directory|Yes|.|The directory to run the action in. This should be the directory in which the Xcode project resides.|
 |scheme|Yes||The Xcode project's scheme to build. This specifies which set of build settings and targets to use when building your app.|
 |configuration|Yes|Release|Specifies the build configuration that Xcode should use. Commonly set to "Release" for production builds meant for App Store distribution.|
 |marketing-version|No||The marketing version number of the app, such as "1.0.0". This sets the MARKETING_VERSION in Xcode, determining the version displayed on the App Store.|
