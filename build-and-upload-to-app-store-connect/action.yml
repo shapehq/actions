@@ -46,9 +46,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Debug
-      run: echo "build number: '${{ inputs.build-number }}'"
-      shell: bash
     - name: Install App Store Connect API Key
       id: install-app-store-connect-api-key
       uses: shapehq/actions/install-asc-api-key@main
@@ -91,7 +88,7 @@ runs:
         echo "file-path=${FILE_PATH}" >> "$GITHUB_OUTPUT"
     - name: Set Build Number
       shell: bash
-      if: ${{ inputs.build-number }} != ""
+      if: "${{ inputs.build-number != '' }}"
       working-directory: ${{ inputs.working-directory }}
       run: |
         # Set Build Number
