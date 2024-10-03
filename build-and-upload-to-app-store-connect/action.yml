@@ -39,13 +39,15 @@ inputs:
   additional-archive-args:
     description: Additional arguments passed to xcodebuild when archiving the app.
     required: false
-  build-directory:
+  build-numberdirectory:
     description: Defines the directory where the build artifacts, like the final binary or intermediate files, will be stored.
     default: .build
     required: true
 runs:
   using: composite
   steps:
+    - name: Debug
+      echo: "build number: '${{ inputs.build-number }}'"
     - name: Install App Store Connect API Key
       id: install-app-store-connect-api-key
       uses: shapehq/actions/install-asc-api-key@main
@@ -88,7 +90,7 @@ runs:
         echo "file-path=${FILE_PATH}" >> "$GITHUB_OUTPUT"
     - name: Set Build Number
       shell: bash
-      if: ${{ inputs.build-number != "" }}
+      if: ${{ inputs.build-number }} != ""
       working-directory: ${{ inputs.working-directory }}
       run: |
         # Set Build Number
