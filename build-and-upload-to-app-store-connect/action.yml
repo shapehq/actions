@@ -88,7 +88,7 @@ runs:
         echo "file-path=${FILE_PATH}" >> "$GITHUB_OUTPUT"
     - name: Set Build Number
       shell: bash
-      if: ${{ inputs.build-number }} != ""
+      if: "${{ inputs.build-number != '' }}"
       working-directory: ${{ inputs.working-directory }}
       run: |
         # Set Build Number
