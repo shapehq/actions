@@ -92,7 +92,7 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         # Set Build Number
-        xcrun agvtool new-version ${{ inputs.build-number }}
+        xcrun agvtool new-version -all ${{ inputs.build-number }}
     - name: Archive App
       shell: bash
       working-directory: ${{ inputs.working-directory }}
