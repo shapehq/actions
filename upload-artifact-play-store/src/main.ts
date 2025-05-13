@@ -20,7 +20,7 @@ async function publishApp(
   serviceAccountKeyPath: string,
   packageName: string,
   bundlePath: string,
-  proguardMappingFilePath: string | undefined
+  proguardMappingFilePath: string | undefined,
 ): Promise<void> {
   const authClient = await createAuthClient(serviceAccountKeyPath);
   const publisher = google.androidpublisher({
@@ -35,7 +35,7 @@ async function publishApp(
   if (proguardMappingFilePath) {
     await uploadProguardMappingFile(publisher, editId, packageName, versionCode, proguardMappingFilePath);
   }
-  const track = await updateTrack(publisher, editId, packageName, versionCode);
+  await updateTrack(publisher, editId, packageName, versionCode);
   await commitEdit(publisher, editId, packageName);
 }
 
@@ -102,7 +102,7 @@ async function updateTrack(
   editId: string,
   packageName: string,
   versionCode: number,
-  track: string = "internal"
+  track: string = "internal",
 ): Promise<Track> {
   core.info(`Updating track "${track}" in "${packageName}" with build "${versionCode}"`);
   const res = await publisher.edits.tracks.update({
@@ -169,7 +169,7 @@ async function uploadProguardMappingFile(
   editId: string,
   packageName: string,
   versionCode: number,
-  mappingFile: string
+  mappingFile: string,
 ) {
   if (mappingFile != undefined && mappingFile.length > 0) {
     core.info(`Uploading Proguard mapping file @ "${mappingFile}"`);
