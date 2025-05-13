@@ -184,7 +184,7 @@ function uploadBundle(publisher, editId, packageName, bundleReleaseFile) {
             throw new Error(`App Bundle file "${bundleReleaseFile}" does not exist.`);
         }
         const stats = fs.statSync(bundleReleaseFile);
-        core.info(`Uploading App Bundle @ "${bundleReleaseFile} - ${stats.size} bytes"`);
+        core.info(`Uploading App Bundle @ "${bundleReleaseFile}" - ${stats.size} bytes`);
         const res = yield publisher.edits.bundles.upload({
             packageName: packageName,
             editId: editId,
@@ -202,7 +202,7 @@ function uploadApk(publisher, editId, packageName, apkReleaseFile) {
             throw new Error(`APK file "${apkReleaseFile}" does not exist.`);
         }
         const stats = fs.statSync(apkReleaseFile);
-        core.info(`Uploading APK @ "${apkReleaseFile}" - ${stats.size} bytes"`);
+        core.info(`Uploading APK @ "${apkReleaseFile}" - ${stats.size} bytes`);
         const res = yield publisher.edits.apks.upload({
             packageName: packageName,
             editId: editId,

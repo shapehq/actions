@@ -143,7 +143,7 @@ async function uploadBundle(publisher: Publisher, editId: string, packageName: s
     throw new Error(`App Bundle file "${bundleReleaseFile}" does not exist.`);
   }
   const stats = fs.statSync(bundleReleaseFile);
-  core.info(`Uploading App Bundle @ "${bundleReleaseFile} - ${stats.size} bytes"`);
+  core.info(`Uploading App Bundle @ "${bundleReleaseFile}" - ${stats.size} bytes`);
   const res = await publisher.edits.bundles.upload({
     packageName: packageName,
     editId: editId,
@@ -160,7 +160,7 @@ async function uploadApk(publisher: Publisher, editId: string, packageName: stri
     throw new Error(`APK file "${apkReleaseFile}" does not exist.`);
   }
   const stats = fs.statSync(apkReleaseFile);
-  core.info(`Uploading APK @ "${apkReleaseFile}" - ${stats.size} bytes"`);
+  core.info(`Uploading APK @ "${apkReleaseFile}" - ${stats.size} bytes`);
   const res = await publisher.edits.apks.upload({
     packageName: packageName,
     editId: editId,
