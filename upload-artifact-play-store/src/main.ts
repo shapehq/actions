@@ -29,7 +29,7 @@ async function publishApp(
   });
 
   const editId = await createEdit(publisher, packageName);
-  validateSelectedTrack(publisher, editId, packageName);
+  await validateSelectedTrack(publisher, editId, packageName);
 
   const versionCode = await uploadReleaseFiles(publisher, editId, packageName, bundlePath);
   if (proguardMappingFilePath) {
