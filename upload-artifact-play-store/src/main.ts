@@ -139,7 +139,11 @@ async function commitEdit(publisher: Publisher, editId: string, packageName: str
 }
 
 async function uploadBundle(publisher: Publisher, editId: string, packageName: string, bundleReleaseFile: string): Promise<Bundle> {
-  core.info(`Uploading App Bundle @ "${bundleReleaseFile}"`);
+  if (!fs.existsSync(bundleReleaseFile)) {
+    throw new Error(`App Bundle file "${bundleReleaseFile}" does not exist.`);
+  }
+  const stats = fs.statSync(bundleReleaseFile);
+  core.info(`Uploading App Bundle @ "${bundleReleaseFile} - ${stats.size} bytes"`);
   const res = await publisher.edits.bundles.upload({
     packageName: packageName,
     editId: editId,
@@ -152,7 +156,11 @@ async function uploadBundle(publisher: Publisher, editId: string, packageName: s
 }
 
 async function uploadApk(publisher: Publisher, editId: string, packageName: string, apkReleaseFile: string): Promise<Apk> {
-  core.info(`Uploading APK @ "${apkReleaseFile}"`);
+  if (!fs.existsSync(apkReleaseFile)) {
+    throw new Error(`APK file "${apkReleaseFile}" does not exist.`);
+  }
+  const stats = fs.statSync(apkReleaseFile);
+  core.info(`Uploading APK @ "${apkReleaseFile}" - ${stats.size} bytes"`);
   const res = await publisher.edits.apks.upload({
     packageName: packageName,
     editId: editId,
