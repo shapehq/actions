@@ -68,7 +68,7 @@ function publishApp(serviceAccountKeyPath, packageName, bundlePath, proguardMapp
             auth: authClient,
         });
         const editId = yield createEdit(publisher, packageName);
-        validateSelectedTrack(publisher, editId, packageName);
+        yield validateSelectedTrack(publisher, editId, packageName);
         const versionCode = yield uploadReleaseFiles(publisher, editId, packageName, bundlePath);
         if (proguardMappingFilePath) {
             yield uploadProguardMappingFile(publisher, editId, packageName, versionCode, proguardMappingFilePath);
@@ -180,7 +180,11 @@ function commitEdit(publisher, editId, packageName) {
 }
 function uploadBundle(publisher, editId, packageName, bundleReleaseFile) {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info(`Uploading App Bundle @ "${bundleReleaseFile}"`);
+        if (!fs.existsSync(bundleReleaseFile)) {
+            throw new Error(`App Bundle file "${bundleReleaseFile}" does not exist.`);
+        }
+        const stats = fs.statSync(bundleReleaseFile);
+        core.info(`Uploading App Bundle @ "${bundleReleaseFile} - ${stats.size} bytes"`);
         const res = yield publisher.edits.bundles.upload({
             packageName: packageName,
             editId: editId,
@@ -194,7 +198,11 @@ function uploadBundle(publisher, editId, packageName, bundleReleaseFile) {
 }
 function uploadApk(publisher, editId, packageName, apkReleaseFile) {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info(`Uploading APK @ "${apkReleaseFile}"`);
+        if (!fs.existsSync(apkReleaseFile)) {
+            throw new Error(`APK file "${apkReleaseFile}" does not exist.`);
+        }
+        const stats = fs.statSync(apkReleaseFile);
+        core.info(`Uploading APK @ "${apkReleaseFile}" - ${stats.size} bytes"`);
         const res = yield publisher.edits.apks.upload({
             packageName: packageName,
             editId: editId,
