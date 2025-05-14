@@ -43,6 +43,10 @@ inputs:
     description: Defines the directory where the build artifacts, like the final binary or intermediate files, will be stored.
     default: .build
     required: true
+  dsyms-archive-name:
+    description: Name of the uploaded archive containing the dSYMs.
+    default: dSYMs
+    required: true
 runs:
   using: composite
   steps:
@@ -137,7 +141,7 @@ runs:
     - name: Archive the dSYMs
       uses: actions/upload-artifact@v4
       with:
-        name: dSYMs
+        name: ${{ inputs.dsyms-archive-name }}
         path: ${{ inputs.working-directory }}/${{ inputs.scheme }}.xcarchive/dSYMs/*
         if-no-files-found: error
     - name: Find IPA
