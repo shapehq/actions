@@ -15,5 +15,5 @@ inputs:
     required: false
     description: "File path to a Proguard/R8 mapping file to be uploaded in addition to an APK"
 runs:
-  using: "node16"
+  using: "node20"
   main: "dist/index.js"
