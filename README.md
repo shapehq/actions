@@ -11,8 +11,6 @@ Several of these actions depend on the 1Password CLI being installed. Please use
 Builds an Xcode project, archives the app, exports an IPA from the archive, and uploads it to App Store Connect.
 As a side effect, the action will upload the dSYM files as an artifact to the job.
 
-
-
 ```yml
 - name: Build and Upload to App Store Connect
   uses: shapehq/actions/build-and-upload-to-app-store-connect@main

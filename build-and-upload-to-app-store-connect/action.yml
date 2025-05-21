@@ -2,10 +2,8 @@ name: Build and Upload to App Store Connect
 outputs:
   derived-data:
     description: The path to the derived data directory that was used during the build.
-    value: ${{ steps.prepare-derived-data.outputs.path }}
   dsyms:
     description: The path to the dSYMs directory in the xcarchive.
-    value: ${{ inputs.working-directory }}/${{ inputs.scheme }}.xcarchive/dSYMs
 inputs:
   working-directory:
     description: The directory to run the action in. This should be the directory in which the Xcode project resides.
@@ -114,7 +112,7 @@ runs:
           DERIVED_DATA_PATH="${{ inputs.build-directory }}/DerivedData-$(uuidgen)"
         fi
         mkdir -p "${DERIVED_DATA_PATH}"
-        echo "path=${DERIVED_DATA_PATH}" >> "$GITHUB_OUTPUT"
+        echo "derived-data=${DERIVED_DATA_PATH}" >> "$GITHUB_OUTPUT"
     - name: Set Build Number
       shell: bash
       if: "${{ inputs.build-number != '' }}"
@@ -137,7 +135,7 @@ runs:
             -authenticationKeyIssuerID ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
             -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
             -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }}\
-            -derivedDataPath "${{ steps.prepare-derived-data.outputs.path }}"
+            -derivedDataPath "${{ steps.prepare-derived-data.outputs.derived-data }}"
         EOF
         )
         if [ -n "${{ inputs.marketing-version }}" ]; then
@@ -162,6 +160,14 @@ runs:
           -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
           -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }} 2>&1\
           | xcbeautify --renderer github-actions
+    - name: Set dSYMs Path
+      id: set-dsyms-path
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        # Set dSYMs path
+        DSYMS_PATH="${{ inputs.working-directory }}/${{ inputs.scheme }}.xcarchive/dSYMs"
+        echo "dsyms=${DSYMS_PATH}" >> "$GITHUB_OUTPUT"
     - name: Archive the dSYMs
       uses: actions/upload-artifact@v4
       with:
