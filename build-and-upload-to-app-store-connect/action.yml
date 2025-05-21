@@ -129,7 +129,7 @@ runs:
             -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
             -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }}\
             -derivedDataPath "${{ steps.prepare-derived-data.outputs.derived-data }}"\
-            -clonedSourcePackagesDirPath "$HOME/Library/Developer/Xcode/DerivedData/
+            -clonedSourcePackagesDirPath "$HOME/Library/Developer/Xcode/DerivedData/"
         EOF
         )
         if [ -n "${{ inputs.marketing-version }}" ]; then
