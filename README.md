@@ -59,7 +59,6 @@ The action supports the following inputs.
 |additional-archive-args|No||Additional arguments passed to xcodebuild when archiving the app.|
 |build-directory|Yes|.build|Defines the directory where the build artifacts, like the final binary or intermediate files, will be stored.|
 |dsyms-archive-name|Yes|dSYMs|Name of the uploaded archive containing the dSYMs.|
-|derived-data|No||A path to a directory where derived data will be stored during the build. The path will be created if it doesn't exist. If not specified, a unique directory will be created.|
 
 The action provides the following outputs:
 

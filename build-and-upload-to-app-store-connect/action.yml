@@ -52,9 +52,6 @@ inputs:
     description: Name of the uploaded archive containing the dSYMs.
     default: dSYMs
     required: true
-  derived-data:
-    description: A path to a directory on the disk where derived data will be stored. The path will be created if it doesn't exist.
-    required: false
 runs:
   using: composite
   steps:
@@ -106,11 +103,7 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         # Prepare Derived Data Directory
-        if [ -n "${{ inputs.derived-data }}" ]; then
-          DERIVED_DATA_PATH="${{ inputs.derived-data }}"
-        else
-          DERIVED_DATA_PATH="${{ inputs.build-directory }}/DerivedData-$(uuidgen)"
-        fi
+        DERIVED_DATA_PATH="${{ inputs.working-directory }}/DerivedData-$(uuidgen)"
         mkdir -p "${DERIVED_DATA_PATH}"
         echo "derived-data=${DERIVED_DATA_PATH}" >> "$GITHUB_OUTPUT"
     - name: Set Build Number
