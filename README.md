@@ -11,11 +11,7 @@ Several of these actions depend on the 1Password CLI being installed. Please use
 Builds an Xcode project, archives the app, exports an IPA from the archive, and uploads it to App Store Connect.
 As a side effect, the action will upload the dSYM files as an artifact to the job.
 
-The action provides the following outputs:
 
-|Name|Description|
-|-|-|
-|derived-data|The path to the derived data directory that was used during the build.|
 
 ```yml
 - name: Build and Upload to App Store Connect
@@ -66,6 +62,13 @@ The action supports the following inputs.
 |build-directory|Yes|.build|Defines the directory where the build artifacts, like the final binary or intermediate files, will be stored.|
 |dsyms-archive-name|Yes|dSYMs|Name of the uploaded archive containing the dSYMs.|
 |derived-data|No||A path to a directory where derived data will be stored during the build. The path will be created if it doesn't exist. If not specified, a unique directory will be created.|
+
+The action provides the following outputs:
+
+|Name|Description|
+|-|-|
+|derived-data|The path to the derived data directory that was used during the build.|
+|dsyms|The path to the dSYMs directory in the xcarchive.|
 
 ## [connect-to-vpn](https://github.com/shapehq/actions/blob/main/connect-to-vpn/action.yml)
 

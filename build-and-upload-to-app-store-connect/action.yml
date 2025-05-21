@@ -3,6 +3,9 @@ outputs:
   derived-data:
     description: The path to the derived data directory that was used during the build.
     value: ${{ steps.prepare-derived-data.outputs.path }}
+  dsyms:
+    description: The path to the dSYMs directory in the xcarchive.
+    value: ${{ inputs.working-directory }}/${{ inputs.scheme }}.xcarchive/dSYMs
 inputs:
   working-directory:
     description: The directory to run the action in. This should be the directory in which the Xcode project resides.
