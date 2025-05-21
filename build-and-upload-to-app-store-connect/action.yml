@@ -103,7 +103,7 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         # Prepare Derived Data Directory
-        DERIVED_DATA_PATH="${{ inputs.working-directory }}/DerivedData-$(uuidgen)"
+        DERIVED_DATA_PATH="DerivedData-$(uuidgen)"
         mkdir -p "${DERIVED_DATA_PATH}"
         echo "derived-data=${DERIVED_DATA_PATH}" >> "$GITHUB_OUTPUT"
     - name: Set Build Number
@@ -128,7 +128,8 @@ runs:
             -authenticationKeyIssuerID ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
             -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
             -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }}\
-            -derivedDataPath "${{ steps.prepare-derived-data.outputs.derived-data }}"
+            -derivedDataPath "${{ steps.prepare-derived-data.outputs.derived-data }}"\
+            -clonedSourcePackagesDirPath "$HOME/Library/Developer/Xcode/DerivedData/
         EOF
         )
         if [ -n "${{ inputs.marketing-version }}" ]; then
