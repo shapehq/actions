@@ -1,9 +1,9 @@
 import SemanticVersionParser from "../src/SemanticVersion/SemanticVersionParser"
-import XcodeVersionParserLive from "../src/XcodeVersion/XcodeVersionParserLive"
+import XcodeVersionParser from "../src/XcodeVersion/XcodeVersionParser"
 
 test("It parses XcodeVersion with major only", () => {
   const filePath = "/Users/runner/Applications/Xcode 14.app"
-  const parser = new XcodeVersionParserLive({
+  const parser = new XcodeVersionParser({
     semanticVersionParser: new SemanticVersionParser()
   })
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -17,7 +17,7 @@ test("It parses XcodeVersion with major only", () => {
 
 test("It parses XcodeVersion with major and minor", () => {
   const filePath = "/Users/runner/Applications/Xcode 14.3.app"
-  const parser = new XcodeVersionParserLive({
+  const parser = new XcodeVersionParser({
     semanticVersionParser: new SemanticVersionParser()
   })
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -31,7 +31,7 @@ test("It parses XcodeVersion with major and minor", () => {
 
 test("It parses XcodeVersion with major, minor, and patch", () => {
   const filePath = "/Users/runner/Applications/Xcode 14.3.1.app"
-  const parser = new XcodeVersionParserLive({
+  const parser = new XcodeVersionParser({
     semanticVersionParser: new SemanticVersionParser()
   })
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -45,7 +45,7 @@ test("It parses XcodeVersion with major, minor, and patch", () => {
 
 test("It parses XcodeVersion for beta version", () => {
   const filePath = "/Users/runner/Applications/Xcode 15 beta.app"
-  const parser = new XcodeVersionParserLive({
+  const parser = new XcodeVersionParser({
     semanticVersionParser: new SemanticVersionParser()
   })
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -59,7 +59,7 @@ test("It parses XcodeVersion for beta version", () => {
 
 test("It parses XcodeVersion for release candidate", () => {
   const filePath = "/Users/runner/Applications/Xcode-15.0.0-Release.Candidate.app"
-  const parser = new XcodeVersionParserLive({
+  const parser = new XcodeVersionParser({
     semanticVersionParser: new SemanticVersionParser()
   })
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -73,7 +73,7 @@ test("It parses XcodeVersion for release candidate", () => {
 
 test("It parses XcodeVersion for abbreviated release candidate", () => {
   const filePath = "/Users/runner/Applications/Xcode-15.0.0-RC.app"
-  const parser = new XcodeVersionParserLive({
+  const parser = new XcodeVersionParser({
     semanticVersionParser: new SemanticVersionParser()
   })
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -87,7 +87,7 @@ test("It parses XcodeVersion for abbreviated release candidate", () => {
 
 test("It parses XcodeVersion for 2nd beta version", () => {
   const filePath = "/Users/runner/Applications/Xcode_15.0.0_Beta.2.app"
-  const parser = new XcodeVersionParserLive({
+  const parser = new XcodeVersionParser({
     semanticVersionParser: new SemanticVersionParser()
   })
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -101,7 +101,7 @@ test("It parses XcodeVersion for 2nd beta version", () => {
 
 test("It returns null for other apps", () => {
   const filePath = "/Users/runner/Applications/Calendar.app"
-  const parser = new XcodeVersionParserLive({
+  const parser = new XcodeVersionParser({
     semanticVersionParser: new SemanticVersionParser()
   })
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -110,7 +110,7 @@ test("It returns null for other apps", () => {
 
 test("It returns null when version number is absent", () => {
   const filePath = "/Users/runner/Applications/Xcode.app"
-  const parser = new XcodeVersionParserLive({
+  const parser = new XcodeVersionParser({
     semanticVersionParser: new SemanticVersionParser()
   })
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -119,7 +119,7 @@ test("It returns null when version number is absent", () => {
 
 test("It replaces multiple underscores in Xcode's name", () => {
   const filePath = "/Users/runner/Applications/Xcode_15.0.0_Beta.app"
-  const parser = new XcodeVersionParserLive({
+  const parser = new XcodeVersionParser({
     semanticVersionParser: new SemanticVersionParser()
   })
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -128,7 +128,7 @@ test("It replaces multiple underscores in Xcode's name", () => {
 
 test("It replaces multiple dashes in Xcode's name", () => {
   const filePath = "/Users/runner/Applications/Xcode-15.0.0-Beta.app"
-  const parser = new XcodeVersionParserLive({
+  const parser = new XcodeVersionParser({
     semanticVersionParser: new SemanticVersionParser()
   })
   const xcodeVersion = parser.parseFilePath(filePath)
@@ -137,7 +137,7 @@ test("It replaces multiple dashes in Xcode's name", () => {
 
 test("It supports a combination of underscore and dashes", async () => {
   const filePath = "/Users/runner/Applications/Xcode_15.0.0-Beta.app"
-  const parser = new XcodeVersionParserLive({
+  const parser = new XcodeVersionParser({
     semanticVersionParser: new SemanticVersionParser()
   })
   const xcodeVersion = parser.parseFilePath(filePath)

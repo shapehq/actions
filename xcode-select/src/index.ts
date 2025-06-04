@@ -1,32 +1,32 @@
 import * as core from "@actions/core"
 import getOptions from "./getOptions"
 import Action from "./Action"
-import LoggerLive from "./Logger/LoggerLive"
+import ActionsLogger from "./Logger/ActionsLogger"
 import KeyValueStateStore from "./StateStore/KeyValueStateStore"
-import CommandRunnerLive from "./CommandRunner/CommandRunnerLive"
-import FileSystemLive from "./FileSystem/FileSystemLive"
+import ExecCommandRunner from "./CommandRunner/ExecCommandRunner"
+import FileSystem from "./FileSystem/FileSystem"
 import SemanticVersionParser from "./SemanticVersion/SemanticVersionParser"
-import SemanticVersionTemplateParserLive from "./SemanticVersion/SemanticVersionTemplateParserLive"
+import SemanticVersionTemplateParser from "./SemanticVersion/SemanticVersionTemplateParser"
 import XcodeVersionMatcher from "./XcodeVersion/XcodeVersionMatcher"
-import XcodeVersionParserLive from "./XcodeVersion/XcodeVersionParserLive"
-import XcodeVersionRepositoryLive from "./XcodeVersion/XcodeVersionRepositoryLive"
-import XcodeSelectorLive from "./XcodeSelector/XcodeSelectorLive"
+import XcodeVersionParser from "./XcodeVersion/XcodeVersionParser"
+import FileSystemXcodeVersionRepository from "./XcodeVersion/FileSystemXcodeVersionRepository"
+import CLIXcodeSelector from "./XcodeSelector/CLIXcodeSelector"
 
-const logger = new LoggerLive()
-const xcodeVersionRepository = new XcodeVersionRepositoryLive({
-  fileSystem: new FileSystemLive(), 
-  xcodeVersionParser: new XcodeVersionParserLive({
+const logger = new ActionsLogger()
+const xcodeVersionRepository = new FileSystemXcodeVersionRepository({
+  fileSystem: new FileSystem(), 
+  xcodeVersionParser: new XcodeVersionParser({
     semanticVersionParser: new SemanticVersionParser()
   })
 })
 const action = new Action({
   stateStore: new KeyValueStateStore({ writerReader: core }),
   logger: logger,
-  semanticVersionTemplateParser: new SemanticVersionTemplateParserLive(),
+  semanticVersionTemplateParser: new SemanticVersionTemplateParser(),
   xcodeVersionRepository: xcodeVersionRepository,
   xcodeVersionMatcher: new XcodeVersionMatcher({ xcodeVersionRepository }),
-  xcodeSelector: new XcodeSelectorLive({
-    commandRunner: new CommandRunnerLive()
+  xcodeSelector: new CLIXcodeSelector({
+    commandRunner: new ExecCommandRunner()
   })
 })
 action.run(getOptions()).catch(err => {

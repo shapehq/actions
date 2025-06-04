@@ -1,3 +1,3 @@
-export default interface XcodeSelector {
+export default interface IXcodeSelector {
   select(filePath: string): Promise<void>
 }

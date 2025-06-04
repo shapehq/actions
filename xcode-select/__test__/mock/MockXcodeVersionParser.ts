@@ -1,7 +1,7 @@
 import XcodeVersion from "../../src/XcodeVersion/XcodeVersion"
-import XcodeVersionParser from "../../src/XcodeVersion/XcodeVersionParser"
+import IXcodeVersionParser from "../../src/XcodeVersion/IXcodeVersionParser"
 
-export default class XcodeVersionParserMock implements XcodeVersionParser {
+export default class XcodeVersionParserMock implements IXcodeVersionParser {
   latestFilePath: string | null = null
   
   private result: XcodeVersion | null
