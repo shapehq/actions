@@ -99,3 +99,16 @@ test("It sorts Xcode versions", () => {
     )
   ])
 })
+
+test("It handles release candidate and beta being installed simultaneously", async () => {
+  const fileSystem = new FileSystemMock()
+  fileSystem.dirContents = [
+    "/Users/runner/Applications/Xcode_16.4-RC.app",
+    "/Users/runner/Applications/Xcode_16.4-Beta.app",
+  ]
+  const semanticVersionParser = new SemanticVersionParser()
+  const xcodeVersionParser = new XcodeVersionParserLive({ semanticVersionParser })
+  const repository = new XcodeVersionRepositoryLive({ fileSystem, xcodeVersionParser })
+  const xcodeVersions = repository.getXcodeVersions()
+  expect(xcodeVersions.length).toBe(2)
+})

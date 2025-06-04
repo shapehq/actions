@@ -42,6 +42,7 @@ export default class XcodeVersionRepositoryLive implements XcodeVersionRepositor
         return e.version.major == xcodeVersion.version.major
           && e.version.minor === xcodeVersion.version.minor
           && e.version.patch === xcodeVersion.version.patch
+          && e.isBeta === xcodeVersion.isBeta
           && e.betaNumber === xcodeVersion.betaNumber
       })
       if (existing.length == 0) {
