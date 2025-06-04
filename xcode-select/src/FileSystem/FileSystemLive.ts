@@ -15,4 +15,12 @@ export class FileSystemLive implements FileSystem {
       return []
     }
   }
+  
+  realPath(path: string): string {
+    try {
+      return fs.realpathSync(path)
+    } catch {
+      return path
+    }
+  }
 }

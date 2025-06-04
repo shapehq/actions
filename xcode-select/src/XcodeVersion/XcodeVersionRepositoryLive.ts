@@ -24,6 +24,10 @@ export class XcodeVersionRepositoryLive implements XcodeVersionRepository {
         return result.concat(this.fileSystem.listContentsOfDir(dirPath))
       }, [])
       .flatMap(filePath => {
+        // Resolve symlinks.
+        return this.fileSystem.realPath(filePath)
+      })
+      .flatMap(filePath => {
         const xcodeVersion = this.xcodeVersionParser.parseFilePath(filePath)
         if (xcodeVersion != null) {
           return xcodeVersion
