@@ -20,7 +20,7 @@ async function publishApp(
   serviceAccountKeyPath: string,
   packageName: string,
   bundlePath: string,
-  proguardMappingFilePath: string | undefined
+  proguardMappingFilePath: string | undefined,
 ): Promise<void> {
   const authClient = await createAuthClient(serviceAccountKeyPath);
   const publisher = google.androidpublisher({
@@ -29,13 +29,13 @@ async function publishApp(
   });
 
   const editId = await createEdit(publisher, packageName);
-  validateSelectedTrack(publisher, editId, packageName);
+  await validateSelectedTrack(publisher, editId, packageName);
 
   const versionCode = await uploadReleaseFiles(publisher, editId, packageName, bundlePath);
   if (proguardMappingFilePath) {
     await uploadProguardMappingFile(publisher, editId, packageName, versionCode, proguardMappingFilePath);
   }
-  const track = await updateTrack(publisher, editId, packageName, versionCode);
+  await updateTrack(publisher, editId, packageName, versionCode);
   await commitEdit(publisher, editId, packageName);
 }
 
@@ -102,7 +102,7 @@ async function updateTrack(
   editId: string,
   packageName: string,
   versionCode: number,
-  track: string = "internal"
+  track: string = "internal",
 ): Promise<Track> {
   core.info(`Updating track "${track}" in "${packageName}" with build "${versionCode}"`);
   const res = await publisher.edits.tracks.update({
@@ -139,7 +139,11 @@ async function commitEdit(publisher: Publisher, editId: string, packageName: str
 }
 
 async function uploadBundle(publisher: Publisher, editId: string, packageName: string, bundleReleaseFile: string): Promise<Bundle> {
-  core.info(`Uploading App Bundle @ "${bundleReleaseFile}"`);
+  if (!fs.existsSync(bundleReleaseFile)) {
+    throw new Error(`App Bundle file "${bundleReleaseFile}" does not exist.`);
+  }
+  const stats = fs.statSync(bundleReleaseFile);
+  core.info(`Uploading App Bundle @ "${bundleReleaseFile}" - ${stats.size} bytes`);
   const res = await publisher.edits.bundles.upload({
     packageName: packageName,
     editId: editId,
@@ -152,7 +156,11 @@ async function uploadBundle(publisher: Publisher, editId: string, packageName: s
 }
 
 async function uploadApk(publisher: Publisher, editId: string, packageName: string, apkReleaseFile: string): Promise<Apk> {
-  core.info(`Uploading APK @ "${apkReleaseFile}"`);
+  if (!fs.existsSync(apkReleaseFile)) {
+    throw new Error(`APK file "${apkReleaseFile}" does not exist.`);
+  }
+  const stats = fs.statSync(apkReleaseFile);
+  core.info(`Uploading APK @ "${apkReleaseFile}" - ${stats.size} bytes`);
   const res = await publisher.edits.apks.upload({
     packageName: packageName,
     editId: editId,
@@ -169,7 +177,7 @@ async function uploadProguardMappingFile(
   editId: string,
   packageName: string,
   versionCode: number,
-  mappingFile: string
+  mappingFile: string,
 ) {
   if (mappingFile != undefined && mappingFile.length > 0) {
     core.info(`Uploading Proguard mapping file @ "${mappingFile}"`);

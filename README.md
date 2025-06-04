@@ -45,6 +45,7 @@ The action supports the following inputs.
 
 |Name|Required|Default Value|Description|
 |-|-|-|-|
+|working-directory|Yes|.|The directory to run the action in. This should be the directory in which the Xcode project resides.|
 |scheme|Yes||The Xcode project's scheme to build. This specifies which set of build settings and targets to use when building your app.|
 |configuration|Yes|Release|Specifies the build configuration that Xcode should use. Commonly set to "Release" for production builds meant for App Store distribution.|
 |marketing-version|No||The marketing version number of the app, such as "1.0.0". This sets the MARKETING_VERSION in Xcode, determining the version displayed on the App Store.|
@@ -57,6 +58,7 @@ The action supports the following inputs.
 |op-development-certificate-password-reference|Yes||Indicates the location in 1Password where the password for decrypting the development certificate (.p12 file) is kept.|
 |additional-archive-args|No||Additional arguments passed to xcodebuild when archiving the app.|
 |build-directory|Yes|.build|Defines the directory where the build artifacts, like the final binary or intermediate files, will be stored.|
+|dsyms-archive-name|Yes|dSYMs|Name of the uploaded archive containing the dSYMs.|
 
 ## [connect-to-vpn](https://github.com/shapehq/actions/blob/main/connect-to-vpn/action.yml)
 
@@ -247,9 +249,9 @@ The outputs can be used to access the API key. The following example shows how t
 - name: Fastlane
   run: bundle exec fastlane build_appstore
   env:          
-    ASC_API_KEY_ISSUER_ID: ${{ steps.install-asc-api-key.outputs.issuer-id }}
-    ASC_API_KEY_ID: ${{ steps.install-asc-api-key.outputs.key-id }}
-    ASC_API_KEY: ${{ steps.install-asc-api-key.outputs.key-file-path }}
+    ASC_API_KEY_ISSUER_ID: ${{ steps.install-company-asc-api-key.outputs.issuer-id }}
+    ASC_API_KEY_ID: ${{ steps.install-company-asc-api-key.outputs.key-id }}
+    ASC_API_KEY: ${{ steps.install-company-asc-api-key.outputs.key-file-path }}
 ```
 
 Use the [install-asc-api-key](https://github.com/shapehq/actions?tab=readme-ov-file#install-asc-api-key) action to install a specified App Store Connect API key.

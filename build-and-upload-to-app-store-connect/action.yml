@@ -1,5 +1,9 @@
 name: Build and Upload to App Store Connect
 inputs:
+  working-directory:
+    description: The directory to run the action in. This should be the directory in which the Xcode project resides.
+    default: .
+    required: true
   scheme:
     description: The Xcode project's scheme to build. This specifies which set of build settings and targets to use when building your app.
     required: true
@@ -39,6 +43,10 @@ inputs:
     description: Defines the directory where the build artifacts, like the final binary or intermediate files, will be stored.
     default: .build
     required: true
+  dsyms-archive-name:
+    description: Name of the uploaded archive containing the dSYMs.
+    default: dSYMs
+    required: true
 runs:
   using: composite
   steps:
@@ -57,6 +65,7 @@ runs:
         certificate-op-reference: ${{ inputs.op-development-certificate-reference }}
     - name: Create Export Options Plist
       id: create-export-options-plist
+      working-directory: ${{ inputs.working-directory }}
       shell: bash
       run: |
         # Create Export Options Plist
@@ -71,8 +80,10 @@ runs:
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
         <plist version="1.0">
         <dict>
+          <key>signingStyle</key>
+          <string>automatic</string>
           <key>method</key>
-          <string>app-store</string>
+          <string>app-store-connect</string>
           <key>destination</key>
           <string>export</string>
           <key>testFlightInternalTestingOnly</key>
@@ -83,12 +94,14 @@ runs:
         echo "file-path=${FILE_PATH}" >> "$GITHUB_OUTPUT"
     - name: Set Build Number
       shell: bash
-      if: ${{ inputs.build-number }} != ""
+      if: "${{ inputs.build-number != '' }}"
+      working-directory: ${{ inputs.working-directory }}
       run: |
         # Set Build Number
-        xcrun agvtool new-version ${{ inputs.build-number }}
+        xcrun agvtool new-version -all ${{ inputs.build-number }}
     - name: Archive App
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         # Archive App
         CMD=$(cat <<EOF
@@ -112,6 +125,7 @@ runs:
         set -o pipefail && $CMD 2>&1 | xcbeautify --renderer github-actions
     - name: Export IPA from Archive
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         # Export IPA from Archive
         set -o pipefail &&\
@@ -127,12 +141,13 @@ runs:
     - name: Archive the dSYMs
       uses: actions/upload-artifact@v4
       with:
-        name: dSYMs
-        path: ${{ inputs.scheme }}.xcarchive/dSYMs/*
+        name: ${{ inputs.dsyms-archive-name }}
+        path: ${{ inputs.working-directory }}/${{ inputs.scheme }}.xcarchive/dSYMs/*
         if-no-files-found: error
     - name: Find IPA
       id: find-ipa
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         # Find IPA
         IPA_FILE_PATH=$(find "${{ inputs.build-directory }}" -type f -name "*.ipa" | head -n 1)
@@ -144,6 +159,7 @@ runs:
         fi
     - name: Upload IPA to App Store Connect
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         # Upload IPA to App Store Connect
         xcrun altool\
