@@ -6,14 +6,14 @@ import XcodeVersion from "./XcodeVersion"
 import XcodeVersionRepository from "./XcodeVersionRepository"
 
 export default class XcodeVersionMatcher {
-  private repository: XcodeVersionRepository
+  private readonly xcodeVersionRepository: XcodeVersionRepository
   
-  constructor(repository: XcodeVersionRepository) {
-    this.repository = repository
+  constructor(config: { xcodeVersionRepository: XcodeVersionRepository }) {
+    this.xcodeVersionRepository = config.xcodeVersionRepository
   }
   
   findXcodeVersion(needle: SemanticVersionTemplate): XcodeVersion {
-    const xcodeVersions = this.repository
+    const xcodeVersions = this.xcodeVersionRepository
       .getXcodeVersions()
       .sort((lhs, rhs) => {
         const versionCompare = semanticVersionSort(lhs.version, rhs.version)

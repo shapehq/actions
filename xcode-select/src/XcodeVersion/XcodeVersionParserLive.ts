@@ -3,10 +3,10 @@ import XcodeVersion from "./XcodeVersion"
 import XcodeVersionParser from "./XcodeVersionParser"
 
 export default class XcodeVersionParserLive implements XcodeVersionParser {
-  private semanticVersionParser: SemanticVersionParser
+  private readonly semanticVersionParser: SemanticVersionParser
   
-  constructor(semanticVersionParser: SemanticVersionParser) {
-    this.semanticVersionParser = semanticVersionParser
+  constructor(config: { semanticVersionParser: SemanticVersionParser }) {
+    this.semanticVersionParser = config.semanticVersionParser
   }
   
   parseFilePath(filePath: string): XcodeVersion | null {

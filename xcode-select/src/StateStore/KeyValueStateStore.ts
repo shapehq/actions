@@ -10,10 +10,10 @@ const KEY = {
 }
 
 export default class KeyValueStateStore implements StateStore {
-  private writerReader: KeyValueStateWriterReader
+  private readonly writerReader: KeyValueStateWriterReader
   
-  constructor(writerReader: KeyValueStateWriterReader) {
-    this.writerReader = writerReader
+  constructor(config: { writerReader: KeyValueStateWriterReader }) {
+    this.writerReader = config.writerReader
     this.isPost = false
   }
   
