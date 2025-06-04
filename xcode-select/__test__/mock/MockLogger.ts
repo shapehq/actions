@@ -1,6 +1,6 @@
 import ILogger from "../../src/Logger/ILogger"
 
-export default class LoggerMock implements ILogger {
+export default class MockLogger implements ILogger {
   private _latestLogMessage: string | null = null
   
   get latestLogMessage(): string | null {

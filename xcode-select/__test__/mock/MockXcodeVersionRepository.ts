@@ -2,7 +2,7 @@ import SemanticVersion from "../../src/SemanticVersion/SemanticVersion"
 import XcodeVersion from "../../src/XcodeVersion/XcodeVersion"
 import IXcodeVersionRepository from "../../src/XcodeVersion/IXcodeVersionRepository"
 
-export default class XcodeVersionRepositoryMock implements IXcodeVersionRepository {
+export default class MockXcodeVersionRepository implements IXcodeVersionRepository {
   private xcodeVersions: XcodeVersion[] = []
   
   getXcodeVersions(): XcodeVersion[] {

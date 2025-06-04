@@ -1,6 +1,6 @@
 import { ActionOptions } from "../../src/Action"
 
-export default class ActionOptionsMock implements ActionOptions {
+export default class MockActionOptions implements ActionOptions {
   version: string
   
   constructor(version: string) {

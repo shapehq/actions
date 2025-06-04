@@ -1,6 +1,6 @@
 import IFileSystem from "../../src/FileSystem/IFileSystem"
 
-export default class FileSystemMock implements IFileSystem {
+export default class MockFileSystem implements IFileSystem {
   dirContents: string[] = []
   
   private _homeDir: string
