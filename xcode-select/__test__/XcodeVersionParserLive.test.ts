@@ -134,3 +134,12 @@ test("It replaces multiple dashes in Xcode's name", () => {
   const xcodeVersion = parser.parseFilePath(filePath)
   expect(xcodeVersion?.name).toEqual("Xcode 15.0.0 Beta")
 })
+
+test("It supports a combination of underscore and dashes", async () => {
+  const filePath = "/Users/runner/Applications/Xcode_15.0.0-Beta.app"
+  const parser = new XcodeVersionParserLive({
+    semanticVersionParser: new SemanticVersionParser()
+  })
+  const xcodeVersion = parser.parseFilePath(filePath)
+  expect(xcodeVersion?.name).toEqual("Xcode 15.0.0 Beta")
+})
