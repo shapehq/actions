@@ -1,7 +1,7 @@
 import { exec } from "child_process"
-import CommandRunner from "./CommandRunner"
+import ICommandRunner from "./ICommandRunner"
 
-export default class CommandRunnerLive implements CommandRunner {
+export default class ExecCommandRunner implements ICommandRunner {
   run(cmd: string): Promise<string> {
     return new Promise((resolve, reject) => {
       exec(cmd, (error, stdout, stderr) => {

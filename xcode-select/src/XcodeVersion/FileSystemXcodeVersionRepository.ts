@@ -1,15 +1,15 @@
 import path from "path"
-import FileSystem from "../FileSystem/FileSystem"
+import IFileSystem from "../FileSystem/IFileSystem"
 import XcodeVersion from "./XcodeVersion"
-import XcodeVersionParser from "./XcodeVersionParser"
-import XcodeVersionRepository from "./XcodeVersionRepository"
+import IXcodeVersionParser from "./IXcodeVersionParser"
+import IXcodeVersionRepository from "./IXcodeVersionRepository"
 import { xcodeVersionSort } from "../XcodeVersion/XcodeVersion"
 
-export default class XcodeVersionRepositoryLive implements XcodeVersionRepository {
-  private fileSystem: FileSystem
-  private xcodeVersionParser: XcodeVersionParser
+export default class FileSystemXcodeVersionRepository implements IXcodeVersionRepository {
+  private readonly fileSystem: IFileSystem
+  private readonly xcodeVersionParser: IXcodeVersionParser
   
-  constructor(config: { fileSystem: FileSystem, xcodeVersionParser: XcodeVersionParser }) {
+  constructor(config: { fileSystem: IFileSystem, xcodeVersionParser: IXcodeVersionParser }) {
     this.fileSystem = config.fileSystem
     this.xcodeVersionParser = config.xcodeVersionParser
   }

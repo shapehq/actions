@@ -1,29 +1,29 @@
-import StateStore from "./StateStore/StateStore"
-import Logger from "./Logger/Logger"
+import IStateStore from "./StateStore/IStateStore"
+import ILogger from "./Logger/ILogger"
 import SemanticVersionTemplateParser from "./SemanticVersion/SemanticVersionTemplateParser"
-import XcodeVersionRepository from "./XcodeVersion/XcodeVersionRepository"
+import IXcodeVersionRepository from "./XcodeVersion/IXcodeVersionRepository"
 import XcodeVersionMatcher from "./XcodeVersion/XcodeVersionMatcher"
-import XcodeSelector from "./XcodeSelector/XcodeSelector"
+import IXcodeSelector from "./XcodeSelector/IXcodeSelector"
 
 export interface ActionOptions {
   readonly version: string
 }
 
 export default class Action {
-  private readonly stateStore: StateStore
-  private readonly logger: Logger
+  private readonly stateStore: IStateStore
+  private readonly logger: ILogger
   private readonly semanticVersionTemplateParser: SemanticVersionTemplateParser
-  private readonly xcodeVersionRepository: XcodeVersionRepository
+  private readonly xcodeVersionRepository: IXcodeVersionRepository
   private readonly xcodeVersionMatcher: XcodeVersionMatcher
-  private readonly xcodeSelector: XcodeSelector
+  private readonly xcodeSelector: IXcodeSelector
   
   constructor(config: {
-    stateStore: StateStore,
-    logger: Logger,
+    stateStore: IStateStore,
+    logger: ILogger,
     semanticVersionTemplateParser: SemanticVersionTemplateParser,
-    xcodeVersionRepository: XcodeVersionRepository,
+    xcodeVersionRepository: IXcodeVersionRepository,
     xcodeVersionMatcher: XcodeVersionMatcher,
-    xcodeSelector: XcodeSelector
+    xcodeSelector: IXcodeSelector
   }) {
     this.stateStore = config.stateStore
     this.logger = config.logger

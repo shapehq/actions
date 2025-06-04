@@ -3,12 +3,12 @@ import SemanticVersionTemplate, {
 } from "../SemanticVersion/SemanticVersionTemplate"
 import { semanticVersionSort } from "../SemanticVersion/SemanticVersion"
 import XcodeVersion from "./XcodeVersion"
-import XcodeVersionRepository from "./XcodeVersionRepository"
+import IXcodeVersionRepository from "./IXcodeVersionRepository"
 
 export default class XcodeVersionMatcher {
-  private readonly xcodeVersionRepository: XcodeVersionRepository
+  private readonly xcodeVersionRepository: IXcodeVersionRepository
   
-  constructor(config: { xcodeVersionRepository: XcodeVersionRepository }) {
+  constructor(config: { xcodeVersionRepository: IXcodeVersionRepository }) {
     this.xcodeVersionRepository = config.xcodeVersionRepository
   }
   
