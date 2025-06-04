@@ -6,31 +6,31 @@ import XcodeVersionMatcher from "./XcodeVersion/XcodeVersionMatcher"
 import XcodeSelector from "./XcodeSelector/XcodeSelector"
 
 export interface ActionOptions {
-  version: string
+  readonly version: string
 }
 
 export default class Action {
-  private stateStore: StateStore
-  private logger: Logger
-  private semanticVersionTemplateParser: SemanticVersionTemplateParser
-  private xcodeVersionRepository: XcodeVersionRepository
-  private xcodeVersionMatcher: XcodeVersionMatcher
-  private xcodeSelector: XcodeSelector
+  private readonly stateStore: StateStore
+  private readonly logger: Logger
+  private readonly semanticVersionTemplateParser: SemanticVersionTemplateParser
+  private readonly xcodeVersionRepository: XcodeVersionRepository
+  private readonly xcodeVersionMatcher: XcodeVersionMatcher
+  private readonly xcodeSelector: XcodeSelector
   
-  constructor(
+  constructor(config: {
     stateStore: StateStore,
     logger: Logger,
     semanticVersionTemplateParser: SemanticVersionTemplateParser,
     xcodeVersionRepository: XcodeVersionRepository,
     xcodeVersionMatcher: XcodeVersionMatcher,
     xcodeSelector: XcodeSelector
-  ) {
-    this.stateStore = stateStore
-    this.logger = logger
-    this.semanticVersionTemplateParser = semanticVersionTemplateParser
-    this.xcodeVersionRepository = xcodeVersionRepository
-    this.xcodeVersionMatcher = xcodeVersionMatcher
-    this.xcodeSelector = xcodeSelector
+  }) {
+    this.stateStore = config.stateStore
+    this.logger = config.logger
+    this.semanticVersionTemplateParser = config.semanticVersionTemplateParser
+    this.xcodeVersionRepository = config.xcodeVersionRepository
+    this.xcodeVersionMatcher = config.xcodeVersionMatcher
+    this.xcodeSelector = config.xcodeSelector
   }
 
   async run(options: ActionOptions) {

@@ -11,14 +11,14 @@ test("It enters post-phase after running main-phase", async () => {
   const stateStore = new StateStoreMock()
   const repository = new XcodeVersionRepositoryMock()
   repository.addXcodeVersion(14, 3)
-  const action = new Action(
-    stateStore,
-    new LoggerMock(),
-    new SemanticVersionTemplateParserLive(),
-    repository,
-    new XcodeVersionMatcher(repository),
-    new XcodeSelectorMock()
-  )
+  const action = new Action({
+    stateStore: stateStore,
+    logger: new LoggerMock(),
+    semanticVersionTemplateParser: new SemanticVersionTemplateParserLive(),
+    xcodeVersionRepository: repository,
+    xcodeVersionMatcher: new XcodeVersionMatcher({ xcodeVersionRepository: repository }),
+    xcodeSelector: new XcodeSelectorMock()
+  })
   expect(stateStore.isPost).not.toBeTruthy()
   const options = new ActionOptionsMock("14.3.x")
   await action.run(options)
@@ -28,14 +28,14 @@ test("It enters post-phase after running main-phase", async () => {
 test("It throws when given invalid version", async () => {
   const repository = new XcodeVersionRepositoryMock()
   repository.addXcodeVersion(14, 3)
-  const action = new Action(
-    new StateStoreMock(),
-    new LoggerMock(),
-    new SemanticVersionTemplateParserLive(),
-    repository,
-    new XcodeVersionMatcher(repository),
-    new XcodeSelectorMock()
-  )
+  const action = new Action({
+    stateStore: new StateStoreMock(),
+    logger: new LoggerMock(),
+    semanticVersionTemplateParser: new SemanticVersionTemplateParserLive(),
+    xcodeVersionRepository: repository,
+    xcodeVersionMatcher: new XcodeVersionMatcher({ xcodeVersionRepository: repository }),
+    xcodeSelector: new XcodeSelectorMock()
+  })
   const options = new ActionOptionsMock("foo")
   expect(action.run(options)).rejects.toThrow()
 })
@@ -43,14 +43,14 @@ test("It throws when given invalid version", async () => {
 test("It throws error when Xcode version not found", async () => {
   const repository = new XcodeVersionRepositoryMock()
   repository.addXcodeVersion(14, 3)
-  const action = new Action(
-    new StateStoreMock(),
-    new LoggerMock(),
-    new SemanticVersionTemplateParserLive(),
-    repository,
-    new XcodeVersionMatcher(repository),
-    new XcodeSelectorMock()
-  )
+  const action = new Action({
+    stateStore: new StateStoreMock(),
+    logger: new LoggerMock(),
+    semanticVersionTemplateParser: new SemanticVersionTemplateParserLive(),
+    xcodeVersionRepository: repository,
+    xcodeVersionMatcher: new XcodeVersionMatcher({ xcodeVersionRepository: repository }),
+    xcodeSelector: new XcodeSelectorMock()
+  })
   const options = new ActionOptionsMock("15.0")
   expect(action.run(options)).rejects.toThrow()
 })
@@ -59,14 +59,14 @@ test("It selects an Xcode version", async () => {
   const repository = new XcodeVersionRepositoryMock()
   repository.addXcodeVersion(14, 3, 1)
   const selector = new XcodeSelectorMock()
-  const action = new Action(
-    new StateStoreMock(),
-    new LoggerMock(),
-    new SemanticVersionTemplateParserLive(),
-    repository,
-    new XcodeVersionMatcher(repository),
-    selector
-  )
+  const action = new Action({
+    stateStore: new StateStoreMock(),
+    logger: new LoggerMock(),
+    semanticVersionTemplateParser: new SemanticVersionTemplateParserLive(),
+    xcodeVersionRepository: repository,
+    xcodeVersionMatcher: new XcodeVersionMatcher({ xcodeVersionRepository: repository }),
+    xcodeSelector: selector
+  })
   const options = new ActionOptionsMock("14.3.1")
   await action.run(options)
   expect(selector.selectedFilePath).toEqual("/Users/runner/Applications/Xcode 14.3.1.app")
@@ -77,14 +77,14 @@ test("It logs message after selecting Xcode version", async () => {
   const repository = new XcodeVersionRepositoryMock()
   repository.addXcodeVersion(14, 3, 1)
   const selector = new XcodeSelectorMock()
-  const action = new Action(
-    new StateStoreMock(),
-    logger,
-    new SemanticVersionTemplateParserLive(),
-    repository,
-    new XcodeVersionMatcher(repository),
-    selector
-  )
+  const action = new Action({
+    stateStore: new StateStoreMock(),
+    logger: logger,
+    semanticVersionTemplateParser: new SemanticVersionTemplateParserLive(),
+    xcodeVersionRepository: repository,
+    xcodeVersionMatcher: new XcodeVersionMatcher({ xcodeVersionRepository: repository }),
+    xcodeSelector: selector
+  })
   const options = new ActionOptionsMock("14.3.1")
   await action.run(options)
   expect(logger.latestLogMessage).not.toBeNull()
@@ -96,14 +96,14 @@ test("It logs message after selecting beta version of Xcode", async () => {
   const repository = new XcodeVersionRepositoryMock()
   repository.addXcodeVersion(15, 0, 0, true)
   const selector = new XcodeSelectorMock()
-  const action = new Action(
-    new StateStoreMock(),
-    logger,
-    new SemanticVersionTemplateParserLive(),
-    repository,
-    new XcodeVersionMatcher(repository),
-    selector
-  )
+  const action = new Action({
+    stateStore: new StateStoreMock(),
+    logger: logger,
+    semanticVersionTemplateParser: new SemanticVersionTemplateParserLive(),
+    xcodeVersionRepository: repository,
+    xcodeVersionMatcher: new XcodeVersionMatcher({ xcodeVersionRepository: repository }),
+    xcodeSelector: selector
+  })
   const options = new ActionOptionsMock("15.x.x")
   await action.run(options)
   expect(logger.latestLogMessage).not.toBeNull()

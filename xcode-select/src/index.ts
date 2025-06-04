@@ -13,18 +13,22 @@ import XcodeVersionRepositoryLive from "./XcodeVersion/XcodeVersionRepositoryLiv
 import XcodeSelectorLive from "./XcodeSelector/XcodeSelectorLive"
 
 const logger = new LoggerLive()
-const xcodeVersionRepository = new XcodeVersionRepositoryLive(
-  new FileSystemLive(), 
-  new XcodeVersionParserLive(new SemanticVersionParser())
-)
-const action = new Action(
-  new KeyValueStateStore(core),
-  logger,
-  new SemanticVersionTemplateParserLive(),
-  xcodeVersionRepository,
-  new XcodeVersionMatcher(xcodeVersionRepository),
-  new XcodeSelectorLive(new CommandRunnerLive())
-)
+const xcodeVersionRepository = new XcodeVersionRepositoryLive({
+  fileSystem: new FileSystemLive(), 
+  xcodeVersionParser: new XcodeVersionParserLive({
+    semanticVersionParser: new SemanticVersionParser()
+  })
+})
+const action = new Action({
+  stateStore: new KeyValueStateStore({ writerReader: core }),
+  logger: logger,
+  semanticVersionTemplateParser: new SemanticVersionTemplateParserLive(),
+  xcodeVersionRepository: xcodeVersionRepository,
+  xcodeVersionMatcher: new XcodeVersionMatcher({ xcodeVersionRepository }),
+  xcodeSelector: new XcodeSelectorLive({
+    commandRunner: new CommandRunnerLive()
+  })
+})
 action.run(getOptions()).catch(err => {
   logger.error(err.toString())
 })

@@ -2,10 +2,10 @@ import XcodeSelector from "./XcodeSelector"
 import CommandRunner from "../CommandRunner/CommandRunner"
 
 export default class XcodeSelectorLive implements XcodeSelector {
-  private commandRunner: CommandRunner
+  private readonly commandRunner: CommandRunner
   
-  constructor(commandRunner: CommandRunner) {
-    this.commandRunner = commandRunner
+  constructor(config: { commandRunner: CommandRunner }) {
+    this.commandRunner = config.commandRunner
   }
   
   async select(filePath: string) {

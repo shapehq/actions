@@ -8,10 +8,10 @@ import XcodeVersionRepositoryLive from "../src/XcodeVersion/XcodeVersionReposito
 
 test("It loads from global Applications folder and user's Applications folder", () => {
   const fileSystem = new FileSystemMock("/Users/runner")
-  const repository = new XcodeVersionRepositoryLive(
-    fileSystem,
-    new XcodeVersionParserMock()
-  )
+  const repository = new XcodeVersionRepositoryLive({
+    fileSystem: fileSystem,
+    xcodeVersionParser: new XcodeVersionParserMock()
+  })
   repository.getXcodeVersions()
   expect(fileSystem.listedDirectories).toEqual([
     "/Applications",
@@ -25,7 +25,7 @@ test("It parses Xcode version from file path", () => {
     "/Users/runner/Applications/Xcode 14.3.app"
   ]
   const xcodeVersionParser = new XcodeVersionParserMock()
-  const repository = new XcodeVersionRepositoryLive(fileSystem, xcodeVersionParser)
+  const repository = new XcodeVersionRepositoryLive({ fileSystem, xcodeVersionParser })
   repository.getXcodeVersions()
   expect(xcodeVersionParser.latestFilePath).not.toBeNull()
 })
@@ -38,8 +38,8 @@ test("It removes duplicate Xcode versions", () => {
     "/Users/runner/Applications/Xcode 14.3.1.app"
   ]
   const semanticVersionParser = new SemanticVersionParser()
-  const xcodeVersionParser = new XcodeVersionParserLive(semanticVersionParser)
-  const repository = new XcodeVersionRepositoryLive(fileSystem, xcodeVersionParser)
+  const xcodeVersionParser = new XcodeVersionParserLive({ semanticVersionParser })
+  const repository = new XcodeVersionRepositoryLive({ fileSystem, xcodeVersionParser })
   const xcodeVersions = repository.getXcodeVersions()
   expect(xcodeVersions.length).toBe(2)
 })
@@ -57,8 +57,8 @@ test("It sorts Xcode versions", () => {
     "/Users/runner/Applications/Xcode 15.0.0.app"
   ]
   const semanticVersionParser = new SemanticVersionParser()
-  const xcodeVersionParser = new XcodeVersionParserLive(semanticVersionParser)
-  const repository = new XcodeVersionRepositoryLive(fileSystem, xcodeVersionParser)
+  const xcodeVersionParser = new XcodeVersionParserLive({ semanticVersionParser })
+  const repository = new XcodeVersionRepositoryLive({ fileSystem, xcodeVersionParser })
   const xcodeVersions = repository.getXcodeVersions()
   expect(xcodeVersions).toStrictEqual([
     new XcodeVersion(

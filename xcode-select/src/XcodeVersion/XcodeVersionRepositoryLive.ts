@@ -9,9 +9,9 @@ export default class XcodeVersionRepositoryLive implements XcodeVersionRepositor
   private fileSystem: FileSystem
   private xcodeVersionParser: XcodeVersionParser
   
-  constructor(fileSystem: FileSystem, xcodeVersionParser: XcodeVersionParser) {
-    this.fileSystem = fileSystem
-    this.xcodeVersionParser = xcodeVersionParser
+  constructor(config: { fileSystem: FileSystem, xcodeVersionParser: XcodeVersionParser }) {
+    this.fileSystem = config.fileSystem
+    this.xcodeVersionParser = config.xcodeVersionParser
   }
   
   getXcodeVersions(): XcodeVersion[] {
