@@ -17,7 +17,15 @@ export class XcodeVersionMatcher {
     const xcodeVersions = this.repository
       .getXcodeVersions()
       .sort((lhs, rhs) => {
-        return semanticVersionSort(lhs.version, rhs.version)
+        const versionCompare = semanticVersionSort(lhs.version, rhs.version)
+        if (versionCompare !== 0) {
+          return versionCompare
+        }
+        // Prefer non-beta (release) over beta when versions are equal
+        if (lhs.isBeta !== rhs.isBeta) {
+          return lhs.isBeta ? -1 : 1
+        }
+        return 0
       })
       .reverse()
     // Find candidate matching the major component.
