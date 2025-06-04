@@ -22,4 +22,8 @@ export class FileSystemMock implements FileSystem {
     this._listedDirectories.push(dirPath)
     return this.dirContents
   }
+  
+  realPath(path: string): string {
+    return path
+  }
 }
