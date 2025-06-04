@@ -116,3 +116,18 @@ test("It throws when no version matches major and minor component", () => {
   const matcher = new XcodeVersionMatcher(repository)
   expect(() => matcher.findXcodeVersion(needle)).toThrow()
 })
+
+test("It prefers release version of beta version", () => {
+  const repository = new XcodeVersionRepositoryMock()
+  repository.addXcodeVersion(16, 4, 0)
+  repository.addXcodeVersion(16, 4, 0, true)
+  const needle = new SemanticVersionTemplate(16, SemanticVersionTemplatePlaceholder, SemanticVersionTemplatePlaceholder)
+  const matcher = new XcodeVersionMatcher(repository)
+  const xcodeVersion = matcher.findXcodeVersion(needle)
+  expect(xcodeVersion).not.toBeNull()
+  expect(xcodeVersion?.version.major).toEqual(16)
+  expect(xcodeVersion?.version.minor).toEqual(4)
+  expect(xcodeVersion?.version.patch).toEqual(0)
+  expect(xcodeVersion?.isBeta).toEqual(false)
+  expect(xcodeVersion?.betaNumber).toBeNull()
+})
