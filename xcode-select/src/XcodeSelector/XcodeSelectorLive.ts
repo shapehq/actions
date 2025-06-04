@@ -1,7 +1,7 @@
-import {XcodeSelector} from "./XcodeSelector"
-import {CommandRunner} from "../CommandRunner/CommandRunner"
+import XcodeSelector from "./XcodeSelector"
+import CommandRunner from "../CommandRunner/CommandRunner"
 
-export class XcodeSelectorLive implements XcodeSelector {
+export default class XcodeSelectorLive implements XcodeSelector {
   private commandRunner: CommandRunner
   
   constructor(commandRunner: CommandRunner) {

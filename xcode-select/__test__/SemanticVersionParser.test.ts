@@ -1,4 +1,4 @@
-import {SemanticVersionParser} from "../src/SemanticVersion/SemanticVersionParser"
+import SemanticVersionParser from "../src/SemanticVersion/SemanticVersionParser"
 
 test("It parses version number with major only", () => {
   const parser = new SemanticVersionParser()

@@ -1,5 +1,5 @@
-import {CompositionRoot} from "./CompositionRoot"
-import {getOptions} from "./getOptions"
+import CompositionRoot from "./CompositionRoot"
+import getOptions from "./getOptions"
 
 const action = CompositionRoot.getAction()
 const logger = CompositionRoot.getLogger()

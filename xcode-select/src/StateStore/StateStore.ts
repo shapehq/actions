@@ -1,3 +1,3 @@
-export interface StateStore {
+export default interface StateStore {
   isPost: boolean
 }

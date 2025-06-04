@@ -1,11 +1,11 @@
-import {Action} from "../src/Action"
-import {ActionOptionsMock} from "./mock/ActionOptionsMock"
-import {StateStoreMock} from "./mock/StateStoreMock"
-import {LoggerMock} from "./mock/LoggerMock"
-import {SemanticVersionTemplateParserLive} from "../src/SemanticVersion/SemanticVersionTemplateParserLive"
-import {XcodeVersionRepositoryMock} from "./mock/XcodeVersionRepositoryMock"
-import {XcodeVersionMatcher} from "../src/XcodeVersion/XcodeVersionMatcher"
-import {XcodeSelectorMock} from "./mock/XcodeSelectorMock"
+import Action from "../src/Action"
+import ActionOptionsMock from "./mock/ActionOptionsMock"
+import StateStoreMock from "./mock/StateStoreMock"
+import LoggerMock from "./mock/LoggerMock"
+import SemanticVersionTemplateParserLive from "../src/SemanticVersion/SemanticVersionTemplateParserLive"
+import XcodeVersionRepositoryMock from "./mock/XcodeVersionRepositoryMock"
+import XcodeVersionMatcher from "../src/XcodeVersion/XcodeVersionMatcher"
+import XcodeSelectorMock from "./mock/XcodeSelectorMock"
 
 test("It enters post-phase after running main-phase", async () => {
   const stateStore = new StateStoreMock()

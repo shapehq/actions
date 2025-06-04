@@ -1,12 +1,11 @@
-import {
-  SemanticVersionTemplate,
+import SemanticVersionTemplate, {
   SemanticVersionTemplatePlaceholder,
   SemanticVersionTemplateMinor,
   SemanticVersionTemplatePatch
 } from "./SemanticVersionTemplate"
-import {SemanticVersionTemplateParser} from "./SemanticVersionTemplateParser"
+import SemanticVersionTemplateParser from "./SemanticVersionTemplateParser"
 
-export class SemanticVersionTemplateParserLive implements SemanticVersionTemplateParser {
+export default class SemanticVersionTemplateParserLive implements SemanticVersionTemplateParser {
   parse(string: string): SemanticVersionTemplate {
     const components = string.split(".")
     if (components.length !== 3) {

@@ -1,4 +1,4 @@
-export class SemanticVersion {
+export default class SemanticVersion {
   private _major: number
   private _minor: number
   private _patch: number

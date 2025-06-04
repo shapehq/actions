@@ -1,6 +1,6 @@
-import {CommandRunner} from "../../src/CommandRunner/CommandRunner"
+import CommandRunner from "../../src/CommandRunner/CommandRunner"
 
-export class CommandRunnerMock implements CommandRunner {
+export default class CommandRunnerMock implements CommandRunner {
   public latestCmd: string | null = null
   
   async run(cmd: string): Promise<string> {

@@ -1,6 +1,6 @@
-import {FileSystem} from "../../src/FileSystem/FileSystem"
+import FileSystem from "../../src/FileSystem/FileSystem"
 
-export class FileSystemMock implements FileSystem {
+export default class FileSystemMock implements FileSystem {
   dirContents: string[] = []
   
   private _homeDir: string

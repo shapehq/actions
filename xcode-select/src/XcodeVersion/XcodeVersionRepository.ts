@@ -1,5 +1,5 @@
-import {XcodeVersion} from "./XcodeVersion"
+import XcodeVersion from "./XcodeVersion"
 
-export interface XcodeVersionRepository {
+export default interface XcodeVersionRepository {
   getXcodeVersions(): XcodeVersion[]
 }

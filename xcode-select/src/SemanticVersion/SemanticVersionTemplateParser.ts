@@ -1,5 +1,5 @@
-import {SemanticVersionTemplate} from "./SemanticVersionTemplate"
+import SemanticVersionTemplate from "./SemanticVersionTemplate"
 
-export interface SemanticVersionTemplateParser {
+export default interface SemanticVersionTemplateParser {
   parse(string: string): SemanticVersionTemplate
 }

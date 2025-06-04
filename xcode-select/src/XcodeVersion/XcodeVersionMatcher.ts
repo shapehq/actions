@@ -1,12 +1,11 @@
-import {
-  SemanticVersionTemplate, 
+import SemanticVersionTemplate, { 
   SemanticVersionTemplatePlaceholder
 } from "../SemanticVersion/SemanticVersionTemplate"
-import {semanticVersionSort} from "../SemanticVersion/SemanticVersion"
-import {XcodeVersion} from "./XcodeVersion"
-import {XcodeVersionRepository} from "./XcodeVersionRepository"
+import { semanticVersionSort } from "../SemanticVersion/SemanticVersion"
+import XcodeVersion from "./XcodeVersion"
+import XcodeVersionRepository from "./XcodeVersionRepository"
 
-export class XcodeVersionMatcher {
+export default class XcodeVersionMatcher {
   private repository: XcodeVersionRepository
   
   constructor(repository: XcodeVersionRepository) {

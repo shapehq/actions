@@ -1,7 +1,6 @@
-import {SemanticVersion} from "../SemanticVersion/SemanticVersion"
-import {semanticVersionSort} from "../SemanticVersion/SemanticVersion"
+import  SemanticVersion, { semanticVersionSort } from "../SemanticVersion/SemanticVersion"
 
-export class XcodeVersion {
+export default class XcodeVersion {
   private _filePath: string
   private _version: SemanticVersion
   private _isBeta: boolean
