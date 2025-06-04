@@ -1,9 +1,8 @@
-import {SemanticVersion} from "../src/SemanticVersion/SemanticVersion"
-import {
-  SemanticVersionTemplate, SemanticVersionTemplatePlaceholder
+import SemanticVersionTemplate, {
+  SemanticVersionTemplatePlaceholder
 } from "../src/SemanticVersion/SemanticVersionTemplate"
-import {XcodeVersionRepositoryMock} from "./mock/XcodeVersionRepositoryMock"
-import {XcodeVersionMatcher} from "../src/XcodeVersion/XcodeVersionMatcher"
+import XcodeVersionRepositoryMock from "./mock/XcodeVersionRepositoryMock"
+import XcodeVersionMatcher from "../src/XcodeVersion/XcodeVersionMatcher"
 
 test("It throws when repository is empty", () => {
   const repository = new XcodeVersionRepositoryMock()

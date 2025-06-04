@@ -1,5 +1,5 @@
-import {XcodeVersion} from "./XcodeVersion"
+import XcodeVersion from "./XcodeVersion"
 
-export interface XcodeVersionParser {
+export default interface XcodeVersionParser {
   parseFilePath(filePath: string): XcodeVersion | null
 }

@@ -4,7 +4,7 @@ export type SemanticVersionTemplateMajor = number
 export type SemanticVersionTemplateMinor = number | "x"
 export type SemanticVersionTemplatePatch = number | "x"
 
-export class SemanticVersionTemplate {
+export default class SemanticVersionTemplate {
   private _major: SemanticVersionTemplateMajor
   private _minor: SemanticVersionTemplateMinor
   private _patch: SemanticVersionTemplatePatch

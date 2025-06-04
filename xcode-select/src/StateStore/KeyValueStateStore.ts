@@ -1,4 +1,4 @@
-import {StateStore} from "./StateStore"
+import StateStore from "./StateStore"
 
 export interface KeyValueStateWriterReader {
   getState(name: string): string | null
@@ -9,7 +9,7 @@ const KEY = {
   IS_POST: "isPost"
 }
 
-export class KeyValueStateStore implements StateStore {
+export default class KeyValueStateStore implements StateStore {
   private writerReader: KeyValueStateWriterReader
   
   constructor(writerReader: KeyValueStateWriterReader) {

@@ -1,6 +1,6 @@
-import {SemanticVersion} from "./SemanticVersion"
+import SemanticVersion from "./SemanticVersion"
 
-export class SemanticVersionParser {
+export default class SemanticVersionParser {
   parse(version: string): SemanticVersion | null {
     const components = version
       // Separate major, minor, and patch.

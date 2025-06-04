@@ -1,15 +1,15 @@
-import {StateStore} from "./StateStore/StateStore"
-import {Logger} from "./Logger/Logger"
-import {SemanticVersionTemplateParser} from "./SemanticVersion/SemanticVersionTemplateParser"
-import {XcodeVersionRepository} from "./XcodeVersion/XcodeVersionRepository"
-import {XcodeVersionMatcher} from "./XcodeVersion/XcodeVersionMatcher"
-import {XcodeSelector} from "./XcodeSelector/XcodeSelector"
+import StateStore from "./StateStore/StateStore"
+import Logger from "./Logger/Logger"
+import SemanticVersionTemplateParser from "./SemanticVersion/SemanticVersionTemplateParser"
+import XcodeVersionRepository from "./XcodeVersion/XcodeVersionRepository"
+import XcodeVersionMatcher from "./XcodeVersion/XcodeVersionMatcher"
+import XcodeSelector from "./XcodeSelector/XcodeSelector"
 
 export interface ActionOptions {
   version: string
 }
 
-export class Action {
+export default class Action {
   private stateStore: StateStore
   private logger: Logger
   private semanticVersionTemplateParser: SemanticVersionTemplateParser

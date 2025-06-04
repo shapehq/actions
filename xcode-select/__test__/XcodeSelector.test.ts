@@ -1,5 +1,5 @@
-import {XcodeSelectorLive} from "../src/XcodeSelector/XcodeSelectorLive"
-import {CommandRunnerMock} from "./mock/CommandRunnerMock"
+import XcodeSelectorLive from "../src/XcodeSelector/XcodeSelectorLive"
+import CommandRunnerMock from "./mock/CommandRunnerMock"
 
 test("It runs xcode-select on the command line", async () => {
   const commandRunner = new CommandRunnerMock()

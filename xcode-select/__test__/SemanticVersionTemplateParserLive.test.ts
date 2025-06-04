@@ -1,5 +1,5 @@
-import {SemanticVersionTemplatePlaceholder} from "../src/SemanticVersion/SemanticVersionTemplate"
-import {SemanticVersionTemplateParserLive} from "../src/SemanticVersion/SemanticVersionTemplateParserLive"
+import { SemanticVersionTemplatePlaceholder } from "../src/SemanticVersion/SemanticVersionTemplate"
+import SemanticVersionTemplateParserLive from "../src/SemanticVersion/SemanticVersionTemplateParserLive"
 
 test("It fails to parse template containing major only", () => {
   const parser = new SemanticVersionTemplateParserLive()

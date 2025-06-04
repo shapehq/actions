@@ -1,8 +1,8 @@
-import {SemanticVersion} from "../../src/SemanticVersion/SemanticVersion"
-import {XcodeVersion} from "../../src/XcodeVersion/XcodeVersion"
-import {XcodeVersionRepository} from "../../src/XcodeVersion/XcodeVersionRepository"
+import SemanticVersion from "../../src/SemanticVersion/SemanticVersion"
+import XcodeVersion from "../../src/XcodeVersion/XcodeVersion"
+import XcodeVersionRepository from "../../src/XcodeVersion/XcodeVersionRepository"
 
-export class XcodeVersionRepositoryMock implements XcodeVersionRepository {
+export default class XcodeVersionRepositoryMock implements XcodeVersionRepository {
   private xcodeVersions: XcodeVersion[] = []
   
   getXcodeVersions(): XcodeVersion[] {

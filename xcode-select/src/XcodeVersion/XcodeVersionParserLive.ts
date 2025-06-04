@@ -1,8 +1,8 @@
-import {SemanticVersionParser} from "../SemanticVersion/SemanticVersionParser"
-import {XcodeVersion} from "./XcodeVersion"
-import {XcodeVersionParser} from "./XcodeVersionParser"
+import SemanticVersionParser from "../SemanticVersion/SemanticVersionParser"
+import XcodeVersion from "./XcodeVersion"
+import XcodeVersionParser from "./XcodeVersionParser"
 
-export class XcodeVersionParserLive implements XcodeVersionParser {
+export default class XcodeVersionParserLive implements XcodeVersionParser {
   private semanticVersionParser: SemanticVersionParser
   
   constructor(semanticVersionParser: SemanticVersionParser) {

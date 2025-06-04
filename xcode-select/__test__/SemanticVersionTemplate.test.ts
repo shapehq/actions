@@ -1,5 +1,4 @@
-import {
-  SemanticVersionTemplate,
+import SemanticVersionTemplate, {
   SemanticVersionTemplatePlaceholder
 } from "../src/SemanticVersion/SemanticVersionTemplate"
 

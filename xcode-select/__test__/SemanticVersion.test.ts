@@ -1,4 +1,4 @@
-import {SemanticVersion, semanticVersionSort} from "../src/SemanticVersion/SemanticVersion"
+import SemanticVersion, { semanticVersionSort } from "../src/SemanticVersion/SemanticVersion"
 
 test("It constructs a display string given major, minor, and patch", () => {
   const version = new SemanticVersion(14, 3, 1)

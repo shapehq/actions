@@ -1,10 +1,10 @@
-import {FileSystemMock} from "./mock/FileSystemMock"
-import {XcodeVersion} from "../src/XcodeVersion/XcodeVersion"
-import {SemanticVersion} from "../src/SemanticVersion/SemanticVersion"
-import {SemanticVersionParser} from "../src/SemanticVersion/SemanticVersionParser"
-import {XcodeVersionParserLive} from "../src/XcodeVersion/XcodeVersionParserLive"
-import {XcodeVersionParserMock} from "./mock/XcodeVersionParserMock"
-import {XcodeVersionRepositoryLive} from "../src/XcodeVersion/XcodeVersionRepositoryLive"
+import FileSystemMock from "./mock/FileSystemMock"
+import XcodeVersion from "../src/XcodeVersion/XcodeVersion"
+import SemanticVersion from "../src/SemanticVersion/SemanticVersion"
+import SemanticVersionParser from "../src/SemanticVersion/SemanticVersionParser"
+import XcodeVersionParserLive from "../src/XcodeVersion/XcodeVersionParserLive"
+import XcodeVersionParserMock from "./mock/XcodeVersionParserMock"
+import XcodeVersionRepositoryLive from "../src/XcodeVersion/XcodeVersionRepositoryLive"
 
 test("It loads from global Applications folder and user's Applications folder", () => {
   const fileSystem = new FileSystemMock("/Users/runner")

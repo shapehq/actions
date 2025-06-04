@@ -1,11 +1,11 @@
 import path from "path"
-import {FileSystem} from "../FileSystem/FileSystem"
-import {XcodeVersion} from "./XcodeVersion"
-import {XcodeVersionParser} from "./XcodeVersionParser"
-import {XcodeVersionRepository} from "./XcodeVersionRepository"
-import {xcodeVersionSort} from "../XcodeVersion/XcodeVersion"
+import FileSystem from "../FileSystem/FileSystem"
+import XcodeVersion from "./XcodeVersion"
+import XcodeVersionParser from "./XcodeVersionParser"
+import XcodeVersionRepository from "./XcodeVersionRepository"
+import { xcodeVersionSort } from "../XcodeVersion/XcodeVersion"
 
-export class XcodeVersionRepositoryLive implements XcodeVersionRepository {
+export default class XcodeVersionRepositoryLive implements XcodeVersionRepository {
   private fileSystem: FileSystem
   private xcodeVersionParser: XcodeVersionParser
   

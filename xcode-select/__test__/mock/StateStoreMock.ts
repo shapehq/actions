@@ -1,5 +1,5 @@
-import {StateStore} from "../../src/StateStore/StateStore"
+import StateStore from "../../src/StateStore/StateStore"
 
-export class StateStoreMock implements StateStore {
+export default class StateStoreMock implements StateStore {
   public isPost = false
 }

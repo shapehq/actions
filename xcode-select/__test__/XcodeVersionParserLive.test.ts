@@ -1,5 +1,5 @@
-import {SemanticVersionParser} from "../src/SemanticVersion/SemanticVersionParser"
-import {XcodeVersionParserLive} from "../src/XcodeVersion/XcodeVersionParserLive"
+import SemanticVersionParser from "../src/SemanticVersion/SemanticVersionParser"
+import XcodeVersionParserLive from "../src/XcodeVersion/XcodeVersionParserLive"
 
 test("It parses XcodeVersion with major only", () => {
   const filePath = "/Users/runner/Applications/Xcode 14.app"

@@ -1,5 +1,5 @@
-import {XcodeVersion} from "../src/XcodeVersion/XcodeVersion"
-import {SemanticVersion} from "../src/SemanticVersion/SemanticVersion"
+import XcodeVersion from "../src/XcodeVersion/XcodeVersion"
+import SemanticVersion from "../src/SemanticVersion/SemanticVersion"
 
 test("It constructs a name for non-beta Xcode version", () => {
   const xcodeVersion = new XcodeVersion(
