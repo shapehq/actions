@@ -9,15 +9,15 @@ inputs:
     default: "."
   module:
     description: "Set the module that you want to build. To see your available modules, please open your project in Android Studio and go in [Project Structure] and see the list on the left."
-    required: true
+    required: false
     default: "app"
   variant:
     description: "Set the build variants you want to create. To see your available variants, open your project in Android Studio and go in [Project Structure] -> variants section. This input also accepts multiple variants, comma-separated."
     required: false
-    default: ""
+    default: "debug"
   artifact_type:
     description: "Set the build type that you want to build. Can be `apk` or `aab`."
-    required: true
+    required: false
     default: "apk"
   arguments:
     description: "Extra arguments passed to the gradle task"
