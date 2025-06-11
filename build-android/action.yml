@@ -1,0 +1,39 @@
+name: "Android Build"
+description: "Builds your Android project with Gradle."
+author: "Gerard Sala"
+
+inputs:
+  project_location:
+    description: "The root directory of your Android project. For example, where your root build gradle file exist (also gradlew, settings.gradle, and so on)"
+    required: false
+    default: "."
+  module:
+    description: "Set the module that you want to build. To see your available modules, please open your project in Android Studio and go in [Project Structure] and see the list on the left."
+    required: false
+    default: ""
+  variant:
+    description: "Set the build variants you want to create. To see your available variants, open your project in Android Studio and go in [Project Structure] -> variants section. This input also accepts multiple variants, comma-separated."
+    required: false
+    default: ""
+  build_type:
+    description: "Set the build type that you want to build."
+    required: true
+    default: "apk"
+  arguments:
+    description: "Extra arguments passed to the gradle task"
+    required: false
+    default: ""
+
+outputs:
+  apk_path:
+    description: "Path of the generated APK after filtering. If the build generates more than one APK which fulfills the filter inputs, this output will contain the last ones path."
+  apk_path_list:
+    description: "List of the generated APK paths after filtering. The paths are separated with | character."
+  aab_path:
+    description: "Path of the generated AAB after filtering. If the build generates more than one AAB which fulfills the filter inputs, this output will contain the last ones path."
+  aab_path_list:
+    description: "List of the generated AAB paths after filtering. The paths are separated with | character."
+
+runs:
+  using: "node20"
+  main: "dist/index.js"
