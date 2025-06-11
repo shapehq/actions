@@ -50,7 +50,13 @@ runs:
     - name: Load credentials
       uses: 1password/load-secrets-action@v2
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.serviceCredentialsOpReference }}
+        SERVICE_ACCOUNT_CREDENTIALS: ${{ inputs.serviceCredentialsOpReference }}
+
+    - name: Write credentials file
+      shell: bash
+      run: |
+        echo "$SERVICE_ACCOUNT_CREDENTIALS" > service-account.json
+        echo "GOOGLE_APPLICATION_CREDENTIALS=service-account.json" >> $GITHUB_ENV
 
     - name: "Distribute apk"
       shell: bash
