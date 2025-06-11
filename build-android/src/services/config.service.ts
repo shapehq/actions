@@ -31,10 +31,10 @@ type ValidatedInput = z.infer<typeof InputSchema>;
 export async function processConfig(): Promise<Config> {
   // Collect raw inputs from GitHub Actions
   const rawInput = {
-    projectLocation: core.getInput("project_location") || ".",
+    projectLocation: core.getInput("project-location") || ".",
     variant: core.getInput("variant") || "",
     module: core.getInput("module", { required: true }),
-    buildType: core.getInput("artifact_type", { required: true }),
+    buildType: core.getInput("artifact-type", { required: true }),
     arguments: core.getInput("arguments") || "",
   };
 
