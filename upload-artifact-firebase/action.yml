@@ -27,6 +27,19 @@ inputs:
     description: "Comma separated email list of testers to invite"
     required: false
 
+outputs:
+  firebase-console-uri:
+    description: "Link to the release in the Firebase console"
+    value: ${{ steps.distribute.outputs.firebase-console-uri }}
+
+  testing-uri:
+    description: "Link to the release in the Firebase App Tester app"
+    value: ${{ steps.distribute.outputs.testing-uri }}
+
+  binary-download-uri:
+    description: "Link to the app binary (APK or AAB file). Expires after one hour."
+    value: ${{ steps.distribute.outputs.binary-download-uri }}
+
 runs:
   using: composite
   steps:
@@ -34,22 +47,38 @@ runs:
       shell: bash
       run: npm install -g firebase-tools
 
+    - name: Load credentials
+      uses: 1password/load-secrets-action@v2
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.serviceCredentialsOpReference }}
+
     - name: "Distribute apk"
       shell: bash
-
+      id: distribute
       env:
         APK_PATH: ${{ inputs.apkPath }}
         APP_ID: ${{ inputs.appId }}
         RELEASE_NOTES: ${{ inputs.releaseNotes }}
         TESTERS: ${{ inputs.testers }}
         GROUPS: ${{ inputs.groups }}
-
       run: |
-        op read "${{ inputs.serviceCredentialsOpReference }}" -o credentials.json
-        export GOOGLE_APPLICATION_CREDENTIALS=$(realpath credentials.json)
+        # Execute firebase command and process output line by line
         firebase appdistribution:distribute \
-        "$APK_PATH" \
-        --app "$APP_ID" \
-        --release-notes "$RELEASE_NOTES" \
-        --testers "$TESTERS" \
-        --groups "$GROUPS"
+          "$APK_PATH" \
+          --app "$APP_ID" \
+          --release-notes "$RELEASE_NOTES" \
+          --testers "$TESTERS" \
+          --groups "$GROUPS" 2>&1 | while read -r line; do
+          echo "$line"
+
+          if [[ $line == *"View this release in the Firebase console"* ]]; then
+            CONSOLE_URI=$(echo "$line" | sed -e 's/.*: //' -e 's/^ *//;s/ *$//')
+            echo "firebase-console-uri=$CONSOLE_URI" >> "$GITHUB_OUTPUT"
+          elif [[ $line == *"Share this release with testers who have access"* ]]; then
+            TESTING_URI=$(echo "$line" | sed -e 's/.*: //' -e 's/^ *//;s/ *$//')
+            echo "testing-uri=$TESTING_URI" >> "$GITHUB_OUTPUT"
+          elif [[ $line == *"Download the release binary"* ]]; then
+            BINARY_URI=$(echo "$line" | sed -e 's/.*: //' -e 's/^ *//;s/ *$//')
+            echo "binary-download-uri=$BINARY_URI" >> "$GITHUB_OUTPUT"
+          fi
+        done
