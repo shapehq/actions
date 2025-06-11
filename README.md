@@ -60,6 +60,62 @@ The action supports the following inputs.
 |build-directory|Yes|.build|Defines the directory where the build artifacts, like the final binary or intermediate files, will be stored.|
 |dsyms-archive-name|Yes|dSYMs|Name of the uploaded archive containing the dSYMs.|
 
+## [build-android](https://github.com/shapehq/actions/blob/main/build-android/action.yml)
+
+A GitHub Action that builds your Android project using Gradle. This action simplifies the process of building Android applications in your GitHub Actions workflows.
+
+## Inputs
+
+| Input              | Required | Default | Description                                                                                 |
+| ------------------ | -------- | ------- | ------------------------------------------------------------------------------------------- |
+| `project-location` | No       | `.`     | The root directory of your Android project (where your root build.gradle file exists)       |
+| `module`           | No       | `app`   | The specific module to build. Check available modules in Android Studio's Project Structure |
+| `variant`          | No       | `debug` | Build variants to create. Can specify multiple variants comma-separated                     |
+| `artifact-type`    | No       | `apk`   | The type of build to generate. Can be `apk` or `aab`                                        |
+| `arguments`        | No       | -       | Extra arguments to pass to the gradle task                                                  |
+
+## Outputs
+
+| Output          | Description                                     |
+| --------------- | ----------------------------------------------- |
+| `apk-path`      | Path of the generated APK                       |
+| `apk-path-list` | List of generated APK paths (separated by `\|`) |
+| `aab-path`      | Path of the generated AAB                       |
+| `aab-path-list` | List of generated AAB paths (separated by `\|`) |
+
+## Usage
+
+#### Build a debug APK
+
+```yaml
+- uses: shapehq/actions/build-android@main
+```
+
+#### Build a release AAB
+
+```yaml
+- uses: shapehq/actions/build-android@main
+  with:
+    variant: "release"
+    artifact-type: "aab"
+```
+
+#### Use the outputs in a following step
+
+```yaml
+- uses: shapehq/actions/build-android@main
+  id: build-android
+  with:
+    variant: "release"
+    artifact-type: "aab"
+
+- uses: shapehq/actions/upload-artifact-play-store@main
+  with:
+    serviceAccountKeyPath: play_service_account.json
+    packageName: com.example.app
+    bundlePath: ${{ steps.build-android.outputs.aab-path }}
+```
+
 ## [connect-to-vpn](https://github.com/shapehq/actions/blob/main/connect-to-vpn/action.yml)
 
 Connects the runner to our a predefined Tailscale exit node.
