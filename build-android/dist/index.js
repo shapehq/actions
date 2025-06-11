@@ -417,10 +417,10 @@ function processConfig() {
     return __awaiter(this, void 0, void 0, function* () {
         // Collect raw inputs from GitHub Actions
         const rawInput = {
-            projectLocation: core.getInput("project_location") || ".",
+            projectLocation: core.getInput("project-location") || ".",
             variant: core.getInput("variant") || "",
-            module: core.getInput("module", { required: true }),
-            buildType: core.getInput("artifact_type", { required: true }),
+            module: core.getInput("module") || "app",
+            buildType: core.getInput("artifact-type") || "apk",
             arguments: core.getInput("arguments") || "",
         };
         // Validate inputs using Zod schema
@@ -583,10 +583,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AAB_LIST_ENV_KEY = exports.AAB_ENV_KEY = exports.APK_LIST_ENV_KEY = exports.APK_ENV_KEY = exports.AAB_APP_TYPE = exports.APK_APP_TYPE = void 0;
 exports.APK_APP_TYPE = "apk";
 exports.AAB_APP_TYPE = "aab";
-exports.APK_ENV_KEY = "apk_path";
-exports.APK_LIST_ENV_KEY = "apk_path_list";
-exports.AAB_ENV_KEY = "aab_path";
-exports.AAB_LIST_ENV_KEY = "aab_path_list";
+exports.APK_ENV_KEY = "apk-path";
+exports.APK_LIST_ENV_KEY = "apk-path-list";
+exports.AAB_ENV_KEY = "aab-path";
+exports.AAB_LIST_ENV_KEY = "aab-path-list";
 
 
 /***/ }),

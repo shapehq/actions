@@ -33,8 +33,8 @@ export async function processConfig(): Promise<Config> {
   const rawInput = {
     projectLocation: core.getInput("project-location") || ".",
     variant: core.getInput("variant") || "",
-    module: core.getInput("module", { required: true }),
-    buildType: core.getInput("artifact-type", { required: true }),
+    module: core.getInput("module") || "app",
+    buildType: core.getInput("artifact-type") || "apk",
     arguments: core.getInput("arguments") || "",
   };
 
