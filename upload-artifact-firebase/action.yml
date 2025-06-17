@@ -60,7 +60,6 @@ runs:
 
     - name: "Distribute apk"
       shell: bash
-      id: distribute
       env:
         APK_PATH: ${{ inputs.apkPath }}
         APP_ID: ${{ inputs.appId }}
