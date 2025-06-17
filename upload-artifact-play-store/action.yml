@@ -14,6 +14,9 @@ inputs:
   proguardMappingFilePath:
     required: false
     description: "File path to a Proguard/R8 mapping file to be uploaded in addition to an APK"
+outputs:
+  internal-sharing-url:
+    description: "URL for internal sharing of the uploaded app"
 runs:
   using: "node20"
   main: "dist/index.js"
