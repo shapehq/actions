@@ -75,6 +75,8 @@ function publishApp(serviceAccountKeyPath, packageName, bundlePath, proguardMapp
         }
         yield updateTrack(publisher, editId, packageName, versionCode);
         yield commitEdit(publisher, editId, packageName);
+        // Return the internal sharing URL
+        return `https://play.google.com/apps/test/${packageName}/${versionCode}`;
     });
 }
 function createEdit(publisher, packageName) {
@@ -238,7 +240,9 @@ function run() {
             const packageName = core.getInput("packageName", { required: true });
             const bundlePath = core.getInput("bundlePath", { required: true });
             const proguardMappingFilePath = core.getInput("proguardMappingFilePath");
-            publishApp(serviceAccountKeyPath, packageName, bundlePath, proguardMappingFilePath);
+            const internalSharingUrl = yield publishApp(serviceAccountKeyPath, packageName, bundlePath, proguardMappingFilePath);
+            core.setOutput("internal-sharing-url", internalSharingUrl);
+            core.info(`Internal sharing URL: ${internalSharingUrl}`);
         }
         catch (error) {
             if (error instanceof Error)
