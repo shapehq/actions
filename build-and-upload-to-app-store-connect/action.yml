@@ -108,7 +108,14 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         # Archive App
-        CMD=$(cat <<EOF
+        archive_app() {
+          local cmd_args=""
+          if [ -n "${{ inputs.marketing-version }}" ]; then
+            cmd_args="$cmd_args MARKETING_VERSION=${{ inputs.marketing-version }}"
+          fi
+          if [ -n "${{ inputs.additional-archive-args }}" ]; then
+            cmd_args="$cmd_args ${{ inputs.additional-archive-args }}"
+          fi
           xcodebuild archive\
             -scheme ${{ inputs.scheme }}\
             -destination generic/platform=ios\
@@ -118,26 +125,19 @@ runs:
             -allowProvisioningUpdates\
             -authenticationKeyIssuerID ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
             -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
-            -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }}
-        EOF
-        )
-        if [ -n "${{ inputs.marketing-version }}" ]; then
-          CMD="$CMD MARKETING_VERSION=${{ inputs.marketing-version }}"
-        fi
-        if [ -n "${{ inputs.additional-archive-args }}" ]; then
-          CMD="$CMD ${{ inputs.additional-archive-args }}"
-        fi
+            -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }} $cmd_args
+        }
         if [[ "${{ inputs.pretty-xcodebuild-output }}" == "true" ]]; then
-          set -o pipefail && $CMD 2>&1 | xcbeautify --renderer github-actions
+          set -o pipefail && archive_app 2>&1 | xcbeautify --renderer github-actions
         else
-          $CMD
+          archive_app
         fi
     - name: Export IPA from Archive
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
         # Export IPA from Archive
-        CMD=$(cat <<EOF
+        export_ipa() {
           xcodebuild -exportArchive\
             -archivePath "${{ inputs.scheme }}.xcarchive"\
             -exportPath ${{ inputs.build-directory }}\
@@ -146,12 +146,11 @@ runs:
             -authenticationKeyIssuerID ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
             -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
             -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }}
-        EOF
-        )
+        }
         if [[ "${{ inputs.pretty-xcodebuild-output }}" == "true" ]]; then
-          set -o pipefail && $CMD 2>&1 | xcbeautify --renderer github-actions
+          set -o pipefail && export_ipa 2>&1 | xcbeautify --renderer github-actions
         else
-          $CMD
+          export_ipa
         fi
     - name: Archive the dSYMs
       uses: actions/upload-artifact@v4
