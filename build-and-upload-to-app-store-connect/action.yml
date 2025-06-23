@@ -123,6 +123,11 @@ runs:
           CMD="$CMD ${{ inputs.additional-archive-args }}"
         fi
         $CMD
+    - name: Print export-options.plist
+      shell: bash
+      run: |
+        echo "${{ steps.create-export-options-plist.outputs.file-path }}"
+        cat "${{ steps.create-export-options-plist.outputs.file-path }}"
     - name: Export IPA from Archive
       shell: bash
       working-directory: ${{ inputs.working-directory }}
