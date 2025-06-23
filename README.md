@@ -59,6 +59,7 @@ The action supports the following inputs.
 |additional-archive-args|No||Additional arguments passed to xcodebuild when archiving the app.|
 |build-directory|Yes|.build|Defines the directory where the build artifacts, like the final binary or intermediate files, will be stored.|
 |dsyms-archive-name|Yes|dSYMs|Name of the uploaded archive containing the dSYMs.|
+|pretty-xcodebuild-output|Yes|true|Whether to pipe xcodebuild output through xcbeautify for prettier formatting.|
 
 ## [connect-to-vpn](https://github.com/shapehq/actions/blob/main/connect-to-vpn/action.yml)
 
