@@ -50,7 +50,7 @@ inputs:
   pretty-xcodebuild-output:
     description: Whether to pipe xcodebuild output through xcbeautify for prettier formatting.
     default: true
-    required: false
+    required: true
 runs:
   using: composite
   steps:
