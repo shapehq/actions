@@ -47,6 +47,10 @@ inputs:
     description: Name of the uploaded archive containing the dSYMs.
     default: dSYMs
     required: true
+  pretty-xcodebuild-output:
+    description: Whether to pipe xcodebuild output through xcbeautify for prettier formatting.
+    default: true
+    required: false
 runs:
   using: composite
   steps:
@@ -122,22 +126,32 @@ runs:
         if [ -n "${{ inputs.additional-archive-args }}" ]; then
           CMD="$CMD ${{ inputs.additional-archive-args }}"
         fi
-        set -o pipefail && $CMD 2>&1 | xcbeautify --renderer github-actions
+        if [[ "${{ inputs.pretty-xcodebuild-output }}" == "true" ]]; then
+          set -o pipefail && $CMD 2>&1 | xcbeautify --renderer github-actions
+        else
+          $CMD
+        fi
     - name: Export IPA from Archive
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
         # Export IPA from Archive
-        set -o pipefail &&\
-        xcodebuild -exportArchive\
-          -archivePath "${{ inputs.scheme }}.xcarchive"\
-          -exportPath ${{ inputs.build-directory }}\
-          -exportOptionsPlist "${{ steps.create-export-options-plist.outputs.file-path }}"\
-          -allowProvisioningUpdates\
-          -authenticationKeyIssuerID ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
-          -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
-          -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }} 2>&1\
-          | xcbeautify --renderer github-actions
+        CMD=$(cat <<EOF
+          xcodebuild -exportArchive\
+            -archivePath "${{ inputs.scheme }}.xcarchive"\
+            -exportPath ${{ inputs.build-directory }}\
+            -exportOptionsPlist "${{ steps.create-export-options-plist.outputs.file-path }}"\
+            -allowProvisioningUpdates\
+            -authenticationKeyIssuerID ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
+            -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
+            -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }}
+        EOF
+        )
+        if [[ "${{ inputs.pretty-xcodebuild-output }}" == "true" ]]; then
+          set -o pipefail && $CMD 2>&1 | xcbeautify --renderer github-actions
+        else
+          $CMD
+        fi
     - name: Archive the dSYMs
       uses: actions/upload-artifact@v4
       with:
