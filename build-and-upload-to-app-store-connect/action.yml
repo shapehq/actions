@@ -110,6 +110,7 @@ runs:
             -destination generic/platform=ios\
             -configuration ${{ inputs.configuration }}\
             -archivePath ${{ inputs.scheme }}.xcarchive\
+            -skipPackagePluginValidation\
             -allowProvisioningUpdates\
             -authenticationKeyIssuerID ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
             -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
