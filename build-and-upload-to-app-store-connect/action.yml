@@ -122,13 +122,12 @@ runs:
         if [ -n "${{ inputs.additional-archive-args }}" ]; then
           CMD="$CMD ${{ inputs.additional-archive-args }}"
         fi
-        set -o pipefail && $CMD 2>&1 | xcbeautify --renderer github-actions
+        $CMD
     - name: Export IPA from Archive
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
         # Export IPA from Archive
-        set -o pipefail &&\
         xcodebuild -exportArchive\
           -archivePath "${{ inputs.scheme }}.xcarchive"\
           -exportPath ${{ inputs.build-directory }}\
@@ -136,8 +135,7 @@ runs:
           -allowProvisioningUpdates\
           -authenticationKeyIssuerID ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
           -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
-          -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }} 2>&1\
-          | xcbeautify --renderer github-actions
+          -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }}
     - name: Archive the dSYMs
       uses: actions/upload-artifact@v4
       with:
