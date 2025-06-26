@@ -1,0 +1,55 @@
+name: Vibeke
+description: Vibe code a pull request
+author: Simon B. Støvring
+inputs:
+  anthropic-api-key-op-reference:
+    description: Reference to an Anthropic API key in 1Password.
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - name: Configure Git
+      shell: bash
+      run: |
+        git config user.name "vibeke-by-framna"
+        git config user.email "vibeke-by-framna@users.noreply.github.com"
+    - name: Install 1Password CLI
+      uses: 1password/install-cli-action@v1
+    - name: Read Anthropic API Key
+      id: anthropic-api-key
+      shell: bash
+      run: |
+        api_key=$(op read "${{ inputs.anthropic-api-key-op-reference }}")
+        echo "api-key=${api_key}" >> $GITHUB_OUTPUT
+    - name: Claude Code
+      uses: anthropics/claude-code-base-action@v0.0.26
+      id: claude-code
+      env:
+        GITHUB_TOKEN: ${{ github.event.client_payload.installation_token }}
+      with:
+        anthropic_api_key: ${{ steps.anthropic-api-key.outputs.api-key }}
+        model: ${{ github.event.client_payload.model }}
+        prompt: ${{ github.event.client_payload.prompt }}
+        timeout_minutes: 60
+        allowed_tools: "Bash(find:*),Bash(ls:*),Bash(cat:*),Bash(git:*),Bash(mv:*),Bash(rm:*),Bash(gh:*),Edit,MultiEdit,Write,mcp__github__create_pull_request,mcp__github__list_pull_requests,mcp__github__get_pull_request_files,mcp__github__get_pull_request_status,mcp__github__update_pull_request_branch,mcp__github__get_pull_request_comments,mcp__github__get_pull_request_reviews,mcp__github__get_pull_request_diff,mcp__github__create_pull_request,mcp__github__update_pull_request,mcp__github__create_or_update_file,mcp__github__delete_file,mcp__github__list_branches,mcp__github__push_files,mcp__github__get_file_contents,mcp__github__create_branch,mcp__github__list_commits,mcp__github__get_commit,mcp__github__get_tag,mcp__github__list_tags,mcp__github__search_code"
+    - name: Display Claude Code Report
+      if: steps.claude-code.outputs.execution_file != ''
+      shell: bash
+      run: |
+        echo "## Claude Code Report" >> $GITHUB_STEP_SUMMARY
+        echo '```json' >> $GITHUB_STEP_SUMMARY
+        cat "${{ steps.claude-code.outputs.execution_file }}" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+    - name: Revoke installation token
+      shell: bash
+      run: |
+        curl -L \
+          -X DELETE \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ github.event.client_payload.installation_token }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/installation/token
