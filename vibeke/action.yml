@@ -47,7 +47,7 @@ runs:
       if: |
         (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@vibeke-by-framna')) ||
         (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@vibeke-by-framna')) ||
-        (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@vibeke-by-framna')) ||
+        (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@vibeke-by-framna'))
       id: claude-code-update-pr
       env:
         GITHUB_TOKEN: ${{ github.token }}
