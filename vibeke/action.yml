@@ -38,6 +38,11 @@ runs:
       if: ${{ github.event_name == 'repository_dispatch' && github.event_type == 'vibeke_create_pr' }}
       shell: bash
       run: echo "Debug 2"
+    - name: Debug 3
+      shell: bash
+      run: |
+        echo "${{ github.event_name }}"
+        echo "${{ github.event_type }}"
     - name: Claude Code
       uses: anthropics/claude-code-base-action@v0.0.26
       if: github.event_name == 'vibeke_create_pr'
