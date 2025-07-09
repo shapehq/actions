@@ -49,13 +49,12 @@ runs:
         (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@vibeke-by-framna')) ||
         (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@vibeke-by-framna'))
       id: claude-code-update-pr
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
       with:
         anthropic_api_key: ${{ steps.anthropic-api-key.outputs.api-key }}
         timeout_minutes: 60
         allowed_tools: ${{ steps.config.outputs.allowed_tools }}
         trigger_phrase: "@vibeke-by-framna"
+        github_token: ${{ github.token }}
     - name: Display Claude Code Report
       if: ${{ steps.claude-code-create-pr.outputs.execution_file != '' || steps.claude-code-update-pr.outputs.execution_file != '' }}
       shell: bash
