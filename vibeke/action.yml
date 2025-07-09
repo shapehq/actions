@@ -25,9 +25,15 @@ runs:
       run: |
         api_key=$(op read "${{ inputs.anthropic-api-key-op-reference }}")
         echo "api-key=${api_key}" >> $GITHUB_OUTPUT
+    - name: Config
+      id: config
+      shell: bash
+      run: |
+        allowed_tools="WebFetch,WebSearch,Edit,MultiEdit,Write,Bash,mcp__github__create_pull_request,mcp__github__list_pull_requests,mcp__github__get_pull_request_files,mcp__github__get_pull_request_status,mcp__github__update_pull_request_branch,mcp__github__get_pull_request_comments,mcp__github__get_pull_request_reviews,mcp__github__get_pull_request_diff,mcp__github__create_pull_request,mcp__github__update_pull_request,mcp__github__create_or_update_file,mcp__github__delete_file,mcp__github__list_branches,mcp__github__push_files,mcp__github__get_file_contents,mcp__github__create_branch,mcp__github__list_commits,mcp__github__get_commit,mcp__github__get_tag,mcp__github__list_tags,mcp__github__search_code"
     - name: Claude Code
       uses: anthropics/claude-code-base-action@v0.0.26
-      id: claude-code
+      if: ${{ github.event_name == 'vibeke-create-pr' }}
+      id: claude-code-create-pr
       env:
         GITHUB_TOKEN: ${{ github.event.client_payload.installation_token }}
       with:
@@ -35,14 +41,31 @@ runs:
         model: ${{ github.event.client_payload.model }}
         prompt: ${{ github.event.client_payload.prompt }}
         timeout_minutes: 60
-        allowed_tools: "WebFetch,WebSearch,Edit,MultiEdit,Write,Bash,mcp__github__create_pull_request,mcp__github__list_pull_requests,mcp__github__get_pull_request_files,mcp__github__get_pull_request_status,mcp__github__update_pull_request_branch,mcp__github__get_pull_request_comments,mcp__github__get_pull_request_reviews,mcp__github__get_pull_request_diff,mcp__github__create_pull_request,mcp__github__update_pull_request,mcp__github__create_or_update_file,mcp__github__delete_file,mcp__github__list_branches,mcp__github__push_files,mcp__github__get_file_contents,mcp__github__create_branch,mcp__github__list_commits,mcp__github__get_commit,mcp__github__get_tag,mcp__github__list_tags,mcp__github__search_code"
+        allowed_tools: ${{ steps.config.outputs.allowed_tools }}
+    - name: Claude Code
+      uses: anthropics/claude-code-action@beta
+      if: |
+        (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@vibeke')) ||
+        (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@vibeke')) ||
+        (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@vibeke')) ||
+      id: claude-code-update-pr
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        anthropic_api_key: ${{ steps.anthropic-api-key.outputs.api-key }}
+        timeout_minutes: 60
+        allowed_tools: ${{ steps.config.outputs.allowed_tools }}
     - name: Display Claude Code Report
-      if: steps.claude-code.outputs.execution_file != ''
+      if: ${{ steps.claude-code-create-pr.outputs.execution_file != '' || steps.claude-code-update-pr.outputs.execution_file != '' }}
       shell: bash
       run: |
         echo "## Claude Code Report" >> $GITHUB_STEP_SUMMARY
         echo '```json' >> $GITHUB_STEP_SUMMARY
-        cat "${{ steps.claude-code.outputs.execution_file }}" >> $GITHUB_STEP_SUMMARY
+        if [[ -n "${{ steps.claude-code-create-pr.outputs.execution_file }}" ]]; then
+          cat "${{ steps.claude-code-create-pr.outputs.execution_file }}" >> $GITHUB_STEP_SUMMARY
+        else
+          cat "${{ steps.claude-code-update-pr.outputs.execution_file }}" >> $GITHUB_STEP_SUMMARY
+        fi
         echo '```' >> $GITHUB_STEP_SUMMARY
     - name: Revoke installation token
       if: ${{ github.event.client_payload.installation_token != '' && github.event.client_payload.installation_token != null }}
