@@ -29,7 +29,7 @@ runs:
       uses: anthropics/claude-code-base-action@v0.0.26
       id: claude-code
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ github.event.client_payload.installation_token }}
       with:
         anthropic_api_key: ${{ steps.anthropic-api-key.outputs.api-key }}
         model: ${{ github.event.client_payload.model }}
@@ -45,7 +45,7 @@ runs:
         cat "${{ steps.claude-code.outputs.execution_file }}" >> $GITHUB_STEP_SUMMARY
         echo '```' >> $GITHUB_STEP_SUMMARY
     - name: Revoke installation token
-      if: false
+      if: ${{ github.event.client_payload.installation_token != '' && github.event.client_payload.installation_token != null }}
       shell: bash
       run: |
         curl -L \
