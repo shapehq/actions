@@ -45,6 +45,7 @@ runs:
         cat "${{ steps.claude-code.outputs.execution_file }}" >> $GITHUB_STEP_SUMMARY
         echo '```' >> $GITHUB_STEP_SUMMARY
     - name: Revoke installation token
+      if: false
       shell: bash
       run: |
         curl -L \
