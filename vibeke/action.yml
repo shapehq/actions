@@ -32,7 +32,7 @@ runs:
         allowed_tools="WebFetch,WebSearch,Edit,MultiEdit,Write,Bash,mcp__github__create_pull_request,mcp__github__list_pull_requests,mcp__github__get_pull_request_files,mcp__github__get_pull_request_status,mcp__github__update_pull_request_branch,mcp__github__get_pull_request_comments,mcp__github__get_pull_request_reviews,mcp__github__get_pull_request_diff,mcp__github__create_pull_request,mcp__github__update_pull_request,mcp__github__create_or_update_file,mcp__github__delete_file,mcp__github__list_branches,mcp__github__push_files,mcp__github__get_file_contents,mcp__github__create_branch,mcp__github__list_commits,mcp__github__get_commit,mcp__github__get_tag,mcp__github__list_tags,mcp__github__search_code"
     - name: Claude Code
       uses: anthropics/claude-code-base-action@v0.0.26
-      if: ${{ github.event_name == 'vibeke-create-pr' }}
+      if: ${{ github.event_name == 'vibeke_create_pr' }}
       id: claude-code-create-pr
       env:
         GITHUB_TOKEN: ${{ github.event.client_payload.installation_token }}
