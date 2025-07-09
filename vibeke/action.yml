@@ -25,10 +25,6 @@ runs:
       run: |
         api_key=$(op read "${{ inputs.anthropic-api-key-op-reference }}")
         echo "api-key=${api_key}" >> $GITHUB_OUTPUT
-    - name: Echo Client Payload
-      shell: bash
-      run: |
-        echo "Installation token: ${{ github.event.client_payload.installation_token }}"
     - name: Claude Code
       uses: anthropics/claude-code-base-action@v0.0.26
       id: claude-code
