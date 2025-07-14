@@ -37,7 +37,7 @@ runs:
       run: |
         RESPONSE=$(curl -s -X POST "https://smooth-daily-goshawk.ngrok-free.app/api/v1/installation-token" \
           -H "Content-Type: application/json" \
-          -d "{\"gitHubToken\":\"${{ github.token }}\"}")
+          -d "{\"repository\":\"${{ github.repository }}\"}")
         INSTALLATION_TOKEN=$(echo "$RESPONSE" | jq -r '.installationToken // empty')
         if [ -n "$INSTALLATION_TOKEN" ]; then
           echo "installation-token=${INSTALLATION_TOKEN}" >> $GITHUB_OUTPUT
