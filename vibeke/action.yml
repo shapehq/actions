@@ -29,13 +29,15 @@ runs:
       id: config
       shell: bash
       run: |
+        vibeke_service_url="https://smooth-daily-goshawk.ngrok-free.app"
         allowed_tools="WebFetch,WebSearch,Edit,MultiEdit,Write,Bash,mcp__github__create_pull_request,mcp__github__list_pull_requests,mcp__github__get_pull_request_files,mcp__github__get_pull_request_status,mcp__github__update_pull_request_branch,mcp__github__get_pull_request_comments,mcp__github__get_pull_request_reviews,mcp__github__get_pull_request_diff,mcp__github__create_pull_request,mcp__github__update_pull_request,mcp__github__create_or_update_file,mcp__github__delete_file,mcp__github__list_branches,mcp__github__push_files,mcp__github__get_file_contents,mcp__github__create_branch,mcp__github__list_commits,mcp__github__get_commit,mcp__github__get_tag,mcp__github__list_tags,mcp__github__search_code"
+        echo "vibeke-service-url" >> $GITHUB_OUTPUT
         echo "allowed-tools=${allowed_tools}" >> $GITHUB_OUTPUT
     - name: Exchange GitHub Token for Installation Token
       id: exchange-github-token
       shell: bash
       run: |
-        RESPONSE=$(curl -s -X POST "https://smooth-daily-goshawk.ngrok-free.app/api/v1/installation-token" \
+        RESPONSE=$(curl -s -X POST "${{ steps.config.outputs.vibeke-service-url }}/api/v1/installation-token" \
           -H "Content-Type: application/json" \
           -d "{\"repository\":\"${{ github.repository }}\"}")
         INSTALLATION_TOKEN=$(echo "$RESPONSE" | jq -r '.installationToken // empty')
@@ -86,19 +88,14 @@ runs:
     - name: Revoke Installation Tokens
       shell: bash
       run: |
-        if [[ -n "${{ github.event.client_payload.installation_token }}" ]]; then
-          curl -L \
-            -X DELETE \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ github.event.client_payload.installation_token }}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/installation/token
-        fi
-        if [[ -n "${{ steps.exchange-github-token.outputs.installation-token }}" ]]; then
-          curl -L \
-            -X DELETE \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ steps.exchange-github-token.outputs.installation-token }}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/installation/token
-        fi
+        delete_token() {
+          local token="$1"
+          if [[ -n "$token" ]]; then
+            curl -sSL -X DELETE \
+              -H "Content-Type: application/json" \
+              -d "{\"installationToken\":\"${token}\"}")
+              "${{ steps.config.outputs.vibeke-service-url }}/api/v1/installation-token"
+          fi
+        }
+        delete_token "${{ github.event.client_payload.installation_token }}"
+        delete_token "${{ steps.exchange-github-token.outputs.installation-token }}"
