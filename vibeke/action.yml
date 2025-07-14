@@ -93,7 +93,7 @@ runs:
           if [[ -n "$token" ]]; then
             curl -sSL -X DELETE \
               -H "Content-Type: application/json" \
-              -d "{\"installationToken\":\"${token}\"}")
+              -d "{\"installationToken\":\"${token}\"}"
               "${{ steps.config.outputs.vibeke-service-url }}/api/v1/installation-token"
           fi
         }
