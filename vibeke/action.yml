@@ -19,6 +19,24 @@ runs:
         git config user.email "vibeke@dk.framna.com"
     - name: Install 1Password CLI
       uses: 1password/install-cli-action@v1
+    - name: Check PR Comment
+      id: check-pr-comment
+      shell: bash
+      if: |
+          (
+            github.event_name == 'issue_comment' &&
+            contains(github.event.comment.body, '@vibeke-by-framna') &&
+            github.event.comment.user.login != 'vibeke-by-framna'
+          ) || (
+            github.event_name == 'pull_request_review_comment' &&
+            contains(github.event.comment.body, '@vibeke-by-framna') &&
+            github.event.comment.user.login != 'vibeke-by-framna'
+          ) || (
+            github.event_name == 'pull_request_review' &&
+            contains(github.event.review.body, '@vibeke-by-framna') &&
+            github.event.review.user.login != 'vibeke-by-framna'
+          )
+      run: echo "is-pr-comment=true" >> $GITHUB_OUTPUT
     - name: Read Anthropic API Key
       id: anthropic-api-key
       shell: bash
@@ -36,6 +54,7 @@ runs:
     - name: Exchange GitHub Token for Installation Token
       id: exchange-github-token
       shell: bash
+      if: ${{ steps.check-pr-comment.outputs.is-pr-comment == 'true' }}
       run: |
         RESPONSE=$(curl -s -X POST "${{ steps.config.outputs.vibeke-service-url }}/api/v1/installation-token" \
           -H "Content-Type: application/json" \
@@ -62,10 +81,7 @@ runs:
         allowed_tools: ${{ steps.config.outputs.allowed-tools }}
     - name: Claude Code
       uses: anthropics/claude-code-action@beta
-      if: |
-        (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@vibeke-by-framna')) ||
-        (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@vibeke-by-framna')) ||
-        (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@vibeke-by-framna'))
+      if: ${{ steps.check-pr-comment.outputs.is-pr-comment == 'true' }}
       id: claude-code-update-pr
       with:
         anthropic_api_key: ${{ steps.anthropic-api-key.outputs.api-key }}
