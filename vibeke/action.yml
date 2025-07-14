@@ -36,9 +36,7 @@ runs:
             contains(github.event.review.body, '@vibeke-by-framna') &&
             github.event.review.user.login != 'vibeke-by-framna'
           )
-      run: |
-        echo "Set is-pr-comment"
-        echo "is-pr-comment=true" >> $GITHUB_OUTPUT
+      run: echo "is-pr-comment=true" >> $GITHUB_OUTPUT
     - name: Read Anthropic API Key
       id: anthropic-api-key
       shell: bash
@@ -109,7 +107,6 @@ runs:
         delete_token() {
           local token="$1"
           if [[ -n "$token" ]]; then
-            echo "Delete token: ${token}"
             curl -sSL -X DELETE \
               -H "Content-Type: application/json" \
               -d "{\"installationToken\":\"${token}\"}" \
