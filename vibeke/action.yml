@@ -70,7 +70,7 @@ runs:
         timeout_minutes: 60
         allowed_tools: ${{ steps.config.outputs.allowed-tools }}
         trigger_phrase: "@vibeke-by-framna"
-        github_token: ${{ github.token }}
+        github_token: ${{ steps.exchange-github-token.outputs.installation-token }}
     - name: Display Claude Code Report
       if: ${{ steps.claude-code-create-pr.outputs.execution_file != '' || steps.claude-code-update-pr.outputs.execution_file != '' }}
       shell: bash
@@ -83,13 +83,22 @@ runs:
           cat "${{ steps.claude-code-update-pr.outputs.execution_file }}" >> $GITHUB_STEP_SUMMARY
         fi
         echo '```' >> $GITHUB_STEP_SUMMARY
-    - name: Revoke installation token
-      if: ${{ github.event.client_payload.installation_token != '' && github.event.client_payload.installation_token != null }}
+    - name: Revoke Installation Tokens
       shell: bash
       run: |
-        curl -L \
-          -X DELETE \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ github.event.client_payload.installation_token }}" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          https://api.github.com/installation/token
+        if [[ -n "${{ github.event.client_payload.installation_token }}" ]]; then
+          curl -L \
+            -X DELETE \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ github.event.client_payload.installation_token }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/installation/token
+        fi
+        if [[ -n "${{ steps.exchange-github-token.outputs.installation-token }}" ]]; then
+          curl -L \
+            -X DELETE \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ steps.exchange-github-token.outputs.installation-token }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/installation/token
+        fi
