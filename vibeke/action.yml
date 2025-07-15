@@ -67,51 +67,51 @@ runs:
           echo "$RESPONSE"
           exit 1
         fi
-    - name: Claude Code
-      uses: anthropics/claude-code-base-action@v0.0.26
-      if: github.event_name == 'repository_dispatch' && github.event.action == 'vibeke_create_pr'
-      id: claude-code-create-pr
-      env:
-        GITHUB_TOKEN: ${{ github.event.client_payload.installation_token }}
-      with:
-        anthropic_api_key: ${{ steps.anthropic-api-key.outputs.api-key }}
-        model: ${{ github.event.client_payload.model }}
-        prompt: ${{ github.event.client_payload.prompt }}
-        timeout_minutes: 60
-        allowed_tools: ${{ steps.config.outputs.allowed-tools }}
-    - name: Claude Code
-      uses: anthropics/claude-code-action@beta
-      if: ${{ steps.check-pr-comment.outputs.is-pr-comment == 'true' }}
-      id: claude-code-update-pr
-      with:
-        anthropic_api_key: ${{ steps.anthropic-api-key.outputs.api-key }}
-        timeout_minutes: 60
-        allowed_tools: ${{ steps.config.outputs.allowed-tools }}
-        trigger_phrase: "@vibeke-by-framna"
-        github_token: ${{ steps.exchange-github-token.outputs.installation-token }}
-    - name: Display Claude Code Report
-      if: ${{ steps.claude-code-create-pr.outputs.execution_file != '' || steps.claude-code-update-pr.outputs.execution_file != '' }}
-      shell: bash
-      run: |
-        echo "## Claude Code Report" >> $GITHUB_STEP_SUMMARY
-        echo '```json' >> $GITHUB_STEP_SUMMARY
-        if [[ -n "${{ steps.claude-code-create-pr.outputs.execution_file }}" ]]; then
-          cat "${{ steps.claude-code-create-pr.outputs.execution_file }}" >> $GITHUB_STEP_SUMMARY
-        else
-          cat "${{ steps.claude-code-update-pr.outputs.execution_file }}" >> $GITHUB_STEP_SUMMARY
-        fi
-        echo '```' >> $GITHUB_STEP_SUMMARY
-    - name: Revoke Installation Tokens
-      shell: bash
-      run: |
-        delete_token() {
-          local token="$1"
-          if [[ -n "$token" ]]; then
-            curl -sSL -X DELETE \
-              -H "Content-Type: application/json" \
-              -d "{\"installationToken\":\"${token}\"}" \
-              "${{ steps.config.outputs.vibeke-service-url }}/api/v1/installation-token"
-          fi
-        }
-        delete_token "${{ github.event.client_payload.installation_token }}"
-        delete_token "${{ steps.exchange-github-token.outputs.installation-token }}"
+    # - name: Claude Code
+    #   uses: anthropics/claude-code-base-action@v0.0.26
+    #   if: github.event_name == 'repository_dispatch' && github.event.action == 'vibeke_create_pr'
+    #   id: claude-code-create-pr
+    #   env:
+    #     GITHUB_TOKEN: ${{ github.event.client_payload.installation_token }}
+    #   with:
+    #     anthropic_api_key: ${{ steps.anthropic-api-key.outputs.api-key }}
+    #     model: ${{ github.event.client_payload.model }}
+    #     prompt: ${{ github.event.client_payload.prompt }}
+    #     timeout_minutes: 60
+    #     allowed_tools: ${{ steps.config.outputs.allowed-tools }}
+    # - name: Claude Code
+    #   uses: anthropics/claude-code-action@beta
+    #   if: ${{ steps.check-pr-comment.outputs.is-pr-comment == 'true' }}
+    #   id: claude-code-update-pr
+    #   with:
+    #     anthropic_api_key: ${{ steps.anthropic-api-key.outputs.api-key }}
+    #     timeout_minutes: 60
+    #     allowed_tools: ${{ steps.config.outputs.allowed-tools }}
+    #     trigger_phrase: "@vibeke-by-framna"
+    #     github_token: ${{ steps.exchange-github-token.outputs.installation-token }}
+    # - name: Display Claude Code Report
+    #   if: ${{ steps.claude-code-create-pr.outputs.execution_file != '' || steps.claude-code-update-pr.outputs.execution_file != '' }}
+    #   shell: bash
+    #   run: |
+    #     echo "## Claude Code Report" >> $GITHUB_STEP_SUMMARY
+    #     echo '```json' >> $GITHUB_STEP_SUMMARY
+    #     if [[ -n "${{ steps.claude-code-create-pr.outputs.execution_file }}" ]]; then
+    #       cat "${{ steps.claude-code-create-pr.outputs.execution_file }}" >> $GITHUB_STEP_SUMMARY
+    #     else
+    #       cat "${{ steps.claude-code-update-pr.outputs.execution_file }}" >> $GITHUB_STEP_SUMMARY
+    #     fi
+    #     echo '```' >> $GITHUB_STEP_SUMMARY
+    # - name: Revoke Installation Tokens
+    #   shell: bash
+    #   run: |
+    #     delete_token() {
+    #       local token="$1"
+    #       if [[ -n "$token" ]]; then
+    #         curl -sSL -X DELETE \
+    #           -H "Content-Type: application/json" \
+    #           -d "{\"installationToken\":\"${token}\"}" \
+    #           "${{ steps.config.outputs.vibeke-service-url }}/api/v1/installation-token"
+    #       fi
+    #     }
+    #     delete_token "${{ github.event.client_payload.installation_token }}"
+    #     delete_token "${{ steps.exchange-github-token.outputs.installation-token }}"
