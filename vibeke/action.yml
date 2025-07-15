@@ -72,7 +72,7 @@ runs:
       run: |
         RESPONSE=$(curl -s "https://api.github.com/${{ github.repository }}" \
           -H "Authorization: Bearer ${{ github.token }}" \
-          -H "Accept: application/vnd.github+json" \
+          -H "Accept: application/vnd.github+json")
         echo $RESPONSE
     # - name: Claude Code
     #   uses: anthropics/claude-code-base-action@v0.0.26
