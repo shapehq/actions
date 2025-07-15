@@ -67,13 +67,6 @@ runs:
           echo "$RESPONSE"
           exit 1
         fi
-    - name: Playground
-      shell: bash
-      run: |
-        RESPONSE=$(curl -v "https://api.github.com/repos/${{ github.repository }}" \
-          -H "Authorization: Bearer ${{ github.token }}" \
-          -H "Accept: application/vnd.github+json")
-        echo $RESPONSE
     # - name: Claude Code
     #   uses: anthropics/claude-code-base-action@v0.0.26
     #   if: github.event_name == 'repository_dispatch' && github.event.action == 'vibeke_create_pr'
