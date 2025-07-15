@@ -58,7 +58,7 @@ runs:
       run: |
         RESPONSE=$(curl -s -X POST "${{ steps.config.outputs.vibeke-service-url }}/api/v1/installation-token" \
           -H "Content-Type: application/json" \
-          -d "{\"repository\":\"${{ github.repository }}\"}")
+          -d "{\"token\":\"${{ github.token }}\",\"repository\":\"${{ github.repository }}\"}")
         INSTALLATION_TOKEN=$(echo "$RESPONSE" | jq -r '.installationToken // empty')
         if [ -n "$INSTALLATION_TOKEN" ]; then
           echo "installation-token=${INSTALLATION_TOKEN}" >> $GITHUB_OUTPUT
