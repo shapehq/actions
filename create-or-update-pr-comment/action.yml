@@ -101,9 +101,9 @@ runs:
         EXISTING_ID="${{ steps.find.outputs.existing_id }}"
 
         if [[ -z "$EXISTING_ID" ]]; then
-          RESPONSE="$(gh api repos/$REPO/issues/$PR/comments -f body@"${COMMENT_FILE}")"
+          RESPONSE="$(gh api repos/$REPO/issues/$PR/comments -F body@"${COMMENT_FILE}")"
         else
-          RESPONSE="$(gh api repos/$REPO/issues/comments/$EXISTING_ID -X PATCH -f body@"${COMMENT_FILE}")"
+          RESPONSE="$(gh api repos/$REPO/issues/comments/$EXISTING_ID -X PATCH -F body@"${COMMENT_FILE}")"
         fi
 
         COMMENT_ID="$(echo "$RESPONSE" | jq '.id')"
