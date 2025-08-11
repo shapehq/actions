@@ -1,0 +1,112 @@
+name: "PR Comment"
+description: "Create or update a PR comment"
+author: "Gerard Sala"
+
+inputs:
+  token:
+    description: "GitHub token with issues:write (usually secrets.GITHUB_TOKEN)"
+    required: true
+  body:
+    description: "Markdown body of the comment"
+    required: true
+  pr-number:
+    description: "Pull request number; auto-detected on PR events if omitted"
+    required: false
+  update-marker:
+    description: "Stable marker token used to find/update the comment. Can be used to have multiple comments in the same PR."
+    required: false
+    default: "pr-comment:default"
+
+outputs:
+  comment-id:
+    description: "ID of the created/updated comment"
+    value: ${{ steps.upsert.outputs.comment_id }}
+  comment-url:
+    description: "URL of the created/updated comment"
+    value: ${{ steps.upsert.outputs.comment_url }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Resolve PR number
+      id: resolve
+      shell: bash
+      env:
+        INPUT_PR: ${{ inputs['pr-number'] }}
+      run: |
+        PR="${INPUT_PR:-}"
+
+        # If PR number is not provided, try to get it from the current branch name
+        if [[ -z "$PR" ]]; then
+          if [[ "${GITHUB_REF:-}" =~ refs/pull/([0-9]+)/ ]]; then
+            PR="${BASH_REMATCH[1]}"
+          fi
+        fi
+
+        # If PR number is still not provided, error out
+        if [[ -z "$PR" ]]; then
+          echo "::error::pr-number is required when not running in a PR context."
+          exit 1
+        fi
+        echo "pr=$PR" >> "$GITHUB_OUTPUT"
+
+    - name: Prepare comment body
+      id: prepare
+      shell: bash
+      env:
+        BODY: ${{ inputs.body }}
+        RAW_MARKER: ${{ inputs['update-marker'] }}
+      run: |
+        # Wrap marker in HTML comment to hide it from the PR body
+        MARKER="<!-- ${RAW_MARKER} -->"
+
+        COMMENT_FILE="$RUNNER_TEMP/comment_body.md"
+        # Preserve newlines in BODY and prepend marker
+        {
+          echo "$MARKER"
+          printf "%s" "$BODY"
+        } > "$COMMENT_FILE"
+
+        echo "comment_file=$COMMENT_FILE" >> "$GITHUB_OUTPUT"
+        echo "normalized_marker=$MARKER" >> "$GITHUB_OUTPUT"
+
+    - name: Find existing comment (optional)
+      id: find
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        MARKER: ${{ steps.prepare.outputs.normalized_marker }}
+      run: |
+        set -euo pipefail
+        REPO="${GITHUB_REPOSITORY}"
+        PR="${{ steps.resolve.outputs.pr }}"
+        if [[ -z "${MARKER}" ]]; then
+          echo "existing_id=" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+        EXISTING_ID="$(gh api "repos/$REPO/issues/$PR/comments" --paginate --jq \
+          '.[] | select(.body | contains("'"$MARKER"'")) | .id' | head -n1)"
+        echo "existing_id=${EXISTING_ID}" >> "$GITHUB_OUTPUT"
+
+    - name: Create or update comment
+      id: upsert
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+      run: |
+        set -euo pipefail
+        REPO="${GITHUB_REPOSITORY}"
+        PR="${{ steps.resolve.outputs.pr }}"
+        COMMENT_FILE="${{ steps.prepare.outputs.comment_file }}"
+        EXISTING_ID="${{ steps.find.outputs.existing_id }}"
+
+        if [[ -z "$EXISTING_ID" ]]; then
+          RESPONSE="$(gh api repos/$REPO/issues/$PR/comments -f body@"${COMMENT_FILE}")"
+        else
+          RESPONSE="$(gh api repos/$REPO/issues/comments/$EXISTING_ID -X PATCH -f body@"${COMMENT_FILE}")"
+        fi
+
+        COMMENT_ID="$(echo "$RESPONSE" | jq '.id')"
+        COMMENT_URL="$(echo "$RESPONSE" | jq -r '.html_url')"
+        echo "comment_id=${COMMENT_ID}" >> "$GITHUB_OUTPUT"
+        echo "comment_url=${COMMENT_URL}" >> "$GITHUB_OUTPUT"
