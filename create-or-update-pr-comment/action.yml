@@ -74,43 +74,45 @@ runs:
         echo "comment_file=$COMMENT_FILE" >> "$GITHUB_OUTPUT"
         echo "normalized_marker=$MARKER" >> "$GITHUB_OUTPUT"
 
-    - name: Find existing comment (optional)
-      id: find
-      shell: bash
-      env:
-        GH_TOKEN: ${{ inputs.token }}
-        MARKER: ${{ steps.prepare.outputs.normalized_marker }}
-      run: |
-        set -euo pipefail
-        REPO="${GITHUB_REPOSITORY}"
-        PR="${{ steps.resolve.outputs.pr }}"
-        if [[ -z "${MARKER}" ]]; then
-          echo "existing_id=" >> "$GITHUB_OUTPUT"
-          exit 0
-        fi
-        EXISTING_ID="$(gh api "repos/$REPO/issues/$PR/comments" --paginate --jq \
-          '.[] | select(.body | contains("'"$MARKER"'")) | .id' | head -n1)"
-        echo "existing_id=${EXISTING_ID}" >> "$GITHUB_OUTPUT"
-
     - name: Create or update comment
       id: upsert
-      shell: bash
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ inputs.token }}
+        script: |
+          const fs = require('fs')
+          const pr = parseInt(process.env.PR, 10)
+          if (!Number.isFinite(pr)) {
+            core.setFailed('Invalid PR number')
+            return
+          }
+          const marker = process.env.MARKER || ''
+          const commentFile = process.env.COMMENT_FILE
+          if (!commentFile) {
+            core.setFailed('COMMENT_FILE env var not set')
+            return
+          }
+          const body = fs.readFileSync(commentFile, 'utf8')
+          const owner = context.repo.owner
+          const repo = context.repo.repo
+          let existingId
+          if (marker) {
+            const comments = await github.paginate(
+              github.rest.issues.listComments,
+              { owner, repo, issue_number: pr, per_page: 100 }
+            )
+            const match = comments.find(c => typeof c.body === 'string' && c.body.includes(marker))
+            if (match) existingId = match.id
+          }
+          let result
+          if (existingId) {
+            result = await github.rest.issues.updateComment({ owner, repo, comment_id: existingId, body })
+          } else {
+            result = await github.rest.issues.createComment({ owner, repo, issue_number: pr, body })
+          }
+          core.setOutput('comment_id', String(result.data.id))
+          core.setOutput('comment_url', result.data.html_url)
       env:
-        GH_TOKEN: ${{ inputs.token }}
-      run: |
-        set -euo pipefail
-        REPO="${GITHUB_REPOSITORY}"
-        PR="${{ steps.resolve.outputs.pr }}"
-        COMMENT_FILE="${{ steps.prepare.outputs.comment_file }}"
-        EXISTING_ID="${{ steps.find.outputs.existing_id }}"
-
-        if [[ -z "$EXISTING_ID" ]]; then
-          RESPONSE="$(gh api \"repos/$REPO/issues/$PR/comments\" -F \"body=@${COMMENT_FILE}\")"
-        else
-          RESPONSE="$(gh api \"repos/$REPO/issues/comments/$EXISTING_ID\" -X PATCH -F \"body=@${COMMENT_FILE}\")"
-        fi
-
-        COMMENT_ID="$(echo "$RESPONSE" | jq '.id')"
-        COMMENT_URL="$(echo "$RESPONSE" | jq -r '.html_url')"
-        echo "comment_id=${COMMENT_ID}" >> "$GITHUB_OUTPUT"
-        echo "comment_url=${COMMENT_URL}" >> "$GITHUB_OUTPUT"
+        PR: ${{ steps.resolve.outputs.pr }}
+        MARKER: ${{ steps.prepare.outputs.normalized_marker }}
+        COMMENT_FILE: ${{ steps.prepare.outputs.comment_file }}
