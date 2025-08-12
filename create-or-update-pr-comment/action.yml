@@ -6,8 +6,8 @@ inputs:
   token:
     description: "GitHub token with issues:write (usually secrets.GITHUB_TOKEN)"
     required: true
-  body:
-    description: "Markdown body of the comment"
+  body-file:
+    description: "Path to a Markdown file with the comment body"
     required: true
   pr-number:
     description: "Pull request number; auto-detected on PR events if omitted"
@@ -54,17 +54,21 @@ runs:
       id: prepare
       shell: bash
       env:
-        BODY: ${{ inputs.body }}
+        BODY_FILE: ${{ inputs['body-file'] }}
         RAW_MARKER: ${{ inputs['update-marker'] }}
       run: |
         # Wrap marker in HTML comment to hide it from the PR body
         MARKER="<!-- ${RAW_MARKER} -->"
 
         COMMENT_FILE="$RUNNER_TEMP/comment_body.md"
-        # Preserve newlines in BODY and prepend marker
+        # Validate input file exists and prepend marker
+        if [[ -z "${BODY_FILE:-}" || ! -f "$BODY_FILE" ]]; then
+          echo "::error::body-file does not exist: ${BODY_FILE:-<empty>}"
+          exit 1
+        fi
         {
           echo "$MARKER"
-          printf "%s" "$BODY"
+          cat "$BODY_FILE"
         } > "$COMMENT_FILE"
 
         echo "comment_file=$COMMENT_FILE" >> "$GITHUB_OUTPUT"
