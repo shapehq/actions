@@ -77,6 +77,10 @@ runs:
     - name: Create or update comment
       id: upsert
       uses: actions/github-script@v7
+      env:
+        PR: ${{ steps.resolve.outputs.pr }}
+        MARKER: ${{ steps.prepare.outputs.normalized_marker }}
+        COMMENT_FILE: ${{ steps.prepare.outputs.comment_file }}
       with:
         github-token: ${{ inputs.token }}
         script: |
@@ -112,7 +116,3 @@ runs:
           }
           core.setOutput('comment_id', String(result.data.id))
           core.setOutput('comment_url', result.data.html_url)
-      env:
-        PR: ${{ steps.resolve.outputs.pr }}
-        MARKER: ${{ steps.prepare.outputs.normalized_marker }}
-        COMMENT_FILE: ${{ steps.prepare.outputs.comment_file }}
