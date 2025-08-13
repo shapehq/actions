@@ -1,0 +1,118 @@
+name: "PR Comment"
+description: "Create or update a PR comment"
+author: "Gerard Sala"
+
+inputs:
+  token:
+    description: "GitHub token with issues:write (usually secrets.GITHUB_TOKEN)"
+    required: true
+  body-file:
+    description: "Path to a Markdown file with the comment body"
+    required: true
+  pr-number:
+    description: "Pull request number; auto-detected on PR events if omitted"
+    required: false
+  update-marker:
+    description: "Stable marker token used to find/update the comment. Can be used to have multiple comments in the same PR."
+    required: false
+    default: "pr-comment:default"
+
+outputs:
+  comment-id:
+    description: "ID of the created/updated comment"
+    value: ${{ steps.upsert.outputs.comment_id }}
+  comment-url:
+    description: "URL of the created/updated comment"
+    value: ${{ steps.upsert.outputs.comment_url }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Resolve PR number
+      id: resolve
+      shell: bash
+      env:
+        INPUT_PR: ${{ inputs['pr-number'] }}
+      run: |
+        PR="${INPUT_PR:-}"
+
+        # If PR number is not provided, try to get it from the current branch name
+        if [[ -z "$PR" ]]; then
+          if [[ "${GITHUB_REF:-}" =~ refs/pull/([0-9]+)/ ]]; then
+            PR="${BASH_REMATCH[1]}"
+          fi
+        fi
+
+        # If PR number is still not provided, error out
+        if [[ -z "$PR" ]]; then
+          echo "::error::pr-number is required when not running in a PR context."
+          exit 1
+        fi
+        echo "pr=$PR" >> "$GITHUB_OUTPUT"
+
+    - name: Prepare comment body
+      id: prepare
+      shell: bash
+      env:
+        BODY_FILE: ${{ inputs['body-file'] }}
+        RAW_MARKER: ${{ inputs['update-marker'] }}
+      run: |
+        # Wrap marker in HTML comment to hide it from the PR body
+        MARKER="<!-- ${RAW_MARKER} -->"
+
+        COMMENT_FILE="$RUNNER_TEMP/comment_body.md"
+        # Validate input file exists and prepend marker
+        if [[ -z "${BODY_FILE:-}" || ! -f "$BODY_FILE" ]]; then
+          echo "::error::body-file does not exist: ${BODY_FILE:-<empty>}"
+          exit 1
+        fi
+        {
+          echo "$MARKER"
+          cat "$BODY_FILE"
+        } > "$COMMENT_FILE"
+
+        echo "comment_file=$COMMENT_FILE" >> "$GITHUB_OUTPUT"
+        echo "normalized_marker=$MARKER" >> "$GITHUB_OUTPUT"
+
+    - name: Create or update comment
+      id: upsert
+      uses: actions/github-script@v7
+      env:
+        PR: ${{ steps.resolve.outputs.pr }}
+        MARKER: ${{ steps.prepare.outputs.normalized_marker }}
+        COMMENT_FILE: ${{ steps.prepare.outputs.comment_file }}
+      with:
+        github-token: ${{ inputs.token }}
+        script: |
+          const fs = require('fs')
+          const pr = parseInt(process.env.PR, 10)
+          if (!Number.isFinite(pr)) {
+            core.setFailed('Invalid PR number')
+            return
+          }
+          const marker = process.env.MARKER || ''
+          const commentFile = process.env.COMMENT_FILE
+          if (!commentFile) {
+            core.setFailed('COMMENT_FILE env var not set')
+            return
+          }
+          const body = fs.readFileSync(commentFile, 'utf8')
+          const owner = context.repo.owner
+          const repo = context.repo.repo
+          let existingId
+          if (marker) {
+            const comments = await github.paginate(
+              github.rest.issues.listComments,
+              { owner, repo, issue_number: pr, per_page: 100 }
+            )
+            const match = comments.find(c => typeof c.body === 'string' && c.body.includes(marker))
+            if (match) existingId = match.id
+          }
+          let result
+          if (existingId) {
+            result = await github.rest.issues.updateComment({ owner, repo, comment_id: existingId, body })
+          } else {
+            result = await github.rest.issues.createComment({ owner, repo, issue_number: pr, body })
+          }
+          core.setOutput('comment_id', String(result.data.id))
+          core.setOutput('comment_url', result.data.html_url)

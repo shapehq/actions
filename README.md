@@ -43,23 +43,23 @@ You may use the `marketing-version` and `build-number` inputs to automatically s
 
 The action supports the following inputs.
 
-|Name|Required|Default Value|Description|
-|-|-|-|-|
-|working-directory|Yes|.|The directory to run the action in. This should be the directory in which the Xcode project resides.|
-|scheme|Yes||The Xcode project's scheme to build. This specifies which set of build settings and targets to use when building your app.|
-|configuration|Yes|Release|Specifies the build configuration that Xcode should use. Commonly set to "Release" for production builds meant for App Store distribution.|
-|marketing-version|No||The marketing version number of the app, such as "1.0.0". This sets the MARKETING_VERSION in Xcode, determining the version displayed on the App Store.|
-|build-number|No||An incrementing number specifying the build version, which is used to uniquely identify an archive or build sent to the App Store Connect.|
-|testflight-internal-testing-only|Yes|false|When enabled, the build cannot be distributed via external TestFlight or the App Store. Must be either "true" or "false".|
-|op-app-store-connect-api-key-issuer-id-reference|Yes||A reference to the location in 1Password where the Issuer ID for the App Store Connect API key is stored. This ID is crucial for API interactions with App Store Connect.|
-|op-app-store-connect-api-key-id-reference|Yes||A reference to the location in 1Password where the App Store Connect API Key ID is stored, used for authentication during API requests.|
-|op-app-store-connect-api-key-file-reference|Yes||A reference to the 1Password field containing the AuthKey.p8 file, essential for establishing connections to App Store Connect.|
-|op-development-certificate-reference|Yes||Points to a field in 1Password where the development certificate and its corresponding private key (.p12 file) are stored, necessary for signing the app during the development phase.|
-|op-development-certificate-password-reference|Yes||Indicates the location in 1Password where the password for decrypting the development certificate (.p12 file) is kept.|
-|additional-archive-args|No||Additional arguments passed to xcodebuild when archiving the app.|
-|build-directory|Yes|.build|Defines the directory where the build artifacts, like the final binary or intermediate files, will be stored.|
-|dsyms-archive-name|Yes|dSYMs|Name of the uploaded archive containing the dSYMs.|
-|pretty-xcodebuild-output|Yes|true|Whether to pipe xcodebuild output through [xcbeautify](https://github.com/cpisciotta/xcbeautify) for prettier formatting.|
+| Name                                             | Required | Default Value | Description                                                                                                                                                                            |
+| ------------------------------------------------ | -------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| working-directory                                | Yes      | .             | The directory to run the action in. This should be the directory in which the Xcode project resides.                                                                                   |
+| scheme                                           | Yes      |               | The Xcode project's scheme to build. This specifies which set of build settings and targets to use when building your app.                                                             |
+| configuration                                    | Yes      | Release       | Specifies the build configuration that Xcode should use. Commonly set to "Release" for production builds meant for App Store distribution.                                             |
+| marketing-version                                | No       |               | The marketing version number of the app, such as "1.0.0". This sets the MARKETING_VERSION in Xcode, determining the version displayed on the App Store.                                |
+| build-number                                     | No       |               | An incrementing number specifying the build version, which is used to uniquely identify an archive or build sent to the App Store Connect.                                             |
+| testflight-internal-testing-only                 | Yes      | false         | When enabled, the build cannot be distributed via external TestFlight or the App Store. Must be either "true" or "false".                                                              |
+| op-app-store-connect-api-key-issuer-id-reference | Yes      |               | A reference to the location in 1Password where the Issuer ID for the App Store Connect API key is stored. This ID is crucial for API interactions with App Store Connect.              |
+| op-app-store-connect-api-key-id-reference        | Yes      |               | A reference to the location in 1Password where the App Store Connect API Key ID is stored, used for authentication during API requests.                                                |
+| op-app-store-connect-api-key-file-reference      | Yes      |               | A reference to the 1Password field containing the AuthKey.p8 file, essential for establishing connections to App Store Connect.                                                        |
+| op-development-certificate-reference             | Yes      |               | Points to a field in 1Password where the development certificate and its corresponding private key (.p12 file) are stored, necessary for signing the app during the development phase. |
+| op-development-certificate-password-reference    | Yes      |               | Indicates the location in 1Password where the password for decrypting the development certificate (.p12 file) is kept.                                                                 |
+| additional-archive-args                          | No       |               | Additional arguments passed to xcodebuild when archiving the app.                                                                                                                      |
+| build-directory                                  | Yes      | .build        | Defines the directory where the build artifacts, like the final binary or intermediate files, will be stored.                                                                          |
+| dsyms-archive-name                               | Yes      | dSYMs         | Name of the uploaded archive containing the dSYMs.                                                                                                                                     |
+| pretty-xcodebuild-output                         | Yes      | true          | Whether to pipe xcodebuild output through [xcbeautify](https://github.com/cpisciotta/xcbeautify) for prettier formatting.                                                              |
 
 ## [connect-to-vpn](https://github.com/shapehq/actions/blob/main/connect-to-vpn/action.yml)
 
@@ -68,6 +68,45 @@ Connects the runner to our a predefined Tailscale exit node.
 ```yml
 - name: Connect to VPN
   uses: shapehq/actions/connect-to-vpn@main
+```
+
+## [create-or-update-pr-comment](https://github.com/shapehq/actions/blob/main/create-or-update-pr-comment/action.yml)
+
+Creates (or updates if already exis) a PR comment. Always updates the same comment by default using a hidden marker. If you need to create more than one comment, you need to pass different markers as a parameter.
+
+The action has the following inputs:
+
+| Name          | Description                                                                                                           |
+| ------------- | --------------------------------------------------------------------------------------------------------------------- |
+| token\*       | GitHub token with issues:write permission. Usually `secrets.GITHUB_TOKEN`.                                            |
+| body-file\*   | A path to a local Markdown file containing the contents of the comment.                                               |
+| pr-number     | Pull request number; auto-detected on PR events if omitted. (Optional)                                                |
+| update-marker | Stable marker token used to find/update the comment. Can be used to have multiple comments in the same PR. (Optional) |
+
+and the following outputs:
+
+| Name        | Description                          |
+| ----------- | ------------------------------------ |
+| comment-id  | ID of the resulting comment          |
+| comment-url | URL linking to the resulting comment |
+
+Example usage:
+
+```yml
+- name: Prepare body comment
+  id: prep-comment
+  shell: bash
+  run: |
+    COMMENT_FILE="$RUNNER_TEMP/comment.md"
+    echo "## Hello World!" > "$COMMENT_FILE"
+    echo "comment_file=$COMMENT_FILE" >> "$GITHUB_OUTPUT"
+
+- name: Create or update comment
+  id: comment
+  uses: shapehq/actions/create-or-update-pr-comment@main
+  with:
+    token: ${{ secrets.GITHUB_TOKEN }}
+    body-file: ${{ steps.prep-comment.outputs.comment_file }}
 ```
 
 ## [install-appiconannotator](https://github.com/shapehq/actions/blob/main/install-appiconannotator/action.yml)
@@ -117,19 +156,19 @@ You may optionally pass the `output-asc-key-file-directory` parameter to specify
 
 The action has the following outputs:
 
-|Name|Description|
-|-|-|
-|issuer_id|The issuer ID.|
-|key_id|The key ID.|
-|key_filename|The name of the stored AuthKey file. This will be on the format `AuthKey_[KeyID].p8`.|
-|key_file_path|The file path to the AuthKey.|
+| Name          | Description                                                                           |
+| ------------- | ------------------------------------------------------------------------------------- |
+| issuer_id     | The issuer ID.                                                                        |
+| key_id        | The key ID.                                                                           |
+| key_filename  | The name of the stored AuthKey file. This will be on the format `AuthKey_[KeyID].p8`. |
+| key_file_path | The file path to the AuthKey.                                                         |
 
 The outputs can be used to access the API key. The following example shows how the outputs can be passed to Fastlane.
 
 ```yml
 - name: Fastlane
   run: bundle exec fastlane build_appstore
-  env:          
+  env:
     ASC_API_KEY_ISSUER_ID: ${{ steps.install-asc-api-key.outputs.issuer-id }}
     ASC_API_KEY_ID: ${{ steps.install-asc-api-key.outputs.key-id }}
     ASC_API_KEY: ${{ steps.install-asc-api-key.outputs.key-file-path }}
@@ -237,19 +276,19 @@ You may optionally pass the `output-asc-key-file-directory` parameter to specify
 
 The action has the following outputs:
 
-|Name|Description|
-|-|-|
-|issuer_id|The issuer ID.|
-|key_id|The key ID.|
-|key_filename|The name of the stored AuthKey file. This will be on the format `AuthKey_[KeyID].p8`.|
-|key_file_path|The file path to the AuthKey.|
+| Name          | Description                                                                           |
+| ------------- | ------------------------------------------------------------------------------------- |
+| issuer_id     | The issuer ID.                                                                        |
+| key_id        | The key ID.                                                                           |
+| key_filename  | The name of the stored AuthKey file. This will be on the format `AuthKey_[KeyID].p8`. |
+| key_file_path | The file path to the AuthKey.                                                         |
 
 The outputs can be used to access the API key. The following example shows how the outputs can be passed to Fastlane.
 
 ```yml
 - name: Fastlane
   run: bundle exec fastlane build_appstore
-  env:          
+  env:
     ASC_API_KEY_ISSUER_ID: ${{ steps.install-company-asc-api-key.outputs.issuer-id }}
     ASC_API_KEY_ID: ${{ steps.install-company-asc-api-key.outputs.key-id }}
     ASC_API_KEY: ${{ steps.install-company-asc-api-key.outputs.key-file-path }}
@@ -451,11 +490,12 @@ Posts a message to Slack.
 ```
 
 The action will automatically add the following details to the Slack message:
-* Workflow name
-* Runner name
-* Branch name
-* GitHub username of the person who started the job
-* Link to view the logs produced by the workflow
+
+- Workflow name
+- Runner name
+- Branch name
+- GitHub username of the person who started the job
+- Link to view the logs produced by the workflow
 
 The details above can be omitted by setting the `add-workflow-info-fields` and `add-view-logs-button` inputs to false.
 
@@ -482,7 +522,7 @@ If you wish to only post to Slack if the jobs fails you can use the `failure()` 
     op-slack-token-reference: op://My Vault/My Slack Token/token
 ```
 
-Similarly, you can have the action only post a message on success using the  `success()` status check function:
+Similarly, you can have the action only post a message on success using the `success()` status check function:
 
 ```yml
 - name: Post Slack message on success
@@ -585,18 +625,19 @@ Uploads an APK to Shipshape.
 
 The action has the following inputs:
 
-|Name|Description|
-|-|-|
-|projectName|The project/client name.|
-|targetName|The project name with the build variant.|
-|apkPath|The path to the APK file that needs to be uploaded.|
-|manifestPath|The path to the AndroidManifest.xml for the same build.|
-|appIconPath|The path to a PNG icon to be shown in Shipshape.|
-|distributionListDefinitions|The available distribution lists in JSON format. E.g. `{"Shape": ["a@shape.dk", "b@shape.dk"], "Client": ["a@example.com", "b@example.com"]}`|
-|distributionListTargets|The distribution lists that will receive the builds, comma-separated. Should be one or more of the keys in `distributionListDefinitions`. E.g. `Shape,Client`.|
-|releaseNotes|The release notes that are going to be shown in Shipshape for this build.|
+| Name                        | Description                                                                                                                                                    |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| projectName                 | The project/client name.                                                                                                                                       |
+| targetName                  | The project name with the build variant.                                                                                                                       |
+| apkPath                     | The path to the APK file that needs to be uploaded.                                                                                                            |
+| manifestPath                | The path to the AndroidManifest.xml for the same build.                                                                                                        |
+| appIconPath                 | The path to a PNG icon to be shown in Shipshape.                                                                                                               |
+| distributionListDefinitions | The available distribution lists in JSON format. E.g. `{"Shape": ["a@shape.dk", "b@shape.dk"], "Client": ["a@example.com", "b@example.com"]}`                  |
+| distributionListTargets     | The distribution lists that will receive the builds, comma-separated. Should be one or more of the keys in `distributionListDefinitions`. E.g. `Shape,Client`. |
+| releaseNotes                | The release notes that are going to be shown in Shipshape for this build.                                                                                      |
 
 Example:
+
 ```yml
 - name: Upload to Shipshape
   uses: shapehq/actions/upload-apk-shipshape@main
