@@ -59,6 +59,7 @@ runs:
         echo "GOOGLE_APPLICATION_CREDENTIALS=service-account.json" >> $GITHUB_ENV
 
     - name: "Distribute apk"
+      id: distribute
       shell: bash
       env:
         APK_PATH: ${{ inputs.apkPath }}
