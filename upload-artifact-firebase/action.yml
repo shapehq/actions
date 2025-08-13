@@ -40,6 +40,19 @@ outputs:
     description: "Link to the app binary (APK or AAB file). Expires after one hour."
     value: ${{ steps.distribute.outputs.binary-download-uri }}
 
+  # Underscore variants for safe dot-notation access in workflows
+  firebase_console_uri:
+    description: "Link to the release in the Firebase console"
+    value: ${{ steps.distribute.outputs.firebase_console_uri }}
+
+  testing_uri:
+    description: "Link to the release in the Firebase App Tester app"
+    value: ${{ steps.distribute.outputs.testing_uri }}
+
+  binary_download_uri:
+    description: "Link to the app binary (APK or AAB file). Expires after one hour."
+    value: ${{ steps.distribute.outputs.binary_download_uri }}
+
 runs:
   using: composite
   steps:
@@ -79,11 +92,14 @@ runs:
           if [[ $line == *"View this release in the Firebase console"* ]]; then
             CONSOLE_URI=$(echo "$line" | sed -e 's/.*: //' -e 's/^ *//;s/ *$//')
             echo "firebase-console-uri=$CONSOLE_URI" >> "$GITHUB_OUTPUT"
+            echo "firebase_console_uri=$CONSOLE_URI" >> "$GITHUB_OUTPUT"
           elif [[ $line == *"Share this release with testers who have access"* ]]; then
             TESTING_URI=$(echo "$line" | sed -e 's/.*: //' -e 's/^ *//;s/ *$//')
             echo "testing-uri=$TESTING_URI" >> "$GITHUB_OUTPUT"
+            echo "testing_uri=$TESTING_URI" >> "$GITHUB_OUTPUT"
           elif [[ $line == *"Download the release binary"* ]]; then
             BINARY_URI=$(echo "$line" | sed -e 's/.*: //' -e 's/^ *//;s/ *$//')
             echo "binary-download-uri=$BINARY_URI" >> "$GITHUB_OUTPUT"
+            echo "binary_download_uri=$BINARY_URI" >> "$GITHUB_OUTPUT"
           fi
         done
