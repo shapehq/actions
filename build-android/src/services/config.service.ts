@@ -17,11 +17,7 @@ const InputSchema = z.object({
 
   module: z.string().transform((val) => val.trim()),
 
-  buildType: z.enum([APK_APP_TYPE, AAB_APP_TYPE], {
-    errorMap: () => ({
-      message: `Build type must be either '${APK_APP_TYPE}' or '${AAB_APP_TYPE}'`,
-    }),
-  }),
+  buildType: z.enum([APK_APP_TYPE, AAB_APP_TYPE]),
 
   arguments: z.string().transform((val) => val.trim()),
 });
@@ -44,7 +40,7 @@ export async function processConfig(): Promise<Config> {
     validatedInput = InputSchema.parse(rawInput);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const errorMessages = error.errors.map((err) => `${err.path.join(".")}: ${err.message}`).join(", ");
+      const errorMessages = error.issues.map((err: z.ZodIssue) => `${err.path.join(".")}: ${err.message}`).join(", ");
       throw new Error(`Input validation failed: ${errorMessages}`);
     }
     throw error;
