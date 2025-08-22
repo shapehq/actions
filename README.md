@@ -6,6 +6,8 @@ This repository contains actions to be used with [GitHub Actions](https://github
 
 Several of these actions depend on the 1Password CLI being installed. Please use 1Password's [install-cli-action](https://github.com/1Password/install-cli-action) action to install the 1Password CLI or [load-secrets-action](https://github.com/1Password/load-secrets-action) to load secrets into the workflow's environment.
 
+Click on any action name below to view detailed documentation, usage examples, and configuration options for that specific action.
+
 ## Available Actions
 
 | Action                                                                                    | Description                                                                                                                                                                                         |
@@ -40,7 +42,3 @@ Several of these actions depend on the 1Password CLI being installed. Please use
 | ------------------------------------------------- | ----------------------------------------------- |
 | [`install-shipshape`](./install-shipshape/)       | Installs Shipshape and sets an activation code. |
 | [`upload-apk-shipshape`](./upload-apk-shipshape/) | Uploads an APK to Shipshape.                    |
-
-## Usage
-
-Click on any action name above to view detailed documentation, usage examples, and configuration options for that specific action.
