@@ -22,7 +22,6 @@ Several of these actions depend on the 1Password CLI being installed. Please use
 | [`install-company-development-certificate`](./install-company-development-certificate/)   | Installs our default company development certificate in the keychain.                                                                                                                               |
 | [`install-company-distribution-certificate`](./install-company-distribution-certificate/) | Installs our default company distribution certificate in the keychain.                                                                                                                              |
 | [`install-provisioning-profile`](./install-provisioning-profile/)                         | Installs a provisioning profile.                                                                                                                                                                    |
-| [`install-shipshape`](./install-shipshape/)                                               | Installs Shipshape and sets an activation code.                                                                                                                                                     |
 | [`install-ssh-key`](./install-ssh-key/)                                                   | Installs an SSH key or a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys), which is an SSH key that grants access to a single repository. |
 | [`jira-comment`](./jira-comment/)                                                         | Adds comment to a Jira issue.                                                                                                                                                                       |
 | [`jira-issues-changelog`](./jira-issues-changelog/)                                       | Outputs a list of Jira issue keys mentioned in commit messages between the current commit and the most recent tag.                                                                                  |
@@ -31,10 +30,16 @@ Several of these actions depend on the 1Password CLI being installed. Please use
 | [`post-slack-message`](./post-slack-message/)                                             | Posts a message to Slack.                                                                                                                                                                           |
 | [`render-ios-app-icon-badge`](./render-ios-app-icon-badge/)                               | Adds a badge to an iOS app icon to indicate that the app is meant for testing purposes.                                                                                                             |
 | [`swiftlint`](./swiftlint/)                                                               | Runs [SwiftLint](https://github.com/realm/SwiftLint) on a codebase.                                                                                                                                 |
-| [`upload-apk-shipshape`](./upload-apk-shipshape/)                                         | Uploads an APK to Shipshape.                                                                                                                                                                        |
 | [`upload-artifact-firebase`](./upload-artifact-firebase/)                                 | Uploads an APK to Firebase App Distribution.                                                                                                                                                        |
 | [`upload-artifact-play-store`](./upload-artifact-play-store/)                             | Uploads a release build (.apk or .aab) to the internal track of the Play Store.                                                                                                                     |
 | [`xcode-select`](./xcode-select/)                                                         | Selects a version of Xcode. The major, minor, and patch values must all be specified, otherwise the action will throw an error.                                                                     |
+
+## Legacy Actions
+
+| Action                                            | Description                                     |
+| ------------------------------------------------- | ----------------------------------------------- |
+| [`install-shipshape`](./install-shipshape/)       | Installs Shipshape and sets an activation code. |
+| [`upload-apk-shipshape`](./upload-apk-shipshape/) | Uploads an APK to Shipshape.                    |
 
 ## Usage
 
