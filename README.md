@@ -1,10 +1,10 @@
 # Actions
 
-This repository contains actions to be used with [GitHub Actions](https://github.com/features/actions) internally at Shape. Please refer to [this article](https://shapedk.atlassian.net/wiki/spaces/SHAPE/pages/3640262736/GitHub+Actions+Runners) for the details on getting started with our self-hosted GitHub Actions runner.
+This repository contains actions to be used with [GitHub Actions](https://github.com/features/actions) internally at Framna Denmark. Please refer to [this page](https://www.notion.so/GitHub-Actions-f38c16cde5c642f5a0c2e05b725af5d0?source=copy_link) for more details on getting started with GitHub Actions and example workflows.
 
 ## Getting Started
 
-Several of these actions depend on the 1Password CLI being installed. Please use 1Password's [install-cli-action](https://github.com/1Password/install-cli-action) action to install the 1Password CLI.
+Several of these actions depend on the 1Password CLI being installed. Please use 1Password's [install-cli-action](https://github.com/1Password/install-cli-action) action to install the 1Password CLI or [load-secrets-action](https://github.com/1Password/load-secrets-action) to load secrets into the workflow's environment.
 
 ## Available Actions
 
@@ -19,8 +19,8 @@ Several of these actions depend on the 1Password CLI being installed. Please use
 | [`install-certificate`](./install-certificate/)                                           | Installs the specified certificate in the keychain.                                                                                                                                                 |
 | [`install-ci-ssh-key`](./install-ci-ssh-key/)                                             | Install the CI's SSH key.                                                                                                                                                                           |
 | [`install-company-asc-api-key`](./install-company-asc-api-key/)                           | Installs our company App Store Connect API key file on the runner and outputs the issuer ID, key ID, and file path of the AuthKey file.                                                             |
-| [`install-company-development-certificate`](./install-company-development-certificate/)   | Installs Shape's default company development certificate in the keychain.                                                                                                                           |
-| [`install-company-distribution-certificate`](./install-company-distribution-certificate/) | Installs Shape's default company distribution certificate in the keychain.                                                                                                                          |
+| [`install-company-development-certificate`](./install-company-development-certificate/)   | Installs our default company development certificate in the keychain.                                                                                                                               |
+| [`install-company-distribution-certificate`](./install-company-distribution-certificate/) | Installs our default company distribution certificate in the keychain.                                                                                                                              |
 | [`install-provisioning-profile`](./install-provisioning-profile/)                         | Installs a provisioning profile.                                                                                                                                                                    |
 | [`install-shipshape`](./install-shipshape/)                                               | Installs Shipshape and sets an activation code.                                                                                                                                                     |
 | [`install-ssh-key`](./install-ssh-key/)                                                   | Installs an SSH key or a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys), which is an SSH key that grants access to a single repository. |

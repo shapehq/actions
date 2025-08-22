@@ -1,6 +1,6 @@
 ## [install-company-development-certificate](https://github.com/shapehq/actions/blob/main/install-company-development-certificate/action.yml)
 
-Installs Shape's default company development certificate in the keychain.
+Installs our default company development certificate in the keychain.
 
 ```yml
 - name: Install Company Development Certificate

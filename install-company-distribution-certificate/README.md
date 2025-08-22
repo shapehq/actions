@@ -1,6 +1,6 @@
 ## [install-company-distribution-certificate](https://github.com/shapehq/actions/blob/main/install-company-distribution-certificate/action.yml)
 
-Installs Shape's default company distribution certificate in the keychain.
+Installs our default company distribution certificate in the keychain.
 
 ```yml
 - name: Install Company Distribution Certificate
