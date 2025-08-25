@@ -1,0 +1,17 @@
+## [install-shipshape](https://github.com/shapehq/actions/blob/main/install-shipshape/action.yml)
+
+Installs Shipshape and sets an activation code.
+
+```yml
+- name: Install Shipshape
+  uses: shapehq/actions/install-shipshape@main
+```
+
+You may optionally specify an activation code to be used by Shipshape. You will likely want to use the default activation code though.
+
+```yml
+- name: Install CI SSH Key
+  uses: shapehq/actions/install-shipshape@main
+  with:
+    op-reference: op://My Vault/My Shipshape Activation Code/password
+```
