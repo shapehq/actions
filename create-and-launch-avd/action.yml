@@ -3,15 +3,14 @@ description: "Creates and launches a headless Android Virtual Device for Instrum
 author: "Mikkel Schläger"
 
 inputs:
-  avdName:
-    description: "Name of the AVD"
-    required: true
-    default: "ci_avd"
-
   apiLevel:
     description: "Android API level"
     required: true
-    default: 35
+
+    avdName:
+      description: "Name of the AVD"
+      required: false
+      default: "ci_avd"
 
 runs:
   using: composite
