@@ -1,0 +1,112 @@
+name: "Create and launch AVD"
+description: "Creates and launches a headless Android Virtual Device for Instrumentation testing purposes"
+author: "Mikkel Schläger"
+
+inputs:
+  avdName:
+    description: "Name of the AVD"
+    required: true
+    default: "ci_avd"
+
+  apiLevel:
+    description: "Android API level"
+    required: true
+    default: 35
+
+runs:
+  using: composite
+  steps:
+    - name: Setup environment
+      shell: bash
+      run: |
+        echo "$ANDROID_SDK_ROOT/platform-tools" >> $GITHUB_PATH
+        echo "$ANDROID_SDK_ROOT/emulator" >> $GITHUB_PATH
+        echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> $GITHUB_PATH
+        echo "SYSTEM_IMAGE=system-images;android-${{ inputs.apiLevel }};google_apis;x86_64" >> $GITHUB_ENV
+        echo "ANDROID_AVD_HOME=${{ github.workspace }}/.android/avd" >> $GITHUB_ENV
+
+    - name: Accept licenses
+      shell: bash
+      run: yes | sdkmanager --licenses || true
+
+    - name: Install emulator
+      shell: bash
+      run: sdkmanager --install emulator
+
+    - name: Enable KVM group perms
+      shell: bash
+      run: |
+        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger --name-match=kvm
+
+    - name: KVM diagnostics
+      shell: bash
+      run: |
+        # Check CPU hardware virtualization flags required for KVM support
+        # Will print number of cores that has the flag, >0 is required
+        # vmx=Intel VT-x 
+        # svm=AMD-V
+        egrep -c '(vmx|svm)' /proc/cpuinfo || true
+        
+        # Check if KVM is installed
+        if [ -e /dev/kvm ]; then
+          ls -la /dev/kvm
+        else
+          echo "/dev/kvm does not exist"
+        fi
+        
+        # Check if runner user is in KVM group
+        groups $(whoami)
+        
+        # Emulator acceleration check
+        emulator -accel-check || true
+
+    - name: Download system image
+      shell: bash
+      run: sdkmanager --install "$SYSTEM_IMAGE"
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        # PulseAudio (libpulse0) is a sound server required by the Android emulator, 
+        # even though we are running with the -no-audio param.
+        sudo apt-get update
+        sudo apt-get install -y libpulse0
+
+    - name: Create AVD
+      shell: bash
+      run: |
+        mkdir -p $ANDROID_AVD_HOME
+        echo "no" | avdmanager create avd \
+            -n "${{ inputs.avdName }}" \
+            -k "$SYSTEM_IMAGE" \
+            --force
+
+    - name: AVD Diagnostics
+      shell: bash
+      run: |
+        ls -la $ANDROID_AVD_HOME
+        emulator -list-avds
+
+    - name: Start adb
+      shell: bash
+      run: |
+        adb kill-server || true
+        adb start-server
+        adb devices
+
+    - name: Launch AVD
+      shell: bash
+      run: |
+        nohup emulator -avd "${{ inputs.avdName }}" \
+          -no-window \
+          -no-audio \
+          -no-boot-anim \
+          -no-metrics \
+          -accel on \
+          > avd.log 2>&1 &
+
+    - name: Wait for device
+      shell: bash
+      run: adb wait-for-device
