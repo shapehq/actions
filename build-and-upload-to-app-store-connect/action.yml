@@ -179,17 +179,14 @@ runs:
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
-        # Upload IPA to App Store Connect
-        upload_ipa() {
-          local cmd_args=""
-          if [ -n "${{ inputs.additional-altool-args }}" ]; then
-            cmd_args="$cmd_args ${{ inputs.additional-altool-args }}"
-          fi
-          xcrun altool\
-            --upload-app\
-            -t ios\
-            -f "${{ steps.find-ipa.outputs.file-path }}"\
-            --apiKey ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
-            --apiIssuer ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }} $cmd_args
-        }
-        upload_ipa
+        local cmd_args=""
+        if [ -n "${{ inputs.additional-altool-args }}" ]; then
+          cmd_args="$cmd_args ${{ inputs.additional-altool-args }}"
+        fi
+        xcrun altool\
+          --upload-app\
+          -t ios\
+          -f "${{ steps.find-ipa.outputs.file-path }}"\
+          --apiKey ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
+          --apiIssuer ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
+          $cmd_args
