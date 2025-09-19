@@ -1,3 +1,4 @@
+
 name: Build and Upload to App Store Connect
 inputs:
   working-directory:
@@ -180,5 +181,6 @@ runs:
           --upload-app\
           -t ios\
           -f "${{ steps.find-ipa.outputs.file-path }}"\
+          --apple-id 1438103288\
           --apiKey ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
           --apiIssuer ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}
