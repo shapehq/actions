@@ -51,6 +51,9 @@ inputs:
     description: Whether to pipe xcodebuild output through xcbeautify for prettier formatting.
     default: true
     required: true
+  additional-altool-args:
+    description: Additional arguments passed to altool when uploading the app.
+    required: false
 runs:
   using: composite
   steps:
@@ -175,10 +178,21 @@ runs:
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
-        # Upload IPA to App Store Connect
-        xcrun altool\
-          --upload-app\
-          -t ios\
-          -f "${{ steps.find-ipa.outputs.file-path }}"\
-          --apiKey ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
-          --apiIssuer ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}
+        set -euo pipefail
+
+        # Build the command as an array
+        cmd=(xcrun altool
+          --upload-app
+          -t ios
+          -f "${{ steps.find-ipa.outputs.file-path }}"
+          --apiKey "${{ steps.install-app-store-connect-api-key.outputs.key-id }}"
+          --apiIssuer "${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}"
+        )
+
+        # Only append if input is non-empty. Tokenize respecting quotes.
+        if [[ -n "${{ inputs.additional-altool-args }}" ]]; then
+          read -r -a extra <<< "${{ inputs.additional-altool-args }}"
+          cmd+=("${extra[@]}")
+        fi
+
+        "${cmd[@]}"
