@@ -195,6 +195,4 @@ runs:
           cmd+=("${extra[@]}")
         fi
 
-        # Show what will run (quoted)
-        printf 'Running: %q ' "${cmd[@]}"; echo
         "${cmd[@]}"
