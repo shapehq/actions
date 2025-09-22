@@ -179,14 +179,23 @@ runs:
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
-        local cmd_args=""
-        if [ -n "${{ inputs.additional-altool-args }}" ]; then
-          cmd_args="$cmd_args ${{ inputs.additional-altool-args }}"
+        set -euo pipefail
+
+        # Build the command as an array
+        cmd=(xcrun altool
+          --upload-app
+          -t ios
+          -f "${{ steps.find-ipa.outputs.file-path }}"
+          --apiKey "${{ steps.install-app-store-connect-api-key.outputs.key-id }}"
+          --apiIssuer "${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}"
+        )
+
+        # Only append if input is non-empty. Tokenize respecting quotes.
+        if [[ -n "${{ inputs.additional-altool-args }}" ]]; then
+          read -r -a extra <<< "${{ inputs.additional-altool-args }}"
+          cmd+=("${extra[@]}")
         fi
-        xcrun altool\
-          --upload-app\
-          -t ios\
-          -f "${{ steps.find-ipa.outputs.file-path }}"\
-          --apiKey ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
-          --apiIssuer ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
-          $cmd_args
+
+        # Show what will run (quoted)
+        printf 'Running: %q ' "${cmd[@]}"; echo
+        "${cmd[@]}"
