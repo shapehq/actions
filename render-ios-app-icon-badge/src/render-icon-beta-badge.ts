@@ -67,7 +67,7 @@ async function renderBetaBadgeToIcon(options: { iconPath: string, curlColor?: st
     "name": "curl"
   }
 
-  if (options.curlColor) {
+  if (options.curlColor && typeof options.curlColor === 'string' && options.curlColor.length > 0) {
     const hex = options.curlColor.replace(/^#/, '')
     const r = parseInt(hex.substring(0, 2), 16) / 255
     const g = parseInt(hex.substring(2, 4), 16) / 255
