@@ -1,16 +1,56 @@
 import path from "path"
 import fs from "fs"
 
+interface FillSpecialization {
+  appearance?: string
+  value: {
+    solid?: string
+  }
+}
+
+interface GlassSpecialization {
+  appearance?: string
+  value: boolean
+}
+
 interface IconLayer {
   "glass"?: boolean
+  "glass-specializations"?: GlassSpecialization[]
   "hidden"?: boolean
   "image-name": string
   "name": string
   "fill"?: string
+  "fill-specializations"?: FillSpecialization[]
+}
+
+interface ShadowSpecialization {
+  appearance?: string
+  value: {
+    kind: string
+    opacity: number
+  }
+}
+
+interface TranslucencySpecialization {
+  appearance?: string
+  value: {
+    enabled: boolean
+    value: number
+  }
+}
+
+interface BlurMaterialSpecialization {
+  appearance?: string
+  value: number
 }
 
 interface IconGroup {
   layers: IconLayer[]
+  "blur-material-specializations"?: BlurMaterialSpecialization[]
+  lighting?: string
+  "shadow-specializations"?: ShadowSpecialization[]
+  specular?: boolean
+  "translucency-specializations"?: TranslucencySpecialization[]
   shadow?: {
     kind: string
     opacity: number
@@ -60,8 +100,9 @@ async function renderBetaBadgeToIcon(options: { iconPath: string, curlColor?: st
     }
   }
 
+  // Build curl layer with fill-specializations
   const curlLayer: IconLayer = {
-    "glass": true,
+    "glass": false,
     "hidden": false,
     "image-name": "curl.png",
     "name": "curl"
@@ -73,12 +114,47 @@ async function renderBetaBadgeToIcon(options: { iconPath: string, curlColor?: st
     const g = parseInt(hex.substring(2, 4), 16) / 255
     const b = parseInt(hex.substring(4, 6), 16) / 255
 
-    curlLayer.fill = {
-      "solid": `srgb:${r.toFixed(5)},${g.toFixed(5)},${b.toFixed(5)},1.00000`
-    } as any
+    // Create fill-specializations with light and dark mode
+    curlLayer["fill-specializations"] = [
+      {
+        value: {
+          solid: `display-p3:${r.toFixed(5)},${g.toFixed(5)},${b.toFixed(5)},1.00000`
+        }
+      },
+      {
+        appearance: "dark",
+        value: {
+          solid: `display-p3:${r.toFixed(5)},${g.toFixed(5)},${b.toFixed(5)},1.00000`
+        }
+      }
+    ]
+  } else {
+    // Default fill-specializations matching example.icon
+    curlLayer["fill-specializations"] = [
+      {
+        value: {
+          solid: "display-p3:0.10980,0.26275,0.47059,1.00000"
+        }
+      },
+      {
+        appearance: "dark",
+        value: {
+          solid: "display-p3:0.07059,0.12157,0.21569,1.00000"
+        }
+      }
+    ]
   }
 
   const badgeGroup: IconGroup = {
+    "blur-material-specializations": [
+      {
+        value: 0.5
+      },
+      {
+        appearance: "tinted",
+        value: 0.5
+      }
+    ],
     layers: [
       {
         "glass": false,
@@ -86,46 +162,74 @@ async function renderBetaBadgeToIcon(options: { iconPath: string, curlColor?: st
         "image-name": "grid.png",
         "name": "grid"
       },
+      {
+        "glass": false,
+        "image-name": "curl_highlights.png",
+        "name": "curl_highlights"
+      },
+      {
+        "glass": false,
+        "image-name": "curl_shadow_on_grid.png",
+        "name": "curl_shadow_on_grid"
+      },
+      {
+        "glass": false,
+        "image-name": "curl_inner_glow.png",
+        "name": "curl_inner_glow"
+      },
       curlLayer,
       {
-        "glass": true,
+        "glass": false,
         "hidden": false,
         "image-name": "curl_shadow.png",
         "name": "curl_shadow"
       },
       {
-        "glass": true,
-        "hidden": false,
-        "image-name": "curl_shadow_on_grid.png",
-        "name": "curl_shadow_on_grid"
-      },
-      {
-        "glass": true,
-        "hidden": false,
-        "image-name": "curl_inner_glow.png",
-        "name": "curl_inner_glow"
-      },
-      {
-        "glass": true,
-        "hidden": false,
-        "image-name": "curl_highlights.png",
-        "name": "curl_highlights"
-      },
-      {
-        "fill": "none",
-        "glass": true,
+        "glass-specializations": [
+          {
+            value: true
+          },
+          {
+            appearance: "tinted",
+            value: false
+          }
+        ],
         "image-name": "background.png",
         "name": "background"
       }
     ],
-    shadow: {
-      kind: "neutral",
-      opacity: 0.5
-    },
-    translucency: {
-      enabled: true,
-      value: 0.5
-    }
+    lighting: "individual",
+    "shadow-specializations": [
+      {
+        value: {
+          kind: "none",
+          opacity: 0.5
+        }
+      },
+      {
+        appearance: "tinted",
+        value: {
+          kind: "none",
+          opacity: 0.5
+        }
+      }
+    ],
+    specular: false,
+    "translucency-specializations": [
+      {
+        value: {
+          enabled: true,
+          value: 0.5
+        }
+      },
+      {
+        appearance: "tinted",
+        value: {
+          enabled: true,
+          value: 0.5
+        }
+      }
+    ]
   }
 
   iconConfig.groups.unshift(badgeGroup)
