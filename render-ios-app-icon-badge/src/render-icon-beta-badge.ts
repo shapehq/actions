@@ -1,5 +1,6 @@
 import path from "path"
 import fs from "fs"
+import { sampleIconColor, colorToHex } from "./utils/sample-icon-color"
 
 interface FillSpecialization {
   appearance?: string
@@ -100,22 +101,32 @@ async function renderBetaBadgeToIcon(options: { iconPath: string, curlColor?: st
     }
   }
 
+  // Determine the curl color to use
+  let effectiveCurlColor = options.curlColor
+
+  // If no curl color was provided, sample it from the icon
+  if (!effectiveCurlColor || effectiveCurlColor.length === 0) {
+    const sampledColor = await sampleIconColor(options.iconPath)
+    if (sampledColor) {
+      effectiveCurlColor = colorToHex(sampledColor)
+      console.log(`Sampled color ${effectiveCurlColor} from icon at ${options.iconPath}`)
+    } else {
+      throw new Error(`Failed to detect color from ${options.iconPath}. Please provide a curl color using --curl-color`)
+    }
+  }
+
   // Build curl layer with fill-specializations
+  const hex = effectiveCurlColor.replace(/^#/, '')
+  const r = parseInt(hex.substring(0, 2), 16) / 255
+  const g = parseInt(hex.substring(2, 4), 16) / 255
+  const b = parseInt(hex.substring(4, 6), 16) / 255
+
   const curlLayer: IconLayer = {
     "glass": false,
     "hidden": false,
     "image-name": "curl.png",
-    "name": "curl"
-  }
-
-  if (options.curlColor && typeof options.curlColor === 'string' && options.curlColor.length > 0) {
-    const hex = options.curlColor.replace(/^#/, '')
-    const r = parseInt(hex.substring(0, 2), 16) / 255
-    const g = parseInt(hex.substring(2, 4), 16) / 255
-    const b = parseInt(hex.substring(4, 6), 16) / 255
-
-    // Create fill-specializations with light and dark mode
-    curlLayer["fill-specializations"] = [
+    "name": "curl",
+    "fill-specializations": [
       {
         value: {
           solid: `display-p3:${r.toFixed(5)},${g.toFixed(5)},${b.toFixed(5)},1.00000`
@@ -125,21 +136,6 @@ async function renderBetaBadgeToIcon(options: { iconPath: string, curlColor?: st
         appearance: "dark",
         value: {
           solid: `display-p3:${r.toFixed(5)},${g.toFixed(5)},${b.toFixed(5)},1.00000`
-        }
-      }
-    ]
-  } else {
-    // Default fill-specializations matching example.icon
-    curlLayer["fill-specializations"] = [
-      {
-        value: {
-          solid: "display-p3:0.10980,0.26275,0.47059,1.00000"
-        }
-      },
-      {
-        appearance: "dark",
-        value: {
-          solid: "display-p3:0.07059,0.12157,0.21569,1.00000"
         }
       }
     ]
