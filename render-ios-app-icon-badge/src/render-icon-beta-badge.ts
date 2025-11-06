@@ -105,7 +105,7 @@ async function renderBetaBadgeToIcon(options: { iconPath: string, curlColor?: st
   let effectiveCurlColor = options.curlColor
 
   // If no curl color was provided, sample it from the icon
-  if (!effectiveCurlColor || effectiveCurlColor.length === 0) {
+  if (!effectiveCurlColor || typeof effectiveCurlColor !== 'string' || effectiveCurlColor.length === 0) {
     const sampledColor = await sampleIconColor(options.iconPath)
     if (sampledColor) {
       effectiveCurlColor = colorToHex(sampledColor)
