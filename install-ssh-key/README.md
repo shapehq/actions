@@ -47,5 +47,12 @@ Attempting to install multiple SSH keys with the same name will cause the SSH ke
 When installing multiple SSH keys, you may need to specify which SSH key to use when accessing a repository. For example, you may clone a repository using a specific SSH key by setting the `GIT_SSH_COMMAND` environment variable as shown below:
 
 ```bash
-GIT_SSH_COMMAND='ssh -i ~/.ssh/my_ssh_key’ git clone git@github.com:shapehq/example.git
+GIT_SSH_COMMAND='ssh -i ~/.ssh/my_ssh_key' git clone git@github.com:shapehq/example.git
 ```
+
+### Outputs
+
+The action provides the following outputs:
+
+- `file-path`: Path to the installed SSH key file.
+- `key`: Raw content of the SSH key.

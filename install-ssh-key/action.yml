@@ -15,10 +15,18 @@ inputs:
   op-password-reference:
     description: Reference to the password for the SSH key in 1Password.
     required: false
+outputs:
+  file-path:
+    description: Path to the installed SSH key file.
+    value: ${{ steps.install-key.outputs.file-path }}
+  key:
+    description: Raw content of the SSH key.
+    value: ${{ steps.install-key.outputs.key }}
 runs:
   using: composite
   steps:
     - name: Install SSH Key
+      id: install-key
       run: |
         # Helper function used to cause ssh-add to timeout instead of hanging indefinitely upon error.
         function timeout() {
@@ -78,4 +86,10 @@ runs:
           fi
           exit 1
         fi
+
+        echo "file-path=$SSH_KEY_PATH" >> $GITHUB_OUTPUT
+        SSH_KEY_CONTENT=$(cat "$SSH_KEY_PATH")
+        echo "key<<EOF" >> $GITHUB_OUTPUT
+        echo "$SSH_KEY_CONTENT" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
       shell: bash
