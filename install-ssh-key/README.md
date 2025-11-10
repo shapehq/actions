@@ -2,6 +2,19 @@
 
 Installs an SSH key or a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys), which is an SSH key that grants access to a single repository.
 
+The SSH key can be provided directly via the `key` input or loaded from 1Password using the `op-reference` input. If both are provided, `key` takes precedence.
+
+### Using a direct SSH key
+
+```yml
+- name: Install SSH Key
+  uses: shapehq/actions/install-ssh-key@main
+  with:
+    key: ${{ secrets.SSH_KEY }}
+```
+
+### Using 1Password
+
 ```yml
 - name: Install SSH Key
   uses: shapehq/actions/install-ssh-key@main
@@ -9,7 +22,7 @@ Installs an SSH key or a [deploy key](https://docs.github.com/en/authentication/
     op-reference: op://My Vault/My SSH Key/ssh-key
 ```
 
-Set the `op-password-reference` input to install a password-protected SSH key.
+Set the `op-password-reference` input to install a password-protected SSH key from 1Password.
 
 ```yml
 - name: Install SSH Key
