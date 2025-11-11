@@ -2,6 +2,21 @@
 
 Installs an SSH key or a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys), which is an SSH key that grants access to a single repository.
 
+The SSH key can be provided directly via the `key` input or loaded from 1Password using the `op-reference` input. If both are provided, `key` takes precedence.
+
+### Using a direct SSH key
+
+The `key` input automatically converts literal `\n` characters to newlines, which is useful when storing SSH keys as GitHub secrets.
+
+```yml
+- name: Install SSH Key
+  uses: shapehq/actions/install-ssh-key@main
+  with:
+    key: ${{ secrets.SSH_KEY }}
+```
+
+### Using 1Password
+
 ```yml
 - name: Install SSH Key
   uses: shapehq/actions/install-ssh-key@main
@@ -9,7 +24,7 @@ Installs an SSH key or a [deploy key](https://docs.github.com/en/authentication/
     op-reference: op://My Vault/My SSH Key/ssh-key
 ```
 
-Set the `op-password-reference` input to install a password-protected SSH key.
+Set the `op-password-reference` input to install a password-protected SSH key from 1Password.
 
 ```yml
 - name: Install SSH Key
@@ -34,5 +49,12 @@ Attempting to install multiple SSH keys with the same name will cause the SSH ke
 When installing multiple SSH keys, you may need to specify which SSH key to use when accessing a repository. For example, you may clone a repository using a specific SSH key by setting the `GIT_SSH_COMMAND` environment variable as shown below:
 
 ```bash
-GIT_SSH_COMMAND='ssh -i ~/.ssh/my_ssh_key’ git clone git@github.com:shapehq/example.git
+GIT_SSH_COMMAND='ssh -i ~/.ssh/my_ssh_key' git clone git@github.com:shapehq/example.git
 ```
+
+### Outputs
+
+The action provides the following outputs:
+
+- `file-path`: Path to the installed SSH key file.
+- `key`: Raw content of the SSH key.
