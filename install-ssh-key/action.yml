@@ -57,7 +57,7 @@ runs:
         # Load the SSH key from direct input or 1Password.
         mkdir -p ~/.ssh
         if [[ -n "${{ inputs.key }}" ]]; then
-          echo -e "${{ inputs.key }}" > "$SSH_KEY_PATH"
+          printf '%b\n' "${{ inputs.key }}" > "$SSH_KEY_PATH"
         elif [[ -n "${{ inputs.op-reference }}" ]]; then
           op read --out-file "$SSH_KEY_PATH" "${{ inputs.op-reference }}"
         else
