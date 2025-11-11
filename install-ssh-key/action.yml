@@ -58,8 +58,10 @@ runs:
         mkdir -p ~/.ssh
         if [[ -n "${{ inputs.key }}" ]]; then
           printf '%b\n' "${{ inputs.key }}" > "$SSH_KEY_PATH"
+          chmod 600 "$SSH_KEY_PATH"
         elif [[ -n "${{ inputs.op-reference }}" ]]; then
           op read --out-file "$SSH_KEY_PATH" "${{ inputs.op-reference }}"
+          chmod 600 "$SSH_KEY_PATH"
         else
           echo "::error::Either 'key' or 'op-reference' input must be provided."
           exit 1
