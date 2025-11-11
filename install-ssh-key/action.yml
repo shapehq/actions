@@ -89,6 +89,7 @@ runs:
 
         echo "file-path=$SSH_KEY_PATH" >> $GITHUB_OUTPUT
         SSH_KEY_CONTENT=$(cat "$SSH_KEY_PATH")
+        echo "::add-mask::$SSH_KEY_CONTENT"
         echo "key<<EOF" >> $GITHUB_OUTPUT
         echo "$SSH_KEY_CONTENT" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
