@@ -6,6 +6,8 @@ The SSH key can be provided directly via the `key` input or loaded from 1Passwor
 
 ### Using a direct SSH key
 
+The `key` input automatically converts literal `\n` characters to newlines, which is useful when storing SSH keys as GitHub secrets.
+
 ```yml
 - name: Install SSH Key
   uses: shapehq/actions/install-ssh-key@main
