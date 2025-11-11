@@ -18,7 +18,7 @@ runs:
   steps:
     - name: Install CI SSH Key
       id: install-key
-      uses: shapehq/actions/install-ssh-key@reduce-op-usage
+      uses: shapehq/actions/install-ssh-key@main
       with:
         op-reference: op://GitHub Actions/CI SSH Private Key/ci-ssh-key
         filename: ${{ inputs.filename }}
