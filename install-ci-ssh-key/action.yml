@@ -6,18 +6,10 @@ inputs:
     description: Name of the file to store the key in.
     required: false
     default: id_rsa
-outputs:
-  file-path:
-    description: Path to the installed SSH key file.
-    value: ${{ steps.install-key.outputs.file-path }}
-  key:
-    description: Raw content of the SSH key.
-    value: ${{ steps.install-key.outputs.key }}
 runs:
   using: composite
   steps:
     - name: Install CI SSH Key
-      id: install-key
       uses: shapehq/actions/install-ssh-key@main
       with:
         op-reference: op://GitHub Actions/CI SSH Private Key/ci-ssh-key
