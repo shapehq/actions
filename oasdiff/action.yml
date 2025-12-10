@@ -72,11 +72,19 @@ runs:
               sed 's/^## /#### /g' | \
               sed 's/^-  /- /g' | \
               sed '/^$/N;/^\n$/d')
+
+            # Check if after cleanup we only have whitespace (no actual changes)
+            if [ -z "$(echo "$DIFF" | tr -d '[:space:]')" ]; then
+              DIFF="_No changes_"
+              HAS_CHANGES="false"
+            else
+              HAS_CHANGES="true"
+            fi
           else
             # For other formats, just strip path prefixes
             DIFF=$(echo "$DIFF" | sed 's|pr/||g; s|base/||g; s|head/||g')
+            HAS_CHANGES="true"
           fi
-          HAS_CHANGES="true"
         fi
 
         # Output results using heredoc for multiline support
