@@ -64,8 +64,18 @@ runs:
           DIFF="_No changes_"
           HAS_CHANGES="false"
         else
-          # Strip common path prefixes (pr/, base/, head/) for cleaner output
-          DIFF=$(echo "$DIFF" | sed 's|pr/||g; s|base/||g; s|head/||g')
+          # Clean up markup output for better rendering in PR comments
+          if [ "$OUTPUT_FORMAT" = "markup" ] || [ -z "$OUTPUT_FORMAT" ]; then
+            DIFF=$(echo "$DIFF" | \
+              sed 's|pr/||g; s|base/||g; s|head/||g' | \
+              sed '/^# API Changelog/d' | \
+              sed 's/^## /#### /g' | \
+              sed 's/^-  /- /g' | \
+              sed '/^$/N;/^\n$/d')
+          else
+            # For other formats, just strip path prefixes
+            DIFF=$(echo "$DIFF" | sed 's|pr/||g; s|base/||g; s|head/||g')
+          fi
           HAS_CHANGES="true"
         fi
 
