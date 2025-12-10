@@ -1,6 +1,6 @@
 # OpenAPI Diff
 
-Runs [oasdiff](https://github.com/tufin/oasdiff) changelog between two OpenAPI specs and outputs the differences with nice formatting for GitHub PR comments.
+Runs [oasdiff](https://github.com/tufin/oasdiff) changelog between two OpenAPI specs and outputs the differences as a nicely formatted markdown table.
 
 ## Usage
 
@@ -106,11 +106,11 @@ For projects with multiple OpenAPI specs:
 
 ## Inputs
 
-| Name     | Description                                                         | Required | Default  |
-| -------- | ------------------------------------------------------------------- | -------- | -------- |
-| `base`   | Path to the base OpenAPI spec file                                  | Yes      |          |
-| `head`   | Path to the head OpenAPI spec file                                  | Yes      |          |
-| `format` | Output format: `markup`, `text`, `html`, or `json`                  | No       | `markup` |
+| Name     | Description                                        | Required | Default |
+| -------- | -------------------------------------------------- | -------- | ------- |
+| `base`   | Path to the base OpenAPI spec file                 | Yes      |         |
+| `head`   | Path to the head OpenAPI spec file                 | Yes      |         |
+| `format` | Output format: `table`, `text`, `html`, or `json`  | No       | `table` |
 
 ## Outputs
 
@@ -121,24 +121,32 @@ For projects with multiple OpenAPI specs:
 
 ## Output Formats
 
-- **markup**: GitHub-flavored markdown with :warning: emojis for breaking changes (default). Renders beautifully in PR comments.
-- **text**: Plain text changelog output
-- **html**: Full HTML with styling (useful for standalone pages)
-- **json**: JSON format for programmatic processing
+- **table**: Markdown table with color-coded severity indicators (default)
+- **text**: Plain text changelog from oasdiff
+- **html**: Full HTML with styling
+- **json**: Raw JSON for programmatic processing
 
 ## Example Output
 
-With the default `markup` format, the output looks like this in PR comments:
+With the default `table` format, the output looks like this:
 
 ---
 
-### GET /api/users/consent
-- :warning: removed the required property 'emailAccepted' from the response with the '200' status
-- added the new optional 'query' request parameter 'filter'
+**8 changes:** 3 breaking, 2 warning, 3 info
 
-### POST /api/users
-- added the new optional request property 'nickname'
+| | Endpoint | Change |
+|:---:|:---|:---|
+| 🔴 | `GET` /api/users | removed the required property 'email' from the response |
+| 🔴 | `POST` /api/users | added the new required request property 'role' |
+| 🔴 | `DELETE` /api/users/{id} | endpoint removed |
+| 🟡 | `PUT` /api/users/{id} | removed the request property 'nickname' |
+| 🟡 | `PUT` /api/users/{id} | removed the request property 'avatar' |
+| 🟢 | `GET` /api/users | added the new optional query parameter 'filter' |
+| 🟢 | `POST` /api/users | added the optional property 'bio' to the response |
+| 🟢 | _components_ | added the schema 'UserRole' |
 
 ---
 
-Breaking changes are clearly marked with :warning: emojis.
+- 🔴 **Breaking changes** - Will break existing clients
+- 🟡 **Warnings** - May affect some clients
+- 🟢 **Info** - Non-breaking additions or changes

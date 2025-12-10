@@ -10,17 +10,17 @@ inputs:
     description: "Path to the head OpenAPI spec file"
     required: true
   format:
-    description: "Output format: markup (GitHub-flavored markdown with emojis), text, html, or json"
+    description: "Output format: table (default), text, html, or json"
     required: false
-    default: "markup"
+    default: "table"
 
 outputs:
   diff:
     description: "The formatted diff output"
-    value: ${{ steps.diff.outputs.result }}
+    value: ${{ steps.render.outputs.result }}
   has-changes:
     description: "Whether there are changes (true/false)"
-    value: ${{ steps.diff.outputs.has_changes }}
+    value: ${{ steps.render.outputs.has_changes }}
 
 runs:
   using: composite
@@ -32,8 +32,8 @@ runs:
           curl -sSfL https://raw.githubusercontent.com/tufin/oasdiff/main/install.sh | sh -s -- -b /usr/local/bin
         fi
 
-    - name: Run oasdiff
-      id: diff
+    - name: Run oasdiff and render
+      id: render
       shell: bash
       env:
         BASE_SPEC: ${{ inputs.base }}
@@ -42,55 +42,90 @@ runs:
       run: |
         set +e
 
-        # Map format input to oasdiff format flag
-        case "$OUTPUT_FORMAT" in
-          markup|text|html|json)
-            FORMAT_FLAG="--format $OUTPUT_FORMAT"
-            ;;
-          *)
-            FORMAT_FLAG="--format markup"
-            ;;
-        esac
-
-        DIFF=$(oasdiff changelog "$BASE_SPEC" "$HEAD_SPEC" $FORMAT_FLAG 2>&1)
-        EXIT_CODE=$?
+        # For table format, use JSON and render with jq
+        if [ "$OUTPUT_FORMAT" = "table" ] || [ -z "$OUTPUT_FORMAT" ]; then
+          DIFF=$(oasdiff changelog "$BASE_SPEC" "$HEAD_SPEC" --format json 2>&1)
+          EXIT_CODE=$?
+        else
+          DIFF=$(oasdiff changelog "$BASE_SPEC" "$HEAD_SPEC" --format "$OUTPUT_FORMAT" 2>&1)
+          EXIT_CODE=$?
+        fi
         set -e
 
         # Handle missing files
         if [ $EXIT_CODE -ne 0 ] && echo "$DIFF" | grep -q "no such file"; then
-          DIFF="_Spec file not found in one of the branches_"
-          HAS_CHANGES="false"
-        elif [ -z "$DIFF" ] || [ "$DIFF" = "No changes" ]; then
-          DIFF="_No changes_"
-          HAS_CHANGES="false"
-        else
-          # Clean up markup output for better rendering in PR comments
-          if [ "$OUTPUT_FORMAT" = "markup" ] || [ -z "$OUTPUT_FORMAT" ]; then
-            DIFF=$(echo "$DIFF" | \
-              sed 's|pr/||g; s|base/||g; s|head/||g' | \
-              sed '/^# API Changelog/d' | \
-              sed 's/^## /#### /g' | \
-              sed 's/^-  /- /g' | \
-              sed '/^$/N;/^\n$/d')
-
-            # Check if after cleanup we only have whitespace (no actual changes)
-            if [ -z "$(echo "$DIFF" | tr -d '[:space:]')" ]; then
-              DIFF="_No changes_"
-              HAS_CHANGES="false"
-            else
-              HAS_CHANGES="true"
-            fi
-          else
-            # For other formats, just strip path prefixes
-            DIFF=$(echo "$DIFF" | sed 's|pr/||g; s|base/||g; s|head/||g')
-            HAS_CHANGES="true"
-          fi
+          {
+            echo "result<<EOF"
+            echo "_Spec file not found in one of the branches_"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+          exit 0
         fi
 
-        # Output results using heredoc for multiline support
+        # Handle empty output
+        if [ -z "$DIFF" ] || [ "$DIFF" = "null" ] || [ "$DIFF" = "[]" ]; then
+          {
+            echo "result<<EOF"
+            echo "_No changes_"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        # For non-table formats, output directly with path cleanup
+        if [ "$OUTPUT_FORMAT" != "table" ] && [ -n "$OUTPUT_FORMAT" ]; then
+          DIFF=$(echo "$DIFF" | sed 's|pr/||g; s|base/||g; s|head/||g')
+          {
+            echo "result<<EOF"
+            echo "$DIFF"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        # Render JSON as markdown table using jq
+        RENDERED=$(echo "$DIFF" | jq -r '
+          if length == 0 then
+            "_No changes_"
+          else
+            # Count by level
+            (map(select(.level == 3)) | length) as $breaking |
+            (map(select(.level == 2)) | length) as $warnings |
+            (map(select(.level == 1)) | length) as $info |
+            (length) as $total |
+
+            # Build summary parts
+            ([
+              (if $breaking > 0 then "\($breaking) breaking" else empty end),
+              (if $warnings > 0 then "\($warnings) warning" else empty end),
+              (if $info > 0 then "\($info) info" else empty end)
+            ] | join(", ")) as $summary |
+
+            # Output summary, table header, and rows
+            (if $breaking > 0 then "**\($total) changes:** \($summary)" else "\($total) changes: \($summary)" end),
+            "",
+            "| | Endpoint | Change |",
+            "|:---:|:---|:---|",
+            (sort_by(-.level, .path, .operation) | .[] |
+              (if .level == 3 then "🔴" elif .level == 2 then "🟡" else "🟢" end) as $emoji |
+              (if .path then "`\(.operation)` \(.path | gsub("pr/|base/|head/"; ""))" else "_\(.section)_" end) as $endpoint |
+              "| \($emoji) | \($endpoint) | \(.text) |"
+            )
+          end
+        ')
+
+        # Output results
         {
           echo "result<<EOF"
-          echo "$DIFF"
+          echo "$RENDERED"
           echo "EOF"
         } >> $GITHUB_OUTPUT
-        echo "has_changes=$HAS_CHANGES" >> $GITHUB_OUTPUT
+
+        if [ "$RENDERED" = "_No changes_" ]; then
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+        else
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+        fi
