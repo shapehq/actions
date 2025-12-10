@@ -1,0 +1,78 @@
+name: "OpenAPI Diff"
+description: "Run oasdiff changelog between base and head OpenAPI specs"
+author: "Framna Denmark"
+
+inputs:
+  base:
+    description: "Path to the base OpenAPI spec file"
+    required: true
+  head:
+    description: "Path to the head OpenAPI spec file"
+    required: true
+  format:
+    description: "Output format: markup (GitHub-flavored markdown with emojis), text, html, or json"
+    required: false
+    default: "markup"
+
+outputs:
+  diff:
+    description: "The formatted diff output"
+    value: ${{ steps.diff.outputs.result }}
+  has-changes:
+    description: "Whether there are changes (true/false)"
+    value: ${{ steps.diff.outputs.has_changes }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install oasdiff
+      shell: bash
+      run: |
+        if ! command -v oasdiff &> /dev/null; then
+          curl -sSfL https://raw.githubusercontent.com/tufin/oasdiff/main/install.sh | sh -s -- -b /usr/local/bin
+        fi
+
+    - name: Run oasdiff
+      id: diff
+      shell: bash
+      env:
+        BASE_SPEC: ${{ inputs.base }}
+        HEAD_SPEC: ${{ inputs.head }}
+        OUTPUT_FORMAT: ${{ inputs.format }}
+      run: |
+        set +e
+
+        # Map format input to oasdiff format flag
+        case "$OUTPUT_FORMAT" in
+          markup|text|html|json)
+            FORMAT_FLAG="--format $OUTPUT_FORMAT"
+            ;;
+          *)
+            FORMAT_FLAG="--format markup"
+            ;;
+        esac
+
+        DIFF=$(oasdiff changelog "$BASE_SPEC" "$HEAD_SPEC" $FORMAT_FLAG 2>&1)
+        EXIT_CODE=$?
+        set -e
+
+        # Handle missing files
+        if [ $EXIT_CODE -ne 0 ] && echo "$DIFF" | grep -q "no such file"; then
+          DIFF="_Spec file not found in one of the branches_"
+          HAS_CHANGES="false"
+        elif [ -z "$DIFF" ] || [ "$DIFF" = "No changes" ]; then
+          DIFF="_No changes_"
+          HAS_CHANGES="false"
+        else
+          # Strip common path prefixes (pr/, base/, head/) for cleaner output
+          DIFF=$(echo "$DIFF" | sed 's|pr/||g; s|base/||g; s|head/||g')
+          HAS_CHANGES="true"
+        fi
+
+        # Output results using heredoc for multiline support
+        {
+          echo "result<<EOF"
+          echo "$DIFF"
+          echo "EOF"
+        } >> $GITHUB_OUTPUT
+        echo "has_changes=$HAS_CHANGES" >> $GITHUB_OUTPUT
