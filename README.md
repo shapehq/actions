@@ -7,7 +7,7 @@
 <div align="center">
 <a href="#-getting-started">🚀 Getting Started</a>&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="#-actions">🧩 Actions</a>&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#-versioning-model">🏷️ Versioning Model</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#%EF%B8%8F-versioning-model">🏷️ Versioning Model</a>&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="#%E2%80%8D-contributing">👩‍💻 Contributing</a>
 </div>
 
