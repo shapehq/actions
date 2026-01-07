@@ -12,7 +12,7 @@ The action has the following inputs:
 Example:
 ```yml
 - name: Create and launch AVD
-  uses: shapehq/actions/create-and-launch-avd@main
+  uses: shapehq/actions/create-and-launch-avd@v1
   with:
     apiLevel: 35
     avdName: my_avd

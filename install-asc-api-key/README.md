@@ -5,7 +5,7 @@ Installs an App Store Connect API key file on the runner and outputs the issuer 
 ```yml
 - name: Install App Store Connect API Key
   id: install-asc-api-key
-  uses: shapehq/actions/install-asc-api-key@main
+  uses: shapehq/actions/install-asc-api-key@v1
   with:
     op-asc-key-issuer-id-reference: op://My Vault/My App Store Connect API Key/Issuer ID
     op-asc-key-id-reference: op://My Vault/My App Store Connect API Key/Key ID
@@ -17,7 +17,7 @@ You may optionally pass the `output-asc-key-file-directory` parameter to specify
 ```yml
 - name: Install App Store Connect API Key
   id: install-asc-api-key
-  uses: shapehq/actions/install-asc-api-key@main
+  uses: shapehq/actions/install-asc-api-key@v1
   with:
     op-asc-key-issuer-id-reference: op://My Vault/My App Store Connect API Key/Issuer ID
     op-asc-key-id-reference: op://My Vault/My App Store Connect API Key/Key ID

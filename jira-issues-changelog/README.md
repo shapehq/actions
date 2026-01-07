@@ -5,7 +5,7 @@ Outputs a list of Jira issue keys mentioned in commit messages between the curre
 ```yml
 - name: Jira issues from changelog
   id: changelog
-  uses: shapehq/actions/jira-issues-changelog@main
+  uses: shapehq/actions/jira-issues-changelog@v1
   with:
     jira-project-id: Jira project ID, e.g. SL
     marketing-version: Marketing version, e.g. 1.0.0

@@ -5,7 +5,7 @@ As a side effect, the action will upload the dSYM files as an artifact to the jo
 
 ```yml
 - name: Build and Upload to App Store Connect
-  uses: shapehq/actions/build-and-upload-to-app-store-connect@main
+  uses: shapehq/actions/build-and-upload-to-app-store-connect@v1
   with:
     scheme: Example
     configuration: Debug
@@ -20,7 +20,7 @@ You may use the `marketing-version` and `build-number` inputs to automatically s
 
 ```yml
 - name: Build and Upload to App Store Connect
-  uses: shapehq/actions/build-and-upload-to-app-store-connect@main
+  uses: shapehq/actions/build-and-upload-to-app-store-connect@v1
   with:
     scheme: Example
     configuration: Debug

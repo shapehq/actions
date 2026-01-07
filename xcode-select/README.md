@@ -6,7 +6,7 @@ The following will pin against the major and minor version, so the action may se
 
 ```yaml
 - name: Select Xcode Version
-  uses: shapehq/actions/xcode-select@main
+  uses: shapehq/actions/xcode-select@v1
   with:
     version: 14.3.x
 ```
@@ -15,7 +15,7 @@ The following will pin against an exact version of Xcode and will not select any
 
 ```yaml
 - name: Select Xcode Version
-  uses: shapehq/actions/xcode-select@main
+  uses: shapehq/actions/xcode-select@v1
   with:
     version: 14.3.1
 ```
@@ -24,7 +24,7 @@ The following will pin against the major version only, so the action may select 
 
 ```yaml
 - name: Select Xcode Version
-  uses: shapehq/actions/xcode-select@main
+  uses: shapehq/actions/xcode-select@v1
   with:
     version: 14.x.x
 ```

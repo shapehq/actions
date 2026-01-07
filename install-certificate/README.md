@@ -4,7 +4,7 @@ Installs the specified certificate in the keychain.
 
 ```yml
 - name: Install Certificate
-  uses: shapehq/actions/install-certificate@main
+  uses: shapehq/actions/install-certificate@v1
   with:
     password-op-reference: op://My Vault/My Certificate/password
     certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
@@ -16,7 +16,7 @@ The action makes the keychain the default keychain on the system. You can disabl
 
 ```yml
 - name: Install Certificate
-  uses: shapehq/actions/install-certificate@main
+  uses: shapehq/actions/install-certificate@v1
   with:
     password-op-reference: op://My Vault/My Certificate/password
     certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
@@ -27,7 +27,7 @@ You may optionally specify the name of the keychain to install the certificate a
 
 ```yml
 - name: Install Certificate
-  uses: shapehq/actions/install-certificate@main
+  uses: shapehq/actions/install-certificate@v1
   with:
     password-op-reference: op://My Vault/My Certificate/password
     certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
@@ -45,13 +45,13 @@ The keychain will be created with a random password if no password is specified.
     echo "::add-mask::$PASSWORD"
     echo "password=$PASSWORD" >> $GITHUB_OUTPUT
 - name: Install First Certificate
-  uses: shapehq/actions/install-certificate@main
+  uses: shapehq/actions/install-certificate@v1
   with:
     password-op-reference: op://My Vault/First Certificate/password
     certificate-op-reference: op://My Vault/First Certificate/Certificate.p12
     keychain-password: ${{ steps.generate-keychain-password.outputs.password }}
 - name: Install Second Certificate
-  uses: shapehq/actions/install-certificate@main
+  uses: shapehq/actions/install-certificate@v1
   with:
     password-op-reference: op://My Vault/Second Certificate/password
     certificate-op-reference: op://My Vault/Second Certificate/Certificate.p12

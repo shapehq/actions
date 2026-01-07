@@ -4,7 +4,7 @@ Checks if there are missing translations in the Localize.biz project throws erro
 
 ```yml
 - name: Verify Loco Translations
-  uses: shapehq/actions/loco-translation-status-checker@main
+  uses: shapehq/actions/loco-translation-status-checker@v1
   with:
     op-loco-api-key-reference: op://My Vault/My Loco API Key/key
 ```

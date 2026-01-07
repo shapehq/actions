@@ -4,14 +4,14 @@ Installs our default company distribution certificate in the keychain.
 
 ```yml
 - name: Install Company Distribution Certificate
-  uses: shapehq/actions/install-company-distribution-certificate@main
+  uses: shapehq/actions/install-company-distribution-certificate@v1
 ```
 
 The action makes the keychain the default keychain on the system. You can disable this as shown below.
 
 ```yml
 - name: Install Company Distribution Certificate
-  uses: shapehq/actions/install-company-distribution-certificate@main
+  uses: shapehq/actions/install-company-distribution-certificate@v1
   with:
     set-default-keychain: false
 ```
@@ -20,7 +20,7 @@ You may optionally specify the name of the keychain to install the certificate a
 
 ```yml
 - name: Install Company Distribution Certificate
-  uses: shapehq/actions/install-company-distribution-certificate@main
+  uses: shapehq/actions/install-company-distribution-certificate@v1
   with:
     keychain-name: signing.keychain
     keychain-password: h3ll0w0rld

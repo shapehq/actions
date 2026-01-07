@@ -4,7 +4,7 @@ Installs a provisioning profile.
 
 ```yml
 - name: Install Provisioning Profile
-  uses: shapehq/actions/install-provisioning-profile@main
+  uses: shapehq/actions/install-provisioning-profile@v1
   with:
     op-reference: op://My Vault/My Provisioning Profile/profile.mobileprovision
 ```

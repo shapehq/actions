@@ -4,14 +4,14 @@ Install the CI's SSH key.
 
 ```yml
 - name: Install CI SSH Key
-  uses: shapehq/actions/install-ci-ssh-key@main
+  uses: shapehq/actions/install-ci-ssh-key@v1
 ```
 
 You may optionally specify the name of the file to store the SSH key in. Only do this if you are storing multiple SSH keys to avoid overriding an SSH key.
 
 ```yml
 - name: Install CI SSH Key
-  uses: shapehq/actions/install-ci-ssh-key@main
+  uses: shapehq/actions/install-ci-ssh-key@v1
   with:
     filename: ci
 ```

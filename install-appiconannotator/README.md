@@ -4,5 +4,5 @@ Installs [appiconannotator](https://github.com/shapehq/appiconannotator).
 
 ```yml
 - name: Install appiconannotator
-  uses: shapehq/actions/install-appiconannotator@main
+  uses: shapehq/actions/install-appiconannotator@v1
 ```
