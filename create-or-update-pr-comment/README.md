@@ -31,7 +31,7 @@ Example usage:
 
 - name: Create or update comment
   id: comment
-  uses: shapehq/actions/create-or-update-pr-comment@main
+  uses: shapehq/actions/create-or-update-pr-comment@v1
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
     body-file: ${{ steps.prep-comment.outputs.comment_file }}

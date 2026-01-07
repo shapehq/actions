@@ -24,7 +24,7 @@ Example:
 
 ```yml
 - name: Upload to Firebase distribution
-  uses: shapehq/actions/upload-artifact-firebase@main
+  uses: shapehq/actions/upload-artifact-firebase@v1
   with:
     serviceCredentialsOpReference: op://1Password vault/1Password json key item/credentials-file-name.json
     appId: 1:123456789012:android:1234567890abcdef1234567

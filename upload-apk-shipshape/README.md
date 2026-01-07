@@ -19,7 +19,7 @@ Example:
 
 ```yml
 - name: Upload to Shipshape
-  uses: shapehq/actions/upload-apk-shipshape@main
+  uses: shapehq/actions/upload-apk-shipshape@v1
   with:
     projectName: Client
     targetName: Client (${{ env.BUILD_TYPE }})

@@ -4,5 +4,5 @@ Connects the runner to our a predefined Tailscale exit node.
 
 ```yml
 - name: Connect to VPN
-  uses: shapehq/actions/connect-to-vpn@main
+  uses: shapehq/actions/connect-to-vpn@v1
 ```

@@ -5,7 +5,7 @@ Uploads a release build (.apk or .aab) to the internal track of the Play Store.
 ```yml
 - name: Upload to Google Play
   id: upload
-  uses: shapehq/actions/upload-artifact-play-store@main
+  uses: shapehq/actions/upload-artifact-play-store@v1
   with:
     serviceAccountKeyPath: play_service_account.json
     packageName: com.example.app
