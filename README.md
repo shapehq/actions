@@ -21,37 +21,134 @@ Click on any action name below to view detailed documentation, usage examples, a
 
 ## Available Actions
 
-| Action                                                                                    | Description                                                                                                                                                                                         |
-| ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`build-and-upload-to-app-store-connect`](./build-and-upload-to-app-store-connect/)       | Builds an Xcode project, archives the app, exports an IPA from the archive, and uploads it to App Store Connect.                                                                                    |
-| [`connect-to-vpn`](./connect-to-vpn/)                                                     | Connects the runner to our a predefined Tailscale exit node.                                                                                                                                        |
-| [`create-and-launch-avd`](./create-and-launch-avd/)                                       | Creates and launches an Android Virtual Device.                                                                                                                                                     |
-| [`create-or-update-pr-comment`](./create-or-update-pr-comment/)                           | Creates (or updates if already exists) a PR comment. Always updates the same comment by default using a hidden marker.                                                                              |
-| [`install-appiconannotator`](./install-appiconannotator/)                                 | Installs [appiconannotator](https://github.com/shapehq/appiconannotator).                                                                                                                           |
-| [`install-artifactory-profile`](./install-artifactory-profile/)                           | Installs a [JFrog Artifactory](https://artifactory.shapeapp.dk/) profile with read access to internal artifacts.                                                                                    |
-| [`install-asc-api-key`](./install-asc-api-key/)                                           | Installs an App Store Connect API key file on the runner and outputs the issuer ID, key ID, and file path of the AuthKey file.                                                                      |
-| [`install-certificate`](./install-certificate/)                                           | Installs the specified certificate in the keychain.                                                                                                                                                 |
-| [`install-ci-ssh-key`](./install-ci-ssh-key/)                                             | Install the CI's SSH key.                                                                                                                                                                           |
-| [`install-company-asc-api-key`](./install-company-asc-api-key/)                           | Installs our company App Store Connect API key file on the runner and outputs the issuer ID, key ID, and file path of the AuthKey file.                                                             |
-| [`install-company-development-certificate`](./install-company-development-certificate/)   | Installs our default company development certificate in the keychain.                                                                                                                               |
-| [`install-company-distribution-certificate`](./install-company-distribution-certificate/) | Installs our default company distribution certificate in the keychain.                                                                                                                              |
-| [`install-provisioning-profile`](./install-provisioning-profile/)                         | Installs a provisioning profile.                                                                                                                                                                    |
-| [`install-ssh-key`](./install-ssh-key/)                                                   | Installs an SSH key or a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys), which is an SSH key that grants access to a single repository. |
-| [`jira-comment`](./jira-comment/)                                                         | Adds comment to a Jira issue.                                                                                                                                                                       |
-| [`jira-issues-changelog`](./jira-issues-changelog/)                                       | Outputs a list of Jira issue keys mentioned in commit messages between the current commit and the most recent tag.                                                                                  |
-| [`loco-translation-status-checker`](./loco-translation-status-checker/)                   | Checks if there are missing translations in the Localize.biz project throws error.                                                                                                                  |
-| [`loco-translation-status-poster`](./loco-translation-status-poster/)                     | Checks if there are missing translations in the Localize.biz project and posts warning to Slack.                                                                                                    |
-| [`oasdiff`](./oasdiff/)                                                                   | Runs [oasdiff](https://github.com/tufin/oasdiff) changelog between two OpenAPI specs and outputs the differences.                                                                                   |
-| [`post-slack-message`](./post-slack-message/)                                             | Posts a message to Slack.                                                                                                                                                                           |
-| [`render-ios-app-icon-badge`](./render-ios-app-icon-badge/)                               | Adds a badge to an iOS app icon to indicate that the app is meant for testing purposes.                                                                                                             |
-| [`swiftlint`](./swiftlint/)                                                               | Runs [SwiftLint](https://github.com/realm/SwiftLint) on a codebase.                                                                                                                                 |
-| [`upload-artifact-firebase`](./upload-artifact-firebase/)                                 | Uploads an APK to Firebase App Distribution.                                                                                                                                                        |
-| [`upload-artifact-play-store`](./upload-artifact-play-store/)                             | Uploads a release build (.apk or .aab) to the internal track of the Play Store.                                                                                                                     |
-| [`xcode-select`](./xcode-select/)                                                         | Selects a version of Xcode. The major, minor, and patch values must all be specified, otherwise the action will throw an error.                                                                     |
+<table>
+  <thead>
+    <tr>
+      <th align="left">Action</th>
+      <th align="left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td nowrap><a href="./build-and-upload-to-app-store-connect/">build-and-upload-to-app-store-connect</a></td>
+      <td>Builds an Xcode project, archives the app, exports an IPA from the archive, and uploads it to App Store Connect.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./connect-to-vpn/">connect-to-vpn</a></td>
+      <td>Connects the runner to our a predefined Tailscale exit node.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./create-and-launch-avd/">create-and-launch-avd</a></td>
+      <td>Creates and launches an Android Virtual Device.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./create-or-update-pr-comment/">create-or-update-pr-comment</a></td>
+      <td>Creates (or updates if already exists) a PR comment. Always updates the same comment by default using a hidden marker.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./install-appiconannotator/">install-appiconannotator</a></td>
+      <td>Installs <a href="https://github.com/shapehq/appiconannotator">appiconannotator</a>.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./install-artifactory-profile/">install-artifactory-profile</a></td>
+      <td>Installs a <a href="https://artifactory.shapeapp.dk/">JFrog Artifactory</a> profile with read access to internal artifacts.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./install-asc-api-key/">install-asc-api-key</a></td>
+      <td>Installs an App Store Connect API key file on the runner and outputs the issuer ID, key ID, and file path of the AuthKey file.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./install-certificate/">install-certificate</a></td>
+      <td>Installs the specified certificate in the keychain.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./install-ci-ssh-key/">install-ci-ssh-key</a></td>
+      <td>Install the CI's SSH key.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./install-company-asc-api-key/">install-company-asc-api-key</a></td>
+      <td>Installs our company App Store Connect API key file on the runner and outputs the issuer ID, key ID, and file path of the AuthKey file.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./install-company-development-certificate/">install-company-development-certificate</a></td>
+      <td>Installs our default company development certificate in the keychain.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./install-company-distribution-certificate/">install-company-distribution-certificate</a></td>
+      <td>Installs our default company distribution certificate in the keychain.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./install-provisioning-profile/">install-provisioning-profile</a></td>
+      <td>Installs a provisioning profile.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./install-ssh-key/">install-ssh-key</a></td>
+      <td>Installs an SSH key or a <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys">deploy key</a>, which is an SSH key that grants access to a single repository.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./jira-comment/">jira-comment</a></td>
+      <td>Adds comment to a Jira issue.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./jira-issues-changelog/">jira-issues-changelog</a></td>
+      <td>Outputs a list of Jira issue keys mentioned in commit messages between the current commit and the most recent tag.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./loco-translation-status-checker/">loco-translation-status-checker</a></td>
+      <td>Checks if there are missing translations in the Localize.biz project throws error.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./loco-translation-status-poster/">loco-translation-status-poster</a></td>
+      <td>Checks if there are missing translations in the Localize.biz project and posts warning to Slack.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./oasdiff/">oasdiff</a></td>
+      <td>Runs <a href="https://github.com/tufin/oasdiff">oasdiff</a> changelog between two OpenAPI specs and outputs the differences.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./post-slack-message/">post-slack-message</a></td>
+      <td>Posts a message to Slack.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./render-ios-app-icon-badge/">render-ios-app-icon-badge</a></td>
+      <td>Adds a badge to an iOS app icon to indicate that the app is meant for testing purposes.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./swiftlint/">swiftlint</a></td>
+      <td>Runs <a href="https://github.com/realm/SwiftLint">SwiftLint</a> on a codebase.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./upload-artifact-firebase/">upload-artifact-firebase</a></td>
+      <td>Uploads an APK to Firebase App Distribution.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./upload-artifact-play-store/">upload-artifact-play-store</a></td>
+      <td>Uploads a release build (.apk or .aab) to the internal track of the Play Store.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./xcode-select/">xcode-select</a></td>
+      <td>Selects a version of Xcode. The major, minor, and patch values must all be specified, otherwise the action will throw an error.</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Legacy Actions
 
-| Action                                            | Description                                     |
-| ------------------------------------------------- | ----------------------------------------------- |
-| [`install-shipshape`](./install-shipshape/)       | Installs Shipshape and sets an activation code. |
-| [`upload-apk-shipshape`](./upload-apk-shipshape/) | Uploads an APK to Shipshape.                    |
+<table>
+  <thead>
+    <tr>
+      <th align="left">Action</th>
+      <th align="left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td nowrap><a href="./install-shipshape/">install-shipshape</a></td>
+      <td>Installs Shipshape and sets an activation code.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./upload-apk-shipshape/">upload-apk-shipshape</a></td>
+      <td>Uploads an APK to Shipshape.</td>
+    </tr>
+  </tbody>
+</table>
