@@ -14,7 +14,17 @@ This repository contains actions to be used with [GitHub Actions](https://github
 >
 > Use these actions at your own risk. Breaking changes may occur without prior notice.
 
-## Getting Started
+<hr />
+
+<div align="center">
+<a href="#-getting-started">🚀 Getting Started</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#-actions">🧩 Actions</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#%E2%80%8D-contributing">👩‍💻 Contributing</a>
+</div>
+
+<hr />
+
+## 🚀 Getting Started
 
 Several of these actions depend on the 1Password CLI being installed. Please use 1Password's [install-cli-action](https://github.com/1Password/install-cli-action) action to install the 1Password CLI or [load-secrets-action](https://github.com/1Password/load-secrets-action) to load secrets into the workflow's environment.
 
@@ -22,17 +32,7 @@ Inputs prefixed with `op-` expect a 1Password item reference, for example `op://
 
 Click on any action name below to view detailed documentation, usage examples, and configuration options for that specific action.
 
-## Contributing
-
-Pull requests with bugfixes and new features are appreciated. We are happy to review PRs and merge them once they are ready, as long as the changes fit the vision of Framna Denmark and align with our internal tech stack and needs.
-
-Clone the repository to get started:
-
-```
-git clone git@github.com:shapehq/actions.git
-```
-
-## Available Actions
+## 🧩 Actions
 
 <table>
   <thead>
@@ -145,7 +145,7 @@ git clone git@github.com:shapehq/actions.git
   </tbody>
 </table>
 
-## Legacy Actions
+### Legacy Actions
 
 <table>
   <thead>
@@ -165,3 +165,13 @@ git clone git@github.com:shapehq/actions.git
     </tr>
   </tbody>
 </table>
+
+## 👩‍💻 Contributing
+
+Pull requests with bugfixes and new features are appreciated. We are happy to review PRs and merge them once they are ready, as long as the changes fit the vision of Framna Denmark and align with our internal tech stack and needs.
+
+Clone the repository to get started:
+
+```
+git clone git@github.com:shapehq/actions.git
+```
