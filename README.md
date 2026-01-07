@@ -17,6 +17,8 @@ This repository contains actions to be used with [GitHub Actions](https://github
 
 Several of these actions depend on the 1Password CLI being installed. Please use 1Password's [install-cli-action](https://github.com/1Password/install-cli-action) action to install the 1Password CLI or [load-secrets-action](https://github.com/1Password/load-secrets-action) to load secrets into the workflow's environment.
 
+Inputs prefixed with `op-` expect a 1Password item reference, for example `op://My Vault/My Item/field`. The action will use `op read` to fetch the value or file from 1Password at runtime.
+
 Click on any action name below to view detailed documentation, usage examples, and configuration options for that specific action.
 
 ## Contributing
