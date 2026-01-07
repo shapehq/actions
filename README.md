@@ -7,6 +7,7 @@
 <div align="center">
 <a href="#-getting-started">🚀 Getting Started</a>&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="#-actions">🧩 Actions</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#-versioning-model">🏷️ Versioning Model</a>&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="#%E2%80%8D-contributing">👩‍💻 Contributing</a>
 </div>
 
@@ -168,6 +169,16 @@ Click on any action name below to view detailed documentation, usage examples, a
   </tbody>
 </table>
 
+## 🏷️ Versioning Model
+
+This repository is versioned as a whole, meaning all actions share the same version.
+
+We follow [Semantic Versioning](https://semver.org/). Version bumps are based on changes merged into `main`:
+
+- **Major**: Breaking changes to one or more actions (e.g. removed/renamed inputs, changed outputs, changed behavior in an incompatible way).
+- **Minor**: Backwards-compatible changes (e.g. new action, new functionality, new inputs, enhancements).
+- **Patch**: Bug fixes and other backwards-compatible maintenance changes.
+¨
 ## 👩‍💻 Contributing
 
 Pull requests with bugfixes and new features are appreciated. We are happy to review PRs and merge them once they are ready, as long as the changes fit the vision of Framna Denmark and align with our internal tech stack and needs.
