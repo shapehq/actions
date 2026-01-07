@@ -64,7 +64,7 @@ git clone git@github.com:shapehq/actions.git
     </tr>
     <tr>
       <td nowrap><a href="./install-artifactory-profile/">install-artifactory-profile</a></td>
-      <td>Installs credentials for our JFrog Artifactory (with read/write access).</td>
+      <td>Installs credentials with read access to our JFrog Artifactory.</td>
     </tr>
     <tr>
       <td nowrap><a href="./install-asc-api-key/">install-asc-api-key</a></td>

@@ -1,6 +1,6 @@
 ## [install-artifactory-profile](https://github.com/shapehq/actions/blob/main/install-artifactory-profile/action.yml)
 
-Installs credentials for our JFrog Artifactory (with read/write access).
+Installs credentials with read access to our JFrog Artifactory.
 
 ```yml
 - name: Install JFrog Artifactory profile
