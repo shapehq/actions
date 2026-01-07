@@ -6,6 +6,7 @@ This repository contains actions to be used with [GitHub Actions](https://github
 > This repository is made public for transparency and reference purposes. These actions are primarily designed for internal use at Framna Denmark and are tailored to our specific workflows and infrastructure.
 >
 > **We provide no guarantees regarding:**
+>
 > - Backward compatibility between versions
 > - Stability or suitability for external use cases
 > - Response to external issues or pull requests
@@ -63,7 +64,7 @@ git clone git@github.com:shapehq/actions.git
     </tr>
     <tr>
       <td nowrap><a href="./install-artifactory-profile/">install-artifactory-profile</a></td>
-      <td>Installs a <a href="https://artifactory.shapeapp.dk/">JFrog Artifactory</a> profile with read access to internal artifacts.</td>
+      <td>Installs credentials with read access to our JFrog Artifactory.</td>
     </tr>
     <tr>
       <td nowrap><a href="./install-asc-api-key/">install-asc-api-key</a></td>
