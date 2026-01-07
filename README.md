@@ -13,6 +13,16 @@ This repository contains actions to be used with [GitHub Actions](https://github
 >
 > Use these actions at your own risk. Breaking changes may occur without prior notice.
 
+## Contributing
+
+Pull requests with bugfixes and new features are appreciated. We are happy to review PRs and merge them once they are ready, as long as the changes fit the vision of Framna Denmark and align with our internal tech stack and needs.
+
+Clone the repository to get started:
+
+```
+git clone git@github.com:shapehq/actions.git
+```
+
 ## Getting Started
 
 Several of these actions depend on the 1Password CLI being installed. Please use 1Password's [install-cli-action](https://github.com/1Password/install-cli-action) action to install the 1Password CLI or [load-secrets-action](https://github.com/1Password/load-secrets-action) to load secrets into the workflow's environment.
