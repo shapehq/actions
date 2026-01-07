@@ -8,9 +8,9 @@ runs:
       id: credentials
       uses: 1password/load-secrets-action@v3
       env:
-        TS_CLIENT_ID: ${{ op://25dt53lxtmov37u7s4b72weu3a/rf6g2bxlkerchywnft3jmldayq/Client ID }}
-        TS_CLIENT_SECRET: ${{ op://25dt53lxtmov37u7s4b72weu3a/rf6g2bxlkerchywnft3jmldayq/Client Secret}}
-        TS_EXIT_NODE_ADDRESS: ${{ op://25dt53lxtmov37u7s4b72weu3a/rf6g2bxlkerchywnft3jmldayq/Exit Node Address }}
+        TS_CLIENT_ID: op://25dt53lxtmov37u7s4b72weu3a/rf6g2bxlkerchywnft3jmldayq/Client ID
+        TS_CLIENT_SECRET: op://25dt53lxtmov37u7s4b72weu3a/rf6g2bxlkerchywnft3jmldayq/Client Secret
+        TS_EXIT_NODE_ADDRESS: op://25dt53lxtmov37u7s4b72weu3a/rf6g2bxlkerchywnft3jmldayq/Exit Node Address
 
     - name: Connect to Tailscale
       uses: tailscale/github-action@v2
