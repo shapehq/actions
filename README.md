@@ -178,7 +178,7 @@ We follow [Semantic Versioning](https://semver.org/). Version bumps are based on
 - **Major**: Breaking changes to one or more actions (e.g. removed/renamed inputs, changed outputs, changed behavior in an incompatible way).
 - **Minor**: Backwards-compatible changes (e.g. new action, new functionality, new inputs, enhancements).
 - **Patch**: Bug fixes and other backwards-compatible maintenance changes.
-¨
+
 ## 👩‍💻 Contributing
 
 Pull requests with bugfixes and new features are appreciated. We are happy to review PRs and merge them once they are ready, as long as the changes fit the vision of Framna Denmark and align with our internal tech stack and needs.
