@@ -2,17 +2,16 @@
 
 This repository contains actions to be used with [GitHub Actions](https://github.com/features/actions) internally at Framna Denmark. Please refer to [this page](https://www.notion.so/GitHub-Actions-f38c16cde5c642f5a0c2e05b725af5d0?source=copy_link) for more details on getting started with GitHub Actions and example workflows.
 
-## Disclaimer
-
-This repository is made public for transparency and reference purposes. These actions are primarily designed for internal use at Framna Denmark and are tailored to our specific workflows and infrastructure.
-
-**We provide no guarantees regarding:**
-- Backward compatibility between versions
-- Stability or suitability for external use cases
-- Response to external issues or pull requests
-- Documentation completeness for external users
-
-Use these actions at your own risk. Breaking changes may occur without prior notice.
+> [!WARNING]
+> This repository is made public for transparency and reference purposes. These actions are primarily designed for internal use at Framna Denmark and are tailored to our specific workflows and infrastructure.
+>
+> **We provide no guarantees regarding:**
+> - Backward compatibility between versions
+> - Stability or suitability for external use cases
+> - Response to external issues or pull requests
+> - Documentation completeness for external users
+>
+> Use these actions at your own risk. Breaking changes may occur without prior notice.
 
 ## Getting Started
 
