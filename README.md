@@ -2,6 +2,17 @@
 
 This repository contains actions to be used with [GitHub Actions](https://github.com/features/actions) internally at Framna Denmark. Please refer to [this page](https://www.notion.so/GitHub-Actions-f38c16cde5c642f5a0c2e05b725af5d0?source=copy_link) for more details on getting started with GitHub Actions and example workflows.
 
+> [!WARNING]
+> This repository is made public for transparency and reference purposes. These actions are primarily designed for internal use at Framna Denmark and are tailored to our specific workflows and infrastructure.
+>
+> **We provide no guarantees regarding:**
+> - Backward compatibility between versions
+> - Stability or suitability for external use cases
+> - Response to external issues or pull requests
+> - Documentation completeness for external users
+>
+> Use these actions at your own risk. Breaking changes may occur without prior notice.
+
 ## Getting Started
 
 Several of these actions depend on the 1Password CLI being installed. Please use 1Password's [install-cli-action](https://github.com/1Password/install-cli-action) action to install the 1Password CLI or [load-secrets-action](https://github.com/1Password/load-secrets-action) to load secrets into the workflow's environment.
@@ -30,6 +41,7 @@ Click on any action name below to view detailed documentation, usage examples, a
 | [`jira-issues-changelog`](./jira-issues-changelog/)                                       | Outputs a list of Jira issue keys mentioned in commit messages between the current commit and the most recent tag.                                                                                  |
 | [`loco-translation-status-checker`](./loco-translation-status-checker/)                   | Checks if there are missing translations in the Localize.biz project throws error.                                                                                                                  |
 | [`loco-translation-status-poster`](./loco-translation-status-poster/)                     | Checks if there are missing translations in the Localize.biz project and posts warning to Slack.                                                                                                    |
+| [`oasdiff`](./oasdiff/)                                                                   | Runs [oasdiff](https://github.com/tufin/oasdiff) changelog between two OpenAPI specs and outputs the differences.                                                                                   |
 | [`post-slack-message`](./post-slack-message/)                                             | Posts a message to Slack.                                                                                                                                                                           |
 | [`render-ios-app-icon-badge`](./render-ios-app-icon-badge/)                               | Adds a badge to an iOS app icon to indicate that the app is meant for testing purposes.                                                                                                             |
 | [`swiftlint`](./swiftlint/)                                                               | Runs [SwiftLint](https://github.com/realm/SwiftLint) on a codebase.                                                                                                                                 |
