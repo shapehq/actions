@@ -1,6 +1,16 @@
-# Actions
+<div align="center">
+<h3>Actions used with <a href="https://github.com/features/actions">GitHub Actions</a> internally at <a href="https://framna.com">Framna Denmark</a>.</h4>
+</div>
 
-This repository contains actions to be used with [GitHub Actions](https://github.com/features/actions) internally at Framna Denmark.
+<hr />
+
+<div align="center">
+<a href="#-getting-started">🚀 Getting Started</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#-actions">🧩 Actions</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#%E2%80%8D-contributing">👩‍💻 Contributing</a>
+</div>
+
+<hr />
 
 > [!WARNING]
 > This repository is made public for transparency and reference purposes. These actions are primarily designed for internal use at Framna Denmark and are tailored to our specific workflows and infrastructure.
@@ -13,14 +23,6 @@ This repository contains actions to be used with [GitHub Actions](https://github
 > - Documentation completeness for external users
 >
 > Use these actions at your own risk. Breaking changes may occur without prior notice.
-
-<hr />
-
-<div align="center">
-<a href="#-getting-started">🚀 Getting Started</a>&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#-actions">🧩 Actions</a>&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#%E2%80%8D-contributing">👩‍💻 Contributing</a>
-</div>
 
 <hr />
 
