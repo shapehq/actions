@@ -163,3 +163,17 @@ test("It omits build number when plist value is missing", async () => {
   const xcodeVersions = await repository.getXcodeVersions()
   expect(xcodeVersions[0].name).toBe("Xcode 14.3.0")
 })
+
+test("It includes RC in the Xcode version name", async () => {
+  const fileSystem = new MockFileSystem()
+  fileSystem.dirContents = ["/Users/runner/Applications/Xcode_26.2-RC.app"]
+  const semanticVersionParser = new SemanticVersionParser()
+  const xcodeVersionParser = new XcodeVersionParser({ semanticVersionParser })
+  const repository = new FileSystemXcodeVersionRepository({
+    fileSystem,
+    xcodeVersionParser,
+    plistReader: new MockPlistReader()
+  })
+  const xcodeVersions = await repository.getXcodeVersions()
+  expect(xcodeVersions[0].name).toContain("RC")
+})

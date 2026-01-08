@@ -63,12 +63,13 @@ test("It parses XcodeVersion for release candidate", () => {
     semanticVersionParser: new SemanticVersionParser()
   })
   const xcodeVersion = parser.parseFilePath(filePath)
-  expect(xcodeVersion?.name).toEqual("Xcode 15.0.0")
+  expect(xcodeVersion?.name).toEqual("Xcode 15.0.0 RC")
   expect(xcodeVersion?.version.major).toEqual(15)
   expect(xcodeVersion?.version.minor).toEqual(0)
   expect(xcodeVersion?.version.patch).toEqual(0)
   expect(xcodeVersion?.isBeta).toBeFalsy()
   expect(xcodeVersion?.betaNumber).toBeNull()
+  expect(xcodeVersion?.isReleaseCandidate).toBeTruthy()
 })
 
 test("It parses XcodeVersion for abbreviated release candidate", () => {
@@ -77,12 +78,13 @@ test("It parses XcodeVersion for abbreviated release candidate", () => {
     semanticVersionParser: new SemanticVersionParser()
   })
   const xcodeVersion = parser.parseFilePath(filePath)
-  expect(xcodeVersion?.name).toEqual("Xcode 15.0.0")
+  expect(xcodeVersion?.name).toEqual("Xcode 15.0.0 RC")
   expect(xcodeVersion?.version.major).toEqual(15)
   expect(xcodeVersion?.version.minor).toEqual(0)
   expect(xcodeVersion?.version.patch).toEqual(0)
   expect(xcodeVersion?.isBeta).toBeFalsy()
   expect(xcodeVersion?.betaNumber).toBeNull()
+  expect(xcodeVersion?.isReleaseCandidate).toBeTruthy()
 })
 
 test("It parses XcodeVersion for 2nd beta version", () => {

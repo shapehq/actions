@@ -130,3 +130,13 @@ test("It prefers release version of beta version", async () => {
   expect(xcodeVersion?.isBeta).toEqual(false)
   expect(xcodeVersion?.betaNumber).toBeNull()
 })
+
+test("It prefers release version over release candidate", async () => {
+  const repository = new MockXcodeVersionRepository()
+  repository.addXcodeVersion(26, 2, 0, false, false)
+  repository.addXcodeVersion(26, 2, 0, false, true)
+  const needle = new SemanticVersionTemplate(26, 2, 0)
+  const matcher = new XcodeVersionMatcher({ xcodeVersionRepository: repository })
+  const xcodeVersion = await matcher.findXcodeVersion(needle)
+  expect(xcodeVersion?.isReleaseCandidate).toBe(false)
+})

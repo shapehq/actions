@@ -27,8 +27,13 @@ export default class XcodeVersionParser implements IXcodeVersionParser {
       .replace(/beta.*$/i, "")
       // Remove anything after the version number.
       .replace(/[^0-9]+$/, "")
+    const lowerName = name.toLowerCase()
     // Check if it is a beta version.
-    const isBeta = name.toLowerCase().includes("beta")
+    const isBeta = lowerName.includes("beta")
+    const isReleaseCandidate = lowerName.includes("rc")
+      || lowerName.includes("release candidate")
+      || lowerName.includes("release.candidate")
+      || lowerName.includes("releasecandidate")
     // Extract the b eta number if available.
     let betaNumber: number | null = null
     if (isBeta) {
@@ -44,6 +49,6 @@ export default class XcodeVersionParser implements IXcodeVersionParser {
     if (version == null) {
       return null
     }
-    return new XcodeVersion(filePath, version, isBeta, betaNumber)
+    return new XcodeVersion(filePath, version, isBeta, betaNumber, isReleaseCandidate)
   }
 }
