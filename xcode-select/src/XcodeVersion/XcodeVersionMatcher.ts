@@ -23,6 +23,9 @@ export default class XcodeVersionMatcher {
         if (lhs.isBeta !== rhs.isBeta) {
           return lhs.isBeta ? -1 : 1
         }
+        if (lhs.isReleaseCandidate !== rhs.isReleaseCandidate) {
+          return lhs.isReleaseCandidate ? -1 : 1
+        }
         return 0
       })
       .reverse()

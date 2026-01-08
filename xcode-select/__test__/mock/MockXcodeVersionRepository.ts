@@ -5,11 +5,17 @@ import IXcodeVersionRepository from "../../src/XcodeVersion/IXcodeVersionReposit
 export default class MockXcodeVersionRepository implements IXcodeVersionRepository {
   private xcodeVersions: XcodeVersion[] = []
   
-  addXcodeVersion(major: number, minor: number = 0, patch: number = 0, isBeta: boolean = false) {
+  addXcodeVersion(
+    major: number,
+    minor: number = 0,
+    patch: number = 0,
+    isBeta: boolean = false,
+    isReleaseCandidate: boolean = false
+  ) {
     const name = "Xcode " + [major, minor, patch].filter(e => e != null).join(".")
     const filePath = "/Users/runner/Applications/" + name + ".app"
     const version = new SemanticVersion(major, minor, patch)
-    const xcodeVersion = new XcodeVersion(filePath, version, isBeta)
+    const xcodeVersion = new XcodeVersion(filePath, version, isBeta, null, isReleaseCandidate)
     this.xcodeVersions.push(xcodeVersion)
   }
 
