@@ -4,14 +4,14 @@ import SemanticVersionTemplate, {
 import MockXcodeVersionRepository from "./mock/MockXcodeVersionRepository"
 import XcodeVersionMatcher from "../src/XcodeVersion/XcodeVersionMatcher"
 
-test("It throws when repository is empty", () => {
+test("It throws when repository is empty", async () => {
   const repository = new MockXcodeVersionRepository()
   const needle = new SemanticVersionTemplate(14, 3, 1)
   const matcher = new XcodeVersionMatcher({ xcodeVersionRepository: repository })
-  expect(() => matcher.findXcodeVersion(needle)).toThrow()
+  await expect(matcher.findXcodeVersion(needle)).rejects.toThrow()
 })
 
-test("It finds version based on major component", () => {
+test("It finds version based on major component", async () => {
   const repository = new MockXcodeVersionRepository()
   repository.addXcodeVersion(15)
   repository.addXcodeVersion(14, 3, 1)
@@ -19,14 +19,14 @@ test("It finds version based on major component", () => {
   repository.addXcodeVersion(13, 4, 1)
   const needle = new SemanticVersionTemplate(14, SemanticVersionTemplatePlaceholder, SemanticVersionTemplatePlaceholder)
   const matcher = new XcodeVersionMatcher({ xcodeVersionRepository: repository })
-  const xcodeVersion = matcher.findXcodeVersion(needle)
+  const xcodeVersion = await matcher.findXcodeVersion(needle)
   expect(xcodeVersion).not.toBeNull()
   expect(xcodeVersion?.version.major).toEqual(14)
   expect(xcodeVersion?.version.minor).toEqual(3)
   expect(xcodeVersion?.version.patch).toEqual(1)
 })
 
-test("It finds version based on major and minor components", () => {
+test("It finds version based on major and minor components", async () => {
   const repository = new MockXcodeVersionRepository()
   repository.addXcodeVersion(15)
   repository.addXcodeVersion(14, 4, 2)
@@ -36,14 +36,14 @@ test("It finds version based on major and minor components", () => {
   repository.addXcodeVersion(13, 4, 1)
   const needle = new SemanticVersionTemplate(14, 3, SemanticVersionTemplatePlaceholder)
   const matcher = new XcodeVersionMatcher({ xcodeVersionRepository: repository })
-  const xcodeVersion = matcher.findXcodeVersion(needle)
+  const xcodeVersion = await matcher.findXcodeVersion(needle)
   expect(xcodeVersion).not.toBeNull()
   expect(xcodeVersion?.version.major).toEqual(14)
   expect(xcodeVersion?.version.minor).toEqual(3)
   expect(xcodeVersion?.version.patch).toEqual(2)
 })
 
-test("It finds version based on major, minor, and patch components", () => {
+test("It finds version based on major, minor, and patch components", async () => {
   const repository = new MockXcodeVersionRepository()
   repository.addXcodeVersion(15)
   repository.addXcodeVersion(14, 4, 2)
@@ -53,14 +53,14 @@ test("It finds version based on major, minor, and patch components", () => {
   repository.addXcodeVersion(13, 4, 1)
   const needle = new SemanticVersionTemplate(14, 3, 1)
   const matcher = new XcodeVersionMatcher({ xcodeVersionRepository: repository })
-  const xcodeVersion = matcher.findXcodeVersion(needle)
+  const xcodeVersion = await matcher.findXcodeVersion(needle)
   expect(xcodeVersion).not.toBeNull()
   expect(xcodeVersion?.version.major).toEqual(14)
   expect(xcodeVersion?.version.minor).toEqual(3)
   expect(xcodeVersion?.version.patch).toEqual(1)
 })
 
-test("It throws when no version matches major, minor, and patch components", () => {
+test("It throws when no version matches major, minor, and patch components", async () => {
   const repository = new MockXcodeVersionRepository()
   repository.addXcodeVersion(15)
   repository.addXcodeVersion(14, 4, 2)
@@ -70,10 +70,10 @@ test("It throws when no version matches major, minor, and patch components", () 
   repository.addXcodeVersion(13, 4, 1)
   const needle = new SemanticVersionTemplate(14, 3, 4)
   const matcher = new XcodeVersionMatcher({ xcodeVersionRepository: repository })
-  expect(() => matcher.findXcodeVersion(needle)).toThrow()
+  await expect(matcher.findXcodeVersion(needle)).rejects.toThrow()
 })
 
-test("It throws when no version matches major and minor components", () => {
+test("It throws when no version matches major and minor components", async () => {
   const repository = new MockXcodeVersionRepository()
   repository.addXcodeVersion(15)
   repository.addXcodeVersion(14, 4, 2)
@@ -83,10 +83,10 @@ test("It throws when no version matches major and minor components", () => {
   repository.addXcodeVersion(13, 4, 1)
   const needle = new SemanticVersionTemplate(14, 5, SemanticVersionTemplatePlaceholder)
   const matcher = new XcodeVersionMatcher({ xcodeVersionRepository: repository })
-  expect(() => matcher.findXcodeVersion(needle)).toThrow()
+  await expect(matcher.findXcodeVersion(needle)).rejects.toThrow()
 })
 
-test("It throws when no version matches major component", () => {
+test("It throws when no version matches major component", async () => {
   const repository = new MockXcodeVersionRepository()
   repository.addXcodeVersion(15)
   repository.addXcodeVersion(14, 4, 2)
@@ -96,10 +96,10 @@ test("It throws when no version matches major component", () => {
   repository.addXcodeVersion(13, 4, 1)
   const needle = new SemanticVersionTemplate(16, SemanticVersionTemplatePlaceholder, SemanticVersionTemplatePlaceholder)
   const matcher = new XcodeVersionMatcher({ xcodeVersionRepository: repository })
-  expect(() => matcher.findXcodeVersion(needle)).toThrow()
+  await expect(matcher.findXcodeVersion(needle)).rejects.toThrow()
 })
 
-test("It throws when no version matches major and minor component", () => {
+test("It throws when no version matches major and minor component", async () => {
   const repository = new MockXcodeVersionRepository()
   repository.addXcodeVersion(13, 1, 0)
   repository.addXcodeVersion(13, 2, 1)
@@ -113,16 +113,16 @@ test("It throws when no version matches major and minor component", () => {
   repository.addXcodeVersion(14, 2, 0)
   const needle = new SemanticVersionTemplate(14, 3, SemanticVersionTemplatePlaceholder)
   const matcher = new XcodeVersionMatcher({ xcodeVersionRepository: repository })
-  expect(() => matcher.findXcodeVersion(needle)).toThrow()
+  await expect(matcher.findXcodeVersion(needle)).rejects.toThrow()
 })
 
-test("It prefers release version of beta version", () => {
+test("It prefers release version of beta version", async () => {
   const repository = new MockXcodeVersionRepository()
   repository.addXcodeVersion(16, 4, 0)
   repository.addXcodeVersion(16, 4, 0, true)
   const needle = new SemanticVersionTemplate(16, SemanticVersionTemplatePlaceholder, SemanticVersionTemplatePlaceholder)
   const matcher = new XcodeVersionMatcher({ xcodeVersionRepository: repository })
-  const xcodeVersion = matcher.findXcodeVersion(needle)
+  const xcodeVersion = await matcher.findXcodeVersion(needle)
   expect(xcodeVersion).not.toBeNull()
   expect(xcodeVersion?.version.major).toEqual(16)
   expect(xcodeVersion?.version.minor).toEqual(4)

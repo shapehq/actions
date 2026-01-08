@@ -12,9 +12,8 @@ export default class XcodeVersionMatcher {
     this.xcodeVersionRepository = config.xcodeVersionRepository
   }
   
-  findXcodeVersion(needle: SemanticVersionTemplate): XcodeVersion {
-    const xcodeVersions = this.xcodeVersionRepository
-      .getXcodeVersions()
+  async findXcodeVersion(needle: SemanticVersionTemplate): Promise<XcodeVersion> {
+    const xcodeVersions = (await this.xcodeVersionRepository.getXcodeVersions())
       .sort((lhs, rhs) => {
         const versionCompare = semanticVersionSort(lhs.version, rhs.version)
         if (versionCompare !== 0) {
