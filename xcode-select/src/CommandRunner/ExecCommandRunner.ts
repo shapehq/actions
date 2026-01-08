@@ -1,10 +1,10 @@
-import { exec } from "child_process"
+import { execFile } from "child_process"
 import ICommandRunner from "./ICommandRunner"
 
 export default class ExecCommandRunner implements ICommandRunner {
-  run(cmd: string): Promise<string> {
+  run(cmd: string[]): Promise<string> {
     return new Promise((resolve, reject) => {
-      exec(cmd, (error, stdout, stderr) => {
+      execFile(cmd[0], cmd.slice(1), (error, stdout, stderr) => {
         if (error) {
           reject(error)
         } else if (stderr) {

@@ -5,17 +5,20 @@ export default class XcodeVersion {
   private _version: SemanticVersion
   private _isBeta: boolean
   private _betaNumber: number | null
+  private _buildNumber: string | null
   
   constructor(
     filePath: string, 
     version: SemanticVersion, 
     isBeta: boolean = false, 
-    betaNumber: number | null = null
+    betaNumber: number | null = null,
+    buildNumber: string | null = null
   ) {
     this._filePath = filePath
     this._version = version
     this._isBeta = isBeta
     this._betaNumber = betaNumber
+    this._buildNumber = buildNumber
   }
   
   get filePath(): string {
@@ -33,6 +36,20 @@ export default class XcodeVersion {
   get betaNumber(): number | null {
     return this._betaNumber
   }
+
+  get buildNumber(): string | null {
+    return this._buildNumber
+  }
+
+  withBuildNumber(buildNumber: string | null): XcodeVersion {
+    return new XcodeVersion(
+      this.filePath,
+      this.version,
+      this.isBeta,
+      this.betaNumber,
+      buildNumber
+    )
+  }
   
   get name(): string {
     let str = "Xcode " + this.version.displayString
@@ -41,6 +58,9 @@ export default class XcodeVersion {
       if (this.betaNumber != null) {
         str += " " + this.betaNumber
       }
+    }
+    if (this.buildNumber != null) {
+      str += " (" + this.buildNumber + ")"
     }
     return str
   }

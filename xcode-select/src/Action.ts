@@ -49,12 +49,11 @@ export default class Action {
       throw new Error(options.version + " could not be parsed to a semantic version template.")
     }
     try {
-      const xcodeVersion = this.xcodeVersionMatcher.findXcodeVersion(versionTemplate)
+      const xcodeVersion = await this.xcodeVersionMatcher.findXcodeVersion(versionTemplate)
       await this.xcodeSelector.select(xcodeVersion.filePath)
       this.logger.log(xcodeVersion.name + " was selected.")
-    } catch {
-      const installedXcodeNames = this.xcodeVersionRepository
-        .getXcodeVersions()
+    } catch (error) {
+      const installedXcodeNames = (await this.xcodeVersionRepository.getXcodeVersions())
         .map(e => "- " + e.name)
         .join("\n")
       throw new Error(

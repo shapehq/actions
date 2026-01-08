@@ -9,7 +9,11 @@ export default class CLIXcodeSelector implements IXcodeSelector {
   }
   
   async select(filePath: string) {
-    const cmd = "sudo xcode-select -s " + filePath + "/Contents/Developer"
-    await this.commandRunner.run(cmd)
+    await this.commandRunner.run([
+      "sudo",
+      "xcode-select",
+      "-s",
+      filePath + "/Contents/Developer"
+    ])
   }
 }

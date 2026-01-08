@@ -4,17 +4,20 @@ import XcodeVersion from "./XcodeVersion"
 import IXcodeVersionParser from "./IXcodeVersionParser"
 import IXcodeVersionRepository from "./IXcodeVersionRepository"
 import { xcodeVersionSort } from "../XcodeVersion/XcodeVersion"
+import IPlistReader from "../PlistReader/IPlistReader"
 
 export default class FileSystemXcodeVersionRepository implements IXcodeVersionRepository {
   private readonly fileSystem: IFileSystem
   private readonly xcodeVersionParser: IXcodeVersionParser
+  private readonly plistReader: IPlistReader
   
-  constructor(config: { fileSystem: IFileSystem, xcodeVersionParser: IXcodeVersionParser }) {
+  constructor(config: { fileSystem: IFileSystem, xcodeVersionParser: IXcodeVersionParser, plistReader: IPlistReader }) {
     this.fileSystem = config.fileSystem
     this.xcodeVersionParser = config.xcodeVersionParser
+    this.plistReader = config.plistReader
   }
   
-  getXcodeVersions(): XcodeVersion[] {
+  async getXcodeVersions(): Promise<XcodeVersion[]> {
     const dirPaths = [
       path.join("/", "Applications"),
       path.join(this.fileSystem.homeDir, "Applications")
@@ -35,9 +38,16 @@ export default class FileSystemXcodeVersionRepository implements IXcodeVersionRe
           return []
         }
       })
+    const xcodeVersionsWithBuildNumbers = await Promise.all(
+      xcodeVersions.map(async xcodeVersion => {
+        const versionPlistPath = path.join(xcodeVersion.filePath, "Contents", "version.plist")
+        const buildNumber = await this.plistReader.getValue(versionPlistPath, "ProductBuildVersion")
+        return xcodeVersion.withBuildNumber(buildNumber)
+      })
+    )
     // Ensure we have no duplicate Xcode versions.
     let result: XcodeVersion[] = []
-    for (const xcodeVersion of xcodeVersions) {
+    for (const xcodeVersion of xcodeVersionsWithBuildNumbers) {
       let existing = result.filter(e => {
         return e.version.major == xcodeVersion.version.major
           && e.version.minor === xcodeVersion.version.minor
