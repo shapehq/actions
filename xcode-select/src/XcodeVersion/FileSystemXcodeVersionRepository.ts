@@ -54,6 +54,7 @@ export default class FileSystemXcodeVersionRepository implements IXcodeVersionRe
           && e.version.patch === xcodeVersion.version.patch
           && e.isBeta === xcodeVersion.isBeta
           && e.betaNumber === xcodeVersion.betaNumber
+          && e.isReleaseCandidate === xcodeVersion.isReleaseCandidate
       })
       if (existing.length == 0) {
         result.push(xcodeVersion)
