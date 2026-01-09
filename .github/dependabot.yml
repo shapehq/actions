@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      render-ios-app-icon-badge:
+      npm:
         patterns:
           - "*"
   - package-ecosystem: "npm"
@@ -13,7 +13,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      upload-artifact-play-store:
+      npm:
         patterns:
           - "*"
   - package-ecosystem: "npm"
@@ -21,7 +21,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      xcode-select:
+      npm:
         patterns:
           - "*"
 
@@ -30,7 +30,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      create-or-update-pr-comment:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -38,7 +38,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      connect-to-vpn:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -46,7 +46,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      post-slack-message:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -54,7 +54,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      install-appiconannotator:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -62,7 +62,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      upload-artifact-firebase:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -70,7 +70,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      loco-translation-status-checker:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -78,7 +78,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      install-ssh-key:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -86,7 +86,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      jira-issues-changelog:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -94,7 +94,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      install-company-asc-api-key:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -102,7 +102,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      jira-comment:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -110,7 +110,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      install-company-distribution-certificate:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -118,7 +118,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      build-and-upload-to-app-store-connect:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -126,7 +126,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      oasdiff:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -134,7 +134,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      create-and-launch-avd:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -142,7 +142,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      upload-apk-shipshape:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -150,7 +150,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      install-ci-ssh-key:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -158,7 +158,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      install-shipshape:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -166,7 +166,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      loco-translation-status-poster:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -174,7 +174,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      install-asc-api-key:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -182,7 +182,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      install-company-development-certificate:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -190,7 +190,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      install-artifactory-profile:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -198,7 +198,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      swiftlint:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -206,7 +206,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      install-certificate:
+      github-actions:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -214,6 +214,6 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      install-provisioning-profile:
+      github-actions:
         patterns:
           - "*"
