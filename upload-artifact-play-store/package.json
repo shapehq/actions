@@ -29,7 +29,7 @@
     "@googleapis/androidpublisher": "^27.0.0"
   },
   "devDependencies": {
-    "@actions/github": "^6.0.1",
+    "@actions/github": "^7.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.17",
     "@typescript-eslint/parser": "^8.32.1",
