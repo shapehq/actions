@@ -8,7 +8,7 @@
     "build": "tsc && ncc build --minify"
   },
   "dependencies": {
-    "@actions/core": "^1.10.0",
+    "@actions/core": "^2.0.2",
     "@vercel/ncc": "^0.34.0"
   },
   "devDependencies": {
