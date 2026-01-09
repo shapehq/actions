@@ -48,7 +48,7 @@ runs:
       run: npm install -g firebase-tools
 
     - name: Load credentials
-      uses: 1password/load-secrets-action@v2
+      uses: 1password/load-secrets-action@v3
       env:
         SERVICE_ACCOUNT_CREDENTIALS: ${{ inputs.serviceCredentialsOpReference }}
 
