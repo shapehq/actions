@@ -2,20 +2,67 @@ name: Rebuild Dists
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-    paths:
-      - 'xcode-select/**'
-      - '!xcode-select/README.md'
-      - 'upload-artifact-play-store/**'
-      - '!upload-artifact-play-store/README.md'
   workflow_dispatch:
 permissions:
   contents: write
+env:
+  ALL_PACKAGES: xcode-select,upload-artifact-play-store
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      should_run: ${{ steps.set-matrix.outputs.should_run }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref_name }}
+      - name: Set build matrix
+        id: set-matrix
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "matrix={\"package\":[\"${ALL_PACKAGES//,/\",\"}\"]}" >> "$GITHUB_OUTPUT"
+            echo 'should_run=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git fetch origin "${{ github.base_ref }}":"refs/remotes/origin/${{ github.base_ref }}"
+          changed_files="$(git diff --name-only "origin/${{ github.base_ref }}"...HEAD)"
+
+          IFS=',' read -r -a packages <<< "$ALL_PACKAGES"
+          changed_packages=()
+          for pkg in "${packages[@]}"; do
+            if echo "$changed_files" | grep -q "^${pkg}/"; then
+              changed_packages+=("$pkg")
+            fi
+          done
+
+          if [[ "${#changed_packages[@]}" -eq 0 ]]; then
+            # GitHub Actions requires a non-empty matrix even when the job is skipped.
+            echo "matrix={\"package\":[\"${packages[0]}\"]}" >> "$GITHUB_OUTPUT"
+            echo 'should_run=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          json='{"package":['
+          for i in "${!changed_packages[@]}"; do
+            if [[ "$i" -gt 0 ]]; then
+              json+=','
+            fi
+            json+="\"${changed_packages[$i]}\""
+          done
+          json+=']}'
+          echo "matrix=$json" >> "$GITHUB_OUTPUT"
+          echo 'should_run=true' >> "$GITHUB_OUTPUT"
+
   build:
+    needs: changes
+    if: ${{ needs.changes.outputs.should_run == 'true' }}
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        package: [xcode-select, upload-artifact-play-store]
+      matrix: ${{ fromJson(needs.changes.outputs.matrix) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
