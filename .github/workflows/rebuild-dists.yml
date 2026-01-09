@@ -1,43 +1,47 @@
-name: Build xcode-select
+name: Rebuild Dists
 on:
   pull_request:
     types: [opened, reopened, synchronize]
     paths:
-      - xcode-select/src/**
-      - xcode-select/package.json
-      - xcode-select/package-lock.json
-      - xcode-select/tsconfig.json
-      - xcode-select/action.yml
+      - 'xcode-select/**'
+      - '!xcode-select/README.md'
+      - 'upload-artifact-play-store/**'
+      - '!upload-artifact-play-store/README.md'
   workflow_dispatch:
 permissions:
   contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: [xcode-select, upload-artifact-play-store]
     steps:
       - name: Checkout
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref_name }}
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: xcode-select/package-lock.json
+          cache-dependency-path: ${{ matrix.package }}/package-lock.json
       - name: Install dependencies
-        working-directory: xcode-select
+        working-directory: ${{ matrix.package }}
         run: npm ci
       - name: Build
-        working-directory: xcode-select
+        working-directory: ${{ matrix.package }}
         run: npm run build
       - name: Commit and push if needed
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add xcode-select
-            git commit -m "chore(xcode-select): rebuild dist"
+            git add "${{ matrix.package }}"
+            git commit -m "chore(${{ matrix.package }}): rebuild dist"
+            git pull --rebase
             git push
           else
             echo "No changes to commit."
