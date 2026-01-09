@@ -56,6 +56,7 @@ export default class Action {
       const installedXcodeNames = (await this.xcodeVersionRepository.getXcodeVersions())
         .map(e => "- " + e.name)
         .join("\n")
+      console.log("This is a change")
       throw new Error(
         "Xcode " + options.version + " was not found.\n\n"
         + "The following versions of Xcode are available:\n"
