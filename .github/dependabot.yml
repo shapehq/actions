@@ -4,109 +4,216 @@ updates:
     directory: "/render-ios-app-icon-badge"
     schedule:
       interval: "weekly"
+    groups:
+      render-ios-app-icon-badge:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: "/upload-artifact-play-store"
     schedule:
       interval: "weekly"
+    groups:
+      upload-artifact-play-store:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: "/xcode-select"
     schedule:
       interval: "weekly"
+    groups:
+      xcode-select:
+        patterns:
+          - "*"
 
   - package-ecosystem: "github-actions"
     directory: "/create-or-update-pr-comment"
     schedule:
       interval: "weekly"
+    groups:
+      create-or-update-pr-comment:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/connect-to-vpn"
     schedule:
       interval: "weekly"
+    groups:
+      connect-to-vpn:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/post-slack-message"
     schedule:
       interval: "weekly"
+    groups:
+      post-slack-message:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/install-appiconannotator"
     schedule:
       interval: "weekly"
+    groups:
+      install-appiconannotator:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/upload-artifact-firebase"
     schedule:
       interval: "weekly"
+    groups:
+      upload-artifact-firebase:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/loco-translation-status-checker"
     schedule:
       interval: "weekly"
+    groups:
+      loco-translation-status-checker:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/install-ssh-key"
     schedule:
       interval: "weekly"
+    groups:
+      install-ssh-key:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/jira-issues-changelog"
     schedule:
       interval: "weekly"
+    groups:
+      jira-issues-changelog:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/install-company-asc-api-key"
     schedule:
       interval: "weekly"
+    groups:
+      install-company-asc-api-key:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/jira-comment"
     schedule:
       interval: "weekly"
+    groups:
+      jira-comment:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/install-company-distribution-certificate"
     schedule:
       interval: "weekly"
+    groups:
+      install-company-distribution-certificate:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/build-and-upload-to-app-store-connect"
     schedule:
       interval: "weekly"
+    groups:
+      build-and-upload-to-app-store-connect:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/oasdiff"
     schedule:
       interval: "weekly"
+    groups:
+      oasdiff:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/create-and-launch-avd"
     schedule:
       interval: "weekly"
+    groups:
+      create-and-launch-avd:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/upload-apk-shipshape"
     schedule:
       interval: "weekly"
+    groups:
+      upload-apk-shipshape:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/install-ci-ssh-key"
     schedule:
       interval: "weekly"
+    groups:
+      install-ci-ssh-key:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/install-shipshape"
     schedule:
       interval: "weekly"
+    groups:
+      install-shipshape:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/loco-translation-status-poster"
     schedule:
       interval: "weekly"
+    groups:
+      loco-translation-status-poster:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/install-asc-api-key"
     schedule:
       interval: "weekly"
+    groups:
+      install-asc-api-key:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/install-company-development-certificate"
     schedule:
       interval: "weekly"
+    groups:
+      install-company-development-certificate:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/install-artifactory-profile"
     schedule:
       interval: "weekly"
+    groups:
+      install-artifactory-profile:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/swiftlint"
     schedule:
       interval: "weekly"
+    groups:
+      swiftlint:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/install-certificate"
     schedule:
       interval: "weekly"
+    groups:
+      install-certificate:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/install-provisioning-profile"
     schedule:
       interval: "weekly"
-
+    groups:
+      install-provisioning-profile:
+        patterns:
+          - "*"
