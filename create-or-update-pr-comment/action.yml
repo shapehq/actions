@@ -76,7 +76,7 @@ runs:
 
     - name: Create or update comment
       id: upsert
-      uses: actions/github-script@v7
+      uses: actions/github-script@v8
       env:
         PR: ${{ steps.resolve.outputs.pr }}
         MARKER: ${{ steps.prepare.outputs.normalized_marker }}
