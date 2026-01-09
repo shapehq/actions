@@ -1,6 +1,7 @@
 name: Build xcode-select
 on:
-  push:
+  pull_request:
+    types: [opened, reopened, synchronize]
     paths:
       - xcode-select/src/**
       - xcode-select/package.json
