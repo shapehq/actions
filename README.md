@@ -29,7 +29,7 @@
 
 ## 🚀 Getting Started
 
-Most actions expect secrets to be provided directly via inputs. If you use 1Password's load-secrets-action, run it before these actions and pass the resulting environment variables or file paths into the inputs.
+Most actions expect secrets to be provided directly via inputs. Use 1Password’s [load-secrets-action](https://github.com/1Password/load-secrets-action) to load secrets. Run it first and pass the resulting environment variables or file paths into the action inputs.
 
 Example using 1Password load-secrets-action:
 
