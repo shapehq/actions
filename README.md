@@ -39,7 +39,6 @@ Example using 1Password load-secrets-action:
   uses: 1password/load-secrets-action@v3
   env:
     SLACK_TOKEN: op://GitHub Actions/Slack Token/token
-
 - name: Post to Slack
   uses: shapehq/actions/post-slack-message@v1
   with:
