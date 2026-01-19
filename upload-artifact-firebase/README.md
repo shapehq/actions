@@ -4,14 +4,16 @@ Uploads an APK to Firebase App Distribution.
 
 The action has the following inputs:
 
-| Name                            | Required | Description                                                                          |
-| ------------------------------- | -------- | ------------------------------------------------------------------------------------ |
-| `serviceCredentialsOpReference` | YES      | 1Password reference to Google service account credentials json file (without quotes) |
-| `appId`                         | YES      | Firebase App ID                                                                      |
-| `apkPath`                       | YES      | Path to the APK that will be uploaded                                                |
-| `releaseNotes`                  | NO       | Release notes for this distribution                                                  |
-| `groups`                        | NO       | Comma separated list of Firebase tester group names                                  |
-| `testers`                       | NO       | Comma separated email list of testers to invite                                      |
+| Name                        | Required | Description                                                                               |
+| --------------------------- | -------- | ----------------------------------------------------------------------------------------- |
+| `serviceCredentialsJson`    | NO       | Google service account credentials JSON. Provide this or one of the alternatives below. |
+| `serviceCredentialsBase64`  | NO       | Base64-encoded credentials JSON. Provide this or one of the alternatives above/below.   |
+| `serviceCredentialsFile`    | NO       | Path to a credentials JSON file. Provide this or one of the alternatives above.         |
+| `appId`                     | YES      | Firebase App ID                                                                           |
+| `apkPath`                   | YES      | Path to the APK that will be uploaded                                                     |
+| `releaseNotes`              | NO       | Release notes for this distribution                                                       |
+| `groups`                    | NO       | Comma separated list of Firebase tester group names                                       |
+| `testers`                   | NO       | Comma separated email list of testers to invite                                           |
 
 and the following outputs:
 |Name|Description|
@@ -26,7 +28,7 @@ Example:
 - name: Upload to Firebase distribution
   uses: shapehq/actions/upload-artifact-firebase@v1
   with:
-    serviceCredentialsOpReference: op://1Password vault/1Password json key item/credentials-file-name.json
+    serviceCredentialsJson: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
     appId: 1:123456789012:android:1234567890abcdef1234567
     apkPath: app/build/outputs/apk/inhouse/app-inhouse.apk
     releaseNotes: ${{ inputs.releaseNotes }}

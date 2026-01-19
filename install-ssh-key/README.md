@@ -6,17 +6,17 @@ Installs an SSH key or a [deploy key](https://docs.github.com/en/authentication/
 - name: Install SSH Key
   uses: shapehq/actions/install-ssh-key@v1
   with:
-    op-reference: op://My Vault/My SSH Key/ssh-key
+    ssh-key: ${{ secrets.SSH_KEY }}
 ```
 
-Set the `op-password-reference` input to install a password-protected SSH key.
+Set the `ssh-key-password` input to install a password-protected SSH key.
 
 ```yml
 - name: Install SSH Key
   uses: shapehq/actions/install-ssh-key@v1
   with:
-    op-reference: op://My Vault/My SSH Key/ssh-key
-    op-password-reference: op://My Vault/My SSH Key/password
+    ssh-key: ${{ secrets.SSH_KEY }}
+    ssh-key-password: ${{ secrets.SSH_KEY_PASSWORD }}
 ```
 
 You may optionally specify the name of the file to store the SSH key in. Only do this if you are storing multiple SSH keys to avoid overriding an SSH key.
@@ -25,9 +25,20 @@ You may optionally specify the name of the file to store the SSH key in. Only do
 - name: Install SSH Key
   uses: shapehq/actions/install-ssh-key@v1
   with:
-    op-reference: op://My Vault/My SSH Key/ssh-key
+    ssh-key: ${{ secrets.SSH_KEY }}
     filename: my_ssh_key
 ```
+
+If you already have the key on disk, you may pass `ssh-key-file` instead:
+
+```yml
+- name: Install SSH Key
+  uses: shapehq/actions/install-ssh-key@v1
+  with:
+    ssh-key-file: ${{ env.SSH_KEY_PATH }}
+```
+
+If your key is base64-encoded, use `ssh-key-base64`.
 
 Attempting to install multiple SSH keys with the same name will cause the SSH key to be overwritten.
 

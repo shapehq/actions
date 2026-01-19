@@ -8,7 +8,7 @@ Posts a message to Slack.
   with:
     channel: "#my-channel"
     message: "Started a new build 🏃‍♀️"
-    op-slack-token-reference: op://My Vault/My Slack Token/token
+    slack-token: ${{ secrets.SLACK_TOKEN }}
 ```
 
 The action will automatically add the following details to the Slack message:
@@ -27,7 +27,7 @@ The details above can be omitted by setting the `add-workflow-info-fields` and `
   with:
     channel: "#my-channel"
     message: "Started a new build 🏃‍♀️"
-    op-slack-token-reference: op://My Vault/My Slack Token/token
+    slack-token: ${{ secrets.SLACK_TOKEN }}
     add-workflow-info-fields: false
     add-view-logs-button: false
 ```
@@ -41,7 +41,7 @@ If you wish to only post to Slack if the jobs fails you can use the `failure()` 
   with:
     channel: "#my-channel"
     message: "Failed building project 💥"
-    op-slack-token-reference: op://My Vault/My Slack Token/token
+    slack-token: ${{ secrets.SLACK_TOKEN }}
 ```
 
 Similarly, you can have the action only post a message on success using the `success()` status check function:
@@ -53,7 +53,7 @@ Similarly, you can have the action only post a message on success using the `suc
   with:
     channel: "#my-channel"
     message: "Successfully built project 🚀"
-    op-slack-token-reference: op://My Vault/My Slack Token/token
+    slack-token: ${{ secrets.SLACK_TOKEN }}
 ```
 
 Custom fields and buttons can be added to the message as shown below. The fields and buttons must be JSON encoded as GitHub Actions inputs do not support arrays.
@@ -66,16 +66,7 @@ Custom fields and buttons can be added to the message as shown below. The fields
     message: Hello world!
     fields: '[{"title": "Foo", "value": "Bar"}]'
     buttons: '[{"title": "Open Website", "url": "https://example.com"}]'
-    op-slack-token-reference: op://GitHub Actions/Slack Token/token
+    slack-token: ${{ secrets.SLACK_TOKEN }}
 ```
 
-You may use the Slack token residing in the shared GitHub Actions vault to post messages.
-
-```yml
-- name: Post to Slack
-  uses: shapehq/actions/post-slack-message@v1
-  with:
-    channel: "#my-channel"
-    message: "Hello world!"
-    op-slack-token-reference: op://GitHub Actions/Slack Token/token
-```
+Provide the Slack token via a secret or environment variable in your workflow.

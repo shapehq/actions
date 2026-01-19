@@ -3,9 +3,15 @@ description: "Uploads an APK to Firebase App Distribution"
 author: "Mikkel Schläger"
 
 inputs:
-  serviceCredentialsOpReference:
-    description: "1Password reference to Google service account credentials json file (without quotes)"
-    required: true
+  serviceCredentialsJson:
+    description: "Google service account credentials JSON"
+    required: false
+  serviceCredentialsBase64:
+    description: "Base64-encoded Google service account credentials JSON"
+    required: false
+  serviceCredentialsFile:
+    description: "Path to a Google service account credentials JSON file"
+    required: false
 
   appId:
     description: "Firebase App ID"
@@ -47,18 +53,21 @@ runs:
       shell: bash
       run: npm install -g firebase-tools
 
-    - name: Load credentials
-      id: upload-artifact-firebase-credentials
-      uses: 1password/load-secrets-action@v3
-      env:
-        SERVICE_ACCOUNT_CREDENTIALS: ${{ inputs.serviceCredentialsOpReference }}
-
     - name: Write credentials file
       shell: bash
-      env:
-        SERVICE_ACCOUNT_CREDENTIALS: ${{ steps.upload-artifact-firebase-credentials.outputs.SERVICE_ACCOUNT_CREDENTIALS }}
       run: |
-        echo "$SERVICE_ACCOUNT_CREDENTIALS" > service-account.json
+        set -euo pipefail
+        if [[ -n "${{ inputs.serviceCredentialsBase64 }}" ]]; then
+          printf '%s' "${{ inputs.serviceCredentialsBase64 }}" | openssl base64 -d -A -out service-account.json
+        elif [[ -n "${{ inputs.serviceCredentialsJson }}" ]]; then
+          printf '%s' "${{ inputs.serviceCredentialsJson }}" > service-account.json
+        elif [[ -n "${{ inputs.serviceCredentialsFile }}" ]]; then
+          eval credentials_file="${{ inputs.serviceCredentialsFile }}"
+          cp "$credentials_file" service-account.json
+        else
+          echo "Error: Provide serviceCredentialsJson, serviceCredentialsBase64, or serviceCredentialsFile."
+          exit 1
+        fi
         echo "GOOGLE_APPLICATION_CREDENTIALS=service-account.json" >> $GITHUB_ENV
 
     - name: "Distribute apk"

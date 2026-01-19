@@ -29,9 +29,24 @@
 
 ## 🚀 Getting Started
 
-Several of these actions depend on the 1Password CLI being installed. Please use 1Password's [install-cli-action](https://github.com/1Password/install-cli-action) action to install the 1Password CLI or [load-secrets-action](https://github.com/1Password/load-secrets-action) to load secrets into the workflow's environment.
+Most actions expect secrets to be provided directly via inputs. If you use 1Password's load-secrets-action, run it before these actions and pass the resulting environment variables or file paths into the inputs.
 
-Inputs prefixed with `op-` expect a 1Password item reference, for example `op://My Vault/My Item/field`. The action will use `op read` to fetch the value or file from 1Password at runtime.
+Example using 1Password load-secrets-action:
+
+```yml
+- name: Load secrets from 1Password
+  id: op
+  uses: 1password/load-secrets-action@v3
+  env:
+    SLACK_TOKEN: op://GitHub Actions/Slack Token/token
+
+- name: Post to Slack
+  uses: shapehq/actions/post-slack-message@v1
+  with:
+    channel: "#builds"
+    message: "Build started"
+    slack-token: ${{ steps.op.outputs.SLACK_TOKEN }}
+```
 
 Click on any action name below to view detailed documentation, usage examples, and configuration options for that specific action.
 

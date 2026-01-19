@@ -2,12 +2,15 @@ name: Install Certificate
 description: Installs a certificate in the keychain.
 author: Simon B. Støvring
 inputs:
-  password-op-reference:
-    description: Reference to the password for the certificate in 1Password.
+  certificate-password:
+    description: Password for the certificate.
     required: true
-  certificate-op-reference:
-    description: Reference to the certificate in 1Password.
-    required: true
+  certificate-base64:
+    description: Base64-encoded certificate (.p12).
+    required: false
+  certificate-file:
+    description: Path to a certificate file (.p12).
+    required: false
   keychain-name:
     description: Name of the keychain to add the certificate to. The keychain will be created if it does not exist.
     required: false
@@ -24,8 +27,9 @@ runs:
   steps:
     - name: Install Certificate
       run: |
-        CERTIFICATE_PASSWORD=$(op read "${{ inputs.password-op-reference }}")
-        CERTIFICATE_FILE_PATH=$(uuidgen).p12
+        set -euo pipefail
+        CERTIFICATE_PASSWORD="${{ inputs.certificate-password }}"
+        CERTIFICATE_FILE_PATH=$(mktemp)
         INPUT_KEYCHAIN_PASSWORD_VALUE="${{ inputs.keychain-password }}"
         KEYCHAIN_PASSWORD="${INPUT_KEYCHAIN_PASSWORD_VALUE:-$(uuidgen)}"
         KEYCHAIN_NAME="${{ inputs.keychain-name }}"
@@ -35,7 +39,15 @@ runs:
           echo "The password for the certificate cannot be empty."
           exit 1
         fi
-        op read --out-file $CERTIFICATE_FILE_PATH "${{ inputs.certificate-op-reference }}"
+        if [[ -n "${{ inputs.certificate-base64 }}" ]]; then
+          printf '%s' "${{ inputs.certificate-base64 }}" | openssl base64 -d -A -out "$CERTIFICATE_FILE_PATH"
+        elif [[ -n "${{ inputs.certificate-file }}" ]]; then
+          eval certificate_file="${{ inputs.certificate-file }}"
+          cp "$certificate_file" "$CERTIFICATE_FILE_PATH"
+        else
+          echo "Error: Provide certificate-base64 or certificate-file."
+          exit 1
+        fi
         if [ ! -f "$KEYCHAIN_DB_PATH" ]; then
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security list-keychains -d user -s $KEYCHAIN_DB_PATH $(security list-keychains -d user | sed s/\"//g)

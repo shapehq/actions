@@ -7,6 +7,6 @@ Checks if there are missing translations in the Localize.biz project and posts w
   uses: shapehq/actions/loco-translation-status-poster@v1
   with:
     channel: "#my-channel"
-    op-slack-token-reference: op://My Vault/My Slack Token/token
-    op-loco-api-key-reference: op://My Vault/My Loco API Key/key
+    slack-token: ${{ secrets.SLACK_TOKEN }}
+    loco-api-key: ${{ secrets.LOCO_API_KEY }}
 ```

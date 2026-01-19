@@ -21,20 +21,26 @@ inputs:
     description: When enabled, the build cannot be distributed via external TestFlight or the App Store. Must be either "true" or "false".
     default: false
     required: true
-  op-app-store-connect-api-key-issuer-id-reference:
-    description: A reference to the location in 1Password where the Issuer ID for the App Store Connect API key is stored. This ID is crucial for API interactions with App Store Connect.
+  app-store-connect-api-key-issuer-id:
+    description: Issuer ID for the App Store Connect API key.
     required: true
-  op-app-store-connect-api-key-id-reference:
-    description: A reference to the location in 1Password where the App Store Connect API Key ID is stored, used for authentication during API requests.
+  app-store-connect-api-key-id:
+    description: App Store Connect API Key ID.
     required: true
-  op-app-store-connect-api-key-file-reference:
-    description: A reference to the 1Password field containing the AuthKey.p8 file, essential for establishing connections to App Store Connect.
-    required: true
-  op-development-certificate-reference:
-    description: Points to a field in 1Password where the development certificate and its corresponding private key (.p12 file) are stored, necessary for signing the app during the development phase.
-    required: true
-  op-development-certificate-password-reference:
-    description: Indicates the location in 1Password where the password for decrypting the development certificate (.p12 file) is kept.
+  app-store-connect-api-key-base64:
+    description: Base64-encoded AuthKey.p8 file.
+    required: false
+  app-store-connect-api-key-file:
+    description: Path to an AuthKey.p8 file.
+    required: false
+  development-certificate-base64:
+    description: Base64-encoded development certificate (.p12).
+    required: false
+  development-certificate-file:
+    description: Path to a development certificate (.p12).
+    required: false
+  development-certificate-password:
+    description: Password for decrypting the development certificate (.p12 file).
     required: true
   additional-archive-args:
     description: Additional arguments passed to xcodebuild when archiving the app.
@@ -61,15 +67,17 @@ runs:
       id: install-app-store-connect-api-key
       uses: shapehq/actions/install-asc-api-key@v1
       with:
-        op-asc-key-issuer-id-reference: ${{ inputs.op-app-store-connect-api-key-issuer-id-reference }}
-        op-asc-key-id-reference: ${{ inputs.op-app-store-connect-api-key-id-reference }}
-        op-asc-key-file-reference: ${{ inputs.op-app-store-connect-api-key-file-reference }}
+        asc-key-issuer-id: ${{ inputs.app-store-connect-api-key-issuer-id }}
+        asc-key-id: ${{ inputs.app-store-connect-api-key-id }}
+        asc-key-base64: ${{ inputs.app-store-connect-api-key-base64 }}
+        asc-key-file: ${{ inputs.app-store-connect-api-key-file }}
         output-asc-key-file-directory: ~/.private_keys
     - name: Install Development Certificate
       uses: shapehq/actions/install-certificate@v1
       with:
-        password-op-reference: ${{ inputs.op-development-certificate-password-reference }}
-        certificate-op-reference: ${{ inputs.op-development-certificate-reference }}
+        certificate-password: ${{ inputs.development-certificate-password }}
+        certificate-base64: ${{ inputs.development-certificate-base64 }}
+        certificate-file: ${{ inputs.development-certificate-file }}
     - name: Create Export Options Plist
       id: create-export-options-plist
       working-directory: ${{ inputs.working-directory }}
