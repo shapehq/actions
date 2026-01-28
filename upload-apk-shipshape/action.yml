@@ -35,23 +35,37 @@ inputs:
     description: 'Send Push'
     default: false
     required: false
+  ssh-key:
+    description: SSH private key contents for Shipshape access.
+    required: false
+  ssh-key-base64:
+    description: Base64-encoded SSH private key.
+    required: false
+  ssh-key-file:
+    description: Path to an SSH private key file.
+    required: false
+  ssh-key-password:
+    description: Password for the SSH key.
+    required: false
+  shipshape-activation-code:
+    description: Activation code for Shipshape.
+    required: true
 
 runs:
   using: composite
   steps:
-    - name: Check 1Password CLI Installed
-      shell: bash
-      run: op > /dev/null || echo "ONEPASSWORD_NOT_INSTALLED=true" >> $GITHUB_ENV
-
-    - name: Install 1Password CLI
-      if: ${{ env.ONEPASSWORD_NOT_INSTALLED }}
-      uses: 1password/install-cli-action@v2
-
-    - name: Install CI SSH Key
-      uses: shapehq/actions/install-ci-ssh-key@v1
+    - name: Install SSH Key
+      uses: shapehq/actions/install-ssh-key@v1
+      with:
+        ssh-key: ${{ inputs.ssh-key }}
+        ssh-key-base64: ${{ inputs.ssh-key-base64 }}
+        ssh-key-file: ${{ inputs.ssh-key-file }}
+        ssh-key-password: ${{ inputs.ssh-key-password }}
 
     - name: Install Shipshape
       uses: shapehq/actions/install-shipshape@v1
+      with:
+        activation-code: ${{ inputs.shipshape-activation-code }}
 
     - name: Create shape-app.config
       shell: bash

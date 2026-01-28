@@ -6,11 +6,21 @@ Installs the specified certificate in the keychain.
 - name: Install Certificate
   uses: shapehq/actions/install-certificate@v1
   with:
-    password-op-reference: op://My Vault/My Certificate/password
-    certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
+    certificate-password: ${{ secrets.CERTIFICATE_PASSWORD }}
+    certificate-base64: ${{ secrets.CERTIFICATE_BASE64 }}
 ```
 
 Note that you must supply a password. Empty passwords are not supported.
+
+You may supply a file path instead of base64:
+
+```yml
+- name: Install Certificate
+  uses: shapehq/actions/install-certificate@v1
+  with:
+    certificate-password: ${{ secrets.CERTIFICATE_PASSWORD }}
+    certificate-file: ${{ env.CERTIFICATE_PATH }}
+```
 
 The action makes the keychain the default keychain on the system. You can disable this as shown below.
 
@@ -18,8 +28,8 @@ The action makes the keychain the default keychain on the system. You can disabl
 - name: Install Certificate
   uses: shapehq/actions/install-certificate@v1
   with:
-    password-op-reference: op://My Vault/My Certificate/password
-    certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
+    certificate-password: ${{ secrets.CERTIFICATE_PASSWORD }}
+    certificate-base64: ${{ secrets.CERTIFICATE_BASE64 }}
     set-default-keychain: false
 ```
 
@@ -29,8 +39,8 @@ You may optionally specify the name of the keychain to install the certificate a
 - name: Install Certificate
   uses: shapehq/actions/install-certificate@v1
   with:
-    password-op-reference: op://My Vault/My Certificate/password
-    certificate-op-reference: op://My Vault/My Certificate/Certificate.p12
+    certificate-password: ${{ secrets.CERTIFICATE_PASSWORD }}
+    certificate-base64: ${{ secrets.CERTIFICATE_BASE64 }}
     keychain-name: signing.keychain
     keychain-password: h3ll0w0rld
 ```
@@ -47,13 +57,13 @@ The keychain will be created with a random password if no password is specified.
 - name: Install First Certificate
   uses: shapehq/actions/install-certificate@v1
   with:
-    password-op-reference: op://My Vault/First Certificate/password
-    certificate-op-reference: op://My Vault/First Certificate/Certificate.p12
+    certificate-password: ${{ secrets.FIRST_CERTIFICATE_PASSWORD }}
+    certificate-base64: ${{ secrets.FIRST_CERTIFICATE_BASE64 }}
     keychain-password: ${{ steps.generate-keychain-password.outputs.password }}
 - name: Install Second Certificate
   uses: shapehq/actions/install-certificate@v1
   with:
-    password-op-reference: op://My Vault/Second Certificate/password
-    certificate-op-reference: op://My Vault/Second Certificate/Certificate.p12
+    certificate-password: ${{ secrets.SECOND_CERTIFICATE_PASSWORD }}
+    certificate-base64: ${{ secrets.SECOND_CERTIFICATE_BASE64 }}
     keychain-password: ${{ steps.generate-keychain-password.outputs.password }}
 ```

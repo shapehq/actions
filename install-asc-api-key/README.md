@@ -7,21 +7,23 @@ Installs an App Store Connect API key file on the runner and outputs the issuer 
   id: install-asc-api-key
   uses: shapehq/actions/install-asc-api-key@v1
   with:
-    op-asc-key-issuer-id-reference: op://My Vault/My App Store Connect API Key/Issuer ID
-    op-asc-key-id-reference: op://My Vault/My App Store Connect API Key/Key ID
-    op-asc-key-file-reference: op://My Vault/My App Store Connect API Key/AuthKey.p8
+    asc-key-issuer-id: ${{ secrets.ASC_KEY_ISSUER_ID }}
+    asc-key-id: ${{ secrets.ASC_KEY_ID }}
+    asc-key-base64: ${{ secrets.ASC_KEY_BASE64 }}
 ```
 
 You may optionally pass the `output-asc-key-file-directory` parameter to specify the directory in which to store the AuthKey file. This defaults to the current directory.
+
+If you already have the AuthKey file on disk, you can pass `asc-key-file` instead of `asc-key-base64`.
 
 ```yml
 - name: Install App Store Connect API Key
   id: install-asc-api-key
   uses: shapehq/actions/install-asc-api-key@v1
   with:
-    op-asc-key-issuer-id-reference: op://My Vault/My App Store Connect API Key/Issuer ID
-    op-asc-key-id-reference: op://My Vault/My App Store Connect API Key/Key ID
-    op-asc-key-file-reference: op://My Vault/My App Store Connect API Key/AuthKey.p8
+    asc-key-issuer-id: ${{ secrets.ASC_KEY_ISSUER_ID }}
+    asc-key-id: ${{ secrets.ASC_KEY_ID }}
+    asc-key-base64: ${{ secrets.ASC_KEY_BASE64 }}
     output-asc-key-file-directory: ./private_keys
 ```
 

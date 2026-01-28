@@ -16,28 +16,18 @@ inputs:
     description: The Jira user who should post the comment. 
     required: true
     default: ci@shape.dk
-  op-jira-api-token-reference:
-    description: 1Password reference to a Jira API token
+  jira-api-token:
+    description: Jira API token
     required: true
 runs:
   using: composite
-  steps:    
-    - name: Install 1Password CLI
-      uses: 1password/install-cli-action@v2
-      with:
-        version: 2.18.0
-    - name: Jira API token
-      id: api-token
-      run: |
-        api_token=$(op read "${{ inputs.op-jira-api-token-reference }}")
-        echo "token=$api_token" >> $GITHUB_OUTPUT
-      shell: bash
+  steps:
     - name: Login to Jira
       uses: atlassian/gajira-login@v3
       env:
         JIRA_BASE_URL: ${{ inputs.jira-base-url }}
         JIRA_USER_EMAIL: ${{ inputs.jira-user-email }}
-        JIRA_API_TOKEN: ${{ steps.api-token.outputs.token }}
+        JIRA_API_TOKEN: ${{ inputs.jira-api-token }}
     - name: Comment on issues
       uses: shapehq/gajira-comment@feature/multiple-issues
       with:
