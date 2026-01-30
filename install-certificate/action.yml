@@ -32,7 +32,7 @@ runs:
         KEYCHAIN_PATH="/Users/$(whoami)/Library/Keychains/${KEYCHAIN_NAME}"
         KEYCHAIN_DB_PATH="${KEYCHAIN_PATH}-db"
         if [ -z "$CERTIFICATE_PASSWORD" ]; then
-          echo "The password for the certificate cannot be empty."
+          echo "::error::The password for the certificate cannot be empty."
           exit 1
         fi
         echo "DBG-CERT: downloading '${{ inputs.certificate-op-reference }}' to $CERTIFICATE_FILE_PATH"
@@ -50,7 +50,7 @@ runs:
           echo "DBG-CERT: openssl pkcs12 exit=$? output<<'MSG'"
           printf '%s\n' "$OPENSSL_PKCS12_OUTPUT"
           echo "MSG"
-          echo "Failed to read certificate file. Check that the certificate and password are correct."
+          echo "::error::Failed to read certificate file. Check that the certificate and password are correct."
           rm -f "$CERTIFICATE_PEM_PATH"
           exit 1
         fi
