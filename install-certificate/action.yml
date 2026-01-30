@@ -44,13 +44,13 @@ runs:
         fi
         CERTIFICATE_EXPIRY=$(openssl x509 -in "$CERTIFICATE_PEM_PATH" -noout -enddate | cut -d= -f2)
         CERTIFICATE_EXPIRY_EPOCH=$(python3 - <<'PY' "$CERTIFICATE_EXPIRY"
-from email.utils import parsedate_to_datetime
-import sys
+        from email.utils import parsedate_to_datetime
+        import sys
 
-dt = parsedate_to_datetime(sys.argv[1])
-print(int(dt.timestamp()))
-PY
-)
+        dt = parsedate_to_datetime(sys.argv[1])
+        print(int(dt.timestamp()))
+        PY
+        )
         NOW=$(date -u +%s)
         GRACE_PERIOD=2592000
         if [ "$CERTIFICATE_EXPIRY_EPOCH" -le "$NOW" ]; then
