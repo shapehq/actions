@@ -35,13 +35,19 @@ runs:
           echo "The password for the certificate cannot be empty."
           exit 1
         fi
+        echo "DBG-CERT: downloading '${{ inputs.certificate-op-reference }}' to $CERTIFICATE_FILE_PATH"
         op read --out-file $CERTIFICATE_FILE_PATH "${{ inputs.certificate-op-reference }}"
+        echo "DBG-CERT: $CERTIFICATE_FILE_PATH size=$(stat -f%z "$CERTIFICATE_FILE_PATH")"
         CERTIFICATE_PEM_PATH=$(mktemp)
-        if ! openssl pkcs12 -in "$CERTIFICATE_FILE_PATH" -clcerts -nokeys -passin pass:"$CERTIFICATE_PASSWORD" -out "$CERTIFICATE_PEM_PATH" >/dev/null 2>&1; then
+        if ! OPENSSL_PKCS12_OUTPUT=$(openssl pkcs12 -in "$CERTIFICATE_FILE_PATH" -clcerts -nokeys -passin pass:"$CERTIFICATE_PASSWORD" -out "$CERTIFICATE_PEM_PATH" 2>&1); then
+          echo "DBG-CERT: openssl pkcs12 exit=$? output<<'MSG'"
+          printf '%s\n' "$OPENSSL_PKCS12_OUTPUT"
+          echo "MSG"
           echo "Failed to read certificate file. Check that the certificate and password are correct."
           rm -f "$CERTIFICATE_PEM_PATH"
           exit 1
         fi
+        echo "DBG-CERT: PEM saved to $CERTIFICATE_PEM_PATH size=$(stat -f%z "$CERTIFICATE_PEM_PATH")"
         CERTIFICATE_EXPIRY=$(openssl x509 -in "$CERTIFICATE_PEM_PATH" -noout -enddate | cut -d= -f2)
         CERTIFICATE_EXPIRY_EPOCH=$(python3 - <<'PY' "$CERTIFICATE_EXPIRY"
         from email.utils import parsedate_to_datetime
