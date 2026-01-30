@@ -43,22 +43,12 @@ runs:
           exit 1
         fi
         CERTIFICATE_EXPIRY=$(openssl x509 -in "$CERTIFICATE_PEM_PATH" -noout -enddate | cut -d= -f2)
-        CERTIFICATE_EXPIRY_EPOCH=$(python3 - <<'PY' "$CERTIFICATE_EXPIRY"
-from email.utils import parsedate_to_datetime
-import sys
-
-dt = parsedate_to_datetime(sys.argv[1])
-print(int(dt.timestamp()))
-PY
-)
-        NOW=$(date -u +%s)
-        GRACE_PERIOD=2592000
-        if [ "$CERTIFICATE_EXPIRY_EPOCH" -le "$NOW" ]; then
+        if ! openssl x509 -in "$CERTIFICATE_PEM_PATH" -noout -checkend 0 >/dev/null 2>&1; then
           echo "::error::The certificate at '${{ inputs.certificate-op-reference }}' has expired on $CERTIFICATE_EXPIRY."
           rm -f "$CERTIFICATE_PEM_PATH"
           exit 1
         fi
-        if [ "$CERTIFICATE_EXPIRY_EPOCH" -le $((NOW + GRACE_PERIOD)) ]; then
+        if ! openssl x509 -in "$CERTIFICATE_PEM_PATH" -noout -checkend 2592000 >/dev/null 2>&1; then
           echo "::warning::The certificate at '${{ inputs.certificate-op-reference }}' will expire soon (on $CERTIFICATE_EXPIRY)."
         fi
         if [ ! -f "$KEYCHAIN_DB_PATH" ]; then
