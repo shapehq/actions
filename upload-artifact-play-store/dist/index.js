@@ -1,260 +1,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 5915:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __importStar(__nccwpck_require__(7484));
-const google = __importStar(__nccwpck_require__(6965));
-const fs = __importStar(__nccwpck_require__(9896));
-function createAuthClient(serviceAccountKeyPath) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return new google.auth.GoogleAuth({
-            keyFile: serviceAccountKeyPath,
-            scopes: ["https://www.googleapis.com/auth/androidpublisher"],
-        });
-    });
-}
-function publishApp(serviceAccountKeyPath, packageName, bundlePath, proguardMappingFilePath) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const authClient = yield createAuthClient(serviceAccountKeyPath);
-        const publisher = google.androidpublisher({
-            version: "v3",
-            auth: authClient,
-        });
-        const editId = yield createEdit(publisher, packageName);
-        yield validateSelectedTrack(publisher, editId, packageName);
-        const versionCode = yield uploadReleaseFiles(publisher, editId, packageName, bundlePath);
-        if (proguardMappingFilePath) {
-            yield uploadProguardMappingFile(publisher, editId, packageName, versionCode, proguardMappingFilePath);
-        }
-        yield updateTrack(publisher, editId, packageName, versionCode);
-        yield commitEdit(publisher, editId, packageName);
-        // Return the internal sharing URL
-        return `https://play.google.com/apps/test/${packageName}/${versionCode}`;
-    });
-}
-function createEdit(publisher, packageName) {
-    return __awaiter(this, void 0, void 0, function* () {
-        core.info(`Creating new Edit for "${packageName}"`);
-        const result = yield publisher.edits.insert({ packageName: packageName });
-        if (result.status != 200) {
-            throw Error(result.statusText);
-        }
-        if (!result.data.id) {
-            throw Error("Something went wrong.");
-        }
-        core.info(`- Created new Edit for "${packageName}" - Expires at ${String(result.data.expiryTimeSeconds)}`);
-        return result.data.id;
-    });
-}
-function validateSelectedTrack(publisher_1, editId_1, packageName_1) {
-    return __awaiter(this, arguments, void 0, function* (publisher, editId, packageName, track = "internal") {
-        core.info(`Validating track "${track}"`);
-        const res = yield publisher.edits.tracks.list({
-            editId: editId,
-            packageName: packageName,
-        });
-        if (res.status != 200) {
-            throw Error(res.statusText);
-        }
-        const allTracks = res.data.tracks;
-        // Check whether we actually have any tracks
-        if (!allTracks) {
-            throw Error("No tracks found, unable to validate track.");
-        }
-        // Check whether the track is valid
-        if (allTracks.find((value) => value.track == track) == undefined) {
-            const allTrackNames = allTracks.map((track) => {
-                return track.track;
-            });
-            throw Error(`Track "${track}" could not be found. Available tracks are: ${allTrackNames.toString()}`);
-        }
-        core.info(`- Track "${track} is valid"`);
-    });
-}
-function uploadReleaseFiles(publisher, editId, packageName, releaseFile) {
-    return __awaiter(this, void 0, void 0, function* () {
-        core.info(`Uploading release file"`);
-        if (releaseFile.endsWith(".apk")) {
-            // Upload APK, or throw when something goes wrong
-            const apk = yield uploadApk(publisher, editId, packageName, releaseFile);
-            if (!apk.versionCode)
-                throw Error("Failed to upload APK.");
-            core.info(`- Uploaded APK with version code "${apk.versionCode}"`);
-            return apk.versionCode;
-        }
-        else if (releaseFile.endsWith(".aab")) {
-            // Upload AAB, or throw when something goes wrong
-            const bundle = yield uploadBundle(publisher, editId, packageName, releaseFile);
-            if (!bundle.versionCode)
-                throw Error("Failed to upload bundle.");
-            core.info(`- Uploaded bundle with version code ${bundle.versionCode}`);
-            return bundle.versionCode;
-        }
-        else {
-            // Throw if file extension is not right
-            throw Error(`${releaseFile} is invalid.`);
-        }
-    });
-}
-function updateTrack(publisher_1, editId_1, packageName_1, versionCode_1) {
-    return __awaiter(this, arguments, void 0, function* (publisher, editId, packageName, versionCode, track = "internal") {
-        core.info(`Updating track "${track}" in "${packageName}" with build "${versionCode}"`);
-        const res = yield publisher.edits.tracks.update({
-            packageName: packageName,
-            editId: editId,
-            track: track,
-            requestBody: {
-                track: track,
-                releases: [
-                    {
-                        versionCodes: [versionCode.toString()],
-                        status: "completed",
-                    },
-                ],
-            },
-        });
-        core.info(`- Updated track "${track}"`);
-        return res.data;
-    });
-}
-function commitEdit(publisher, editId, packageName) {
-    return __awaiter(this, void 0, void 0, function* () {
-        core.info(`Committing the Edit`);
-        const res = yield publisher.edits.commit({
-            editId: editId,
-            packageName: packageName,
-        });
-        if (res.data.id) {
-            core.info(`- Successfully committed edit "${res.data.id}"`);
-            return res.data.id;
-        }
-        else {
-            return Promise.reject(res.status);
-        }
-    });
-}
-function uploadBundle(publisher, editId, packageName, bundleReleaseFile) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (!fs.existsSync(bundleReleaseFile)) {
-            throw new Error(`App Bundle file "${bundleReleaseFile}" does not exist.`);
-        }
-        const stats = fs.statSync(bundleReleaseFile);
-        core.info(`Uploading App Bundle @ "${bundleReleaseFile}" - ${stats.size} bytes`);
-        const res = yield publisher.edits.bundles.upload({
-            packageName: packageName,
-            editId: editId,
-            media: {
-                mimeType: "application/octet-stream",
-                body: fs.createReadStream(bundleReleaseFile),
-            },
-        });
-        return res.data;
-    });
-}
-function uploadApk(publisher, editId, packageName, apkReleaseFile) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (!fs.existsSync(apkReleaseFile)) {
-            throw new Error(`APK file "${apkReleaseFile}" does not exist.`);
-        }
-        const stats = fs.statSync(apkReleaseFile);
-        core.info(`Uploading APK @ "${apkReleaseFile}" - ${stats.size} bytes`);
-        const res = yield publisher.edits.apks.upload({
-            packageName: packageName,
-            editId: editId,
-            media: {
-                mimeType: "application/vnd.android.package-archive",
-                body: fs.createReadStream(apkReleaseFile),
-            },
-        });
-        return res.data;
-    });
-}
-function uploadProguardMappingFile(publisher, editId, packageName, versionCode, mappingFile) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (mappingFile != undefined && mappingFile.length > 0) {
-            core.info(`Uploading Proguard mapping file @ "${mappingFile}"`);
-            yield publisher.edits.deobfuscationfiles.upload({
-                packageName: packageName,
-                editId: editId,
-                apkVersionCode: versionCode,
-                deobfuscationFileType: "proguard",
-                media: {
-                    mimeType: "application/octet-stream",
-                    body: fs.createReadStream(mappingFile),
-                },
-            });
-        }
-    });
-}
-function run() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const serviceAccountKeyPath = core.getInput("serviceAccountKeyPath", { required: true });
-            const packageName = core.getInput("packageName", { required: true });
-            const bundlePath = core.getInput("bundlePath", { required: true });
-            const proguardMappingFilePath = core.getInput("proguardMappingFilePath");
-            const internalSharingUrl = yield publishApp(serviceAccountKeyPath, packageName, bundlePath, proguardMappingFilePath);
-            core.setOutput("internal-sharing-url", internalSharingUrl);
-            core.info(`Internal sharing URL: ${internalSharingUrl}`);
-        }
-        catch (error) {
-            if (error instanceof Error)
-                core.setFailed(error.message);
-        }
-    });
-}
-run();
-
-
-/***/ }),
-
 /***/ 4914:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -54828,6 +54574,260 @@ module.exports.implForWrapper = function (wrapper) {
 
 /***/ }),
 
+/***/ 1730:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__nccwpck_require__(7484));
+const google = __importStar(__nccwpck_require__(6965));
+const fs = __importStar(__nccwpck_require__(9896));
+function createAuthClient(serviceAccountKeyPath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new google.auth.GoogleAuth({
+            keyFile: serviceAccountKeyPath,
+            scopes: ["https://www.googleapis.com/auth/androidpublisher"],
+        });
+    });
+}
+function publishApp(serviceAccountKeyPath, packageName, bundlePath, proguardMappingFilePath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const authClient = yield createAuthClient(serviceAccountKeyPath);
+        const publisher = google.androidpublisher({
+            version: "v3",
+            auth: authClient,
+        });
+        const editId = yield createEdit(publisher, packageName);
+        yield validateSelectedTrack(publisher, editId, packageName);
+        const versionCode = yield uploadReleaseFiles(publisher, editId, packageName, bundlePath);
+        if (proguardMappingFilePath) {
+            yield uploadProguardMappingFile(publisher, editId, packageName, versionCode, proguardMappingFilePath);
+        }
+        yield updateTrack(publisher, editId, packageName, versionCode);
+        yield commitEdit(publisher, editId, packageName);
+        // Return the internal sharing URL
+        return `https://play.google.com/apps/test/${packageName}/${versionCode}`;
+    });
+}
+function createEdit(publisher, packageName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        core.info(`Creating new Edit for "${packageName}"`);
+        const result = yield publisher.edits.insert({ packageName: packageName });
+        if (result.status != 200) {
+            throw Error(result.statusText);
+        }
+        if (!result.data.id) {
+            throw Error("Something went wrong.");
+        }
+        core.info(`- Created new Edit for "${packageName}" - Expires at ${String(result.data.expiryTimeSeconds)}`);
+        return result.data.id;
+    });
+}
+function validateSelectedTrack(publisher_1, editId_1, packageName_1) {
+    return __awaiter(this, arguments, void 0, function* (publisher, editId, packageName, track = "internal") {
+        core.info(`Validating track "${track}"`);
+        const res = yield publisher.edits.tracks.list({
+            editId: editId,
+            packageName: packageName,
+        });
+        if (res.status != 200) {
+            throw Error(res.statusText);
+        }
+        const allTracks = res.data.tracks;
+        // Check whether we actually have any tracks
+        if (!allTracks) {
+            throw Error("No tracks found, unable to validate track.");
+        }
+        // Check whether the track is valid
+        if (allTracks.find((value) => value.track == track) == undefined) {
+            const allTrackNames = allTracks.map((track) => {
+                return track.track;
+            });
+            throw Error(`Track "${track}" could not be found. Available tracks are: ${allTrackNames.toString()}`);
+        }
+        core.info(`- Track "${track} is valid"`);
+    });
+}
+function uploadReleaseFiles(publisher, editId, packageName, releaseFile) {
+    return __awaiter(this, void 0, void 0, function* () {
+        core.info(`Uploading release file"`);
+        if (releaseFile.endsWith(".apk")) {
+            // Upload APK, or throw when something goes wrong
+            const apk = yield uploadApk(publisher, editId, packageName, releaseFile);
+            if (!apk.versionCode)
+                throw Error("Failed to upload APK.");
+            core.info(`- Uploaded APK with version code "${apk.versionCode}"`);
+            return apk.versionCode;
+        }
+        else if (releaseFile.endsWith(".aab")) {
+            // Upload AAB, or throw when something goes wrong
+            const bundle = yield uploadBundle(publisher, editId, packageName, releaseFile);
+            if (!bundle.versionCode)
+                throw Error("Failed to upload bundle.");
+            core.info(`- Uploaded bundle with version code ${bundle.versionCode}`);
+            return bundle.versionCode;
+        }
+        else {
+            // Throw if file extension is not right
+            throw Error(`${releaseFile} is invalid.`);
+        }
+    });
+}
+function updateTrack(publisher_1, editId_1, packageName_1, versionCode_1) {
+    return __awaiter(this, arguments, void 0, function* (publisher, editId, packageName, versionCode, track = "internal") {
+        core.info(`Updating track "${track}" in "${packageName}" with build "${versionCode}"`);
+        const res = yield publisher.edits.tracks.update({
+            packageName: packageName,
+            editId: editId,
+            track: track,
+            requestBody: {
+                track: track,
+                releases: [
+                    {
+                        versionCodes: [versionCode.toString()],
+                        status: "completed",
+                    },
+                ],
+            },
+        });
+        core.info(`- Updated track "${track}"`);
+        return res.data;
+    });
+}
+function commitEdit(publisher, editId, packageName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        core.info(`Committing the Edit`);
+        const res = yield publisher.edits.commit({
+            editId: editId,
+            packageName: packageName,
+        });
+        if (res.data.id) {
+            core.info(`- Successfully committed edit "${res.data.id}"`);
+            return res.data.id;
+        }
+        else {
+            return Promise.reject(res.status);
+        }
+    });
+}
+function uploadBundle(publisher, editId, packageName, bundleReleaseFile) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!fs.existsSync(bundleReleaseFile)) {
+            throw new Error(`App Bundle file "${bundleReleaseFile}" does not exist.`);
+        }
+        const stats = fs.statSync(bundleReleaseFile);
+        core.info(`Uploading App Bundle @ "${bundleReleaseFile}" - ${stats.size} bytes`);
+        const res = yield publisher.edits.bundles.upload({
+            packageName: packageName,
+            editId: editId,
+            media: {
+                mimeType: "application/octet-stream",
+                body: fs.createReadStream(bundleReleaseFile),
+            },
+        });
+        return res.data;
+    });
+}
+function uploadApk(publisher, editId, packageName, apkReleaseFile) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!fs.existsSync(apkReleaseFile)) {
+            throw new Error(`APK file "${apkReleaseFile}" does not exist.`);
+        }
+        const stats = fs.statSync(apkReleaseFile);
+        core.info(`Uploading APK @ "${apkReleaseFile}" - ${stats.size} bytes`);
+        const res = yield publisher.edits.apks.upload({
+            packageName: packageName,
+            editId: editId,
+            media: {
+                mimeType: "application/vnd.android.package-archive",
+                body: fs.createReadStream(apkReleaseFile),
+            },
+        });
+        return res.data;
+    });
+}
+function uploadProguardMappingFile(publisher, editId, packageName, versionCode, mappingFile) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (mappingFile != undefined && mappingFile.length > 0) {
+            core.info(`Uploading Proguard mapping file @ "${mappingFile}"`);
+            yield publisher.edits.deobfuscationfiles.upload({
+                packageName: packageName,
+                editId: editId,
+                apkVersionCode: versionCode,
+                deobfuscationFileType: "proguard",
+                media: {
+                    mimeType: "application/octet-stream",
+                    body: fs.createReadStream(mappingFile),
+                },
+            });
+        }
+    });
+}
+function run() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const serviceAccountKeyPath = core.getInput("serviceAccountKeyPath", { required: true });
+            const packageName = core.getInput("packageName", { required: true });
+            const bundlePath = core.getInput("bundlePath", { required: true });
+            const proguardMappingFilePath = core.getInput("proguardMappingFilePath");
+            const internalSharingUrl = yield publishApp(serviceAccountKeyPath, packageName, bundlePath, proguardMappingFilePath);
+            core.setOutput("internal-sharing-url", internalSharingUrl);
+            core.info(`Internal sharing URL: ${internalSharingUrl}`);
+        }
+        catch (error) {
+            if (error instanceof Error)
+                core.setFailed(error.message);
+        }
+    });
+}
+run();
+
+
+/***/ }),
+
 /***/ 2078:
 /***/ ((module) => {
 
@@ -56815,7 +56815,7 @@ module.exports = /*#__PURE__*/JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(5915);
+/******/ 	var __webpack_exports__ = __nccwpck_require__(1730);
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()
