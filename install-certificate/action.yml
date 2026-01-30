@@ -44,7 +44,6 @@ runs:
           OPENSSL_PKCS12_FLAGS=""
         fi
         if ! OPENSSL_PKCS12_OUTPUT=$(openssl pkcs12 $OPENSSL_PKCS12_FLAGS -in "$CERTIFICATE_FILE_PATH" -clcerts -nokeys -passin pass:"$CERTIFICATE_PASSWORD" -out "$CERTIFICATE_PEM_PATH" 2>&1); then
-          printf '%s\n' "$OPENSSL_PKCS12_OUTPUT"
           echo "::error::Failed to read certificate file. Check that the certificate and password are correct."
           rm -f "$CERTIFICATE_PEM_PATH"
           exit 1
