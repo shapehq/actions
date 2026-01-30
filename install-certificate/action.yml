@@ -56,6 +56,8 @@ runs:
         fi
         echo "DBG-CERT: PEM saved to $CERTIFICATE_PEM_PATH size=$(stat -f%z "$CERTIFICATE_PEM_PATH")"
         CERTIFICATE_EXPIRY=$(openssl x509 -in "$CERTIFICATE_PEM_PATH" -noout -enddate | cut -d= -f2)
+        CERTIFICATE_NAME=$(openssl x509 -in "$CERTIFICATE_PEM_PATH" -noout -subject | sed 's/^subject= //')
+        echo "DBG-CERT: certificate name=\"${CERTIFICATE_NAME}\" expires=\"$CERTIFICATE_EXPIRY\""
         CERTIFICATE_EXPIRY_EPOCH=$(python3 - <<'PY' "$CERTIFICATE_EXPIRY"
         from email.utils import parsedate_to_datetime
         import sys
