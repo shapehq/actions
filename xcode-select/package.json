@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@actions/core": "^2.0.2",
+    "@actions/core": "^3.0.0",
     "@vercel/ncc": "^0.38.4"
   },
   "devDependencies": {
