@@ -49,8 +49,32 @@ runs:
           exit 1
         fi
         CERTIFICATE_EXPIRY=$(openssl x509 -in "$CERTIFICATE_PEM_PATH" -noout -enddate | cut -d= -f2)
-        if ! openssl x509 -in "$CERTIFICATE_PEM_PATH" -noout -checkend 0 >/dev/null 2>&1; then
+        if ! command -v python3 >/dev/null 2>&1; then
+          echo "::error::Python 3 is required to validate the certificate expiry."
+          rm -f "$CERTIFICATE_PEM_PATH"
+          exit 1
+        fi
+        python3 - "$CERTIFICATE_EXPIRY" <<'PY'
+from datetime import datetime, timezone
+import sys
+
+expiry_str = sys.argv[1]
+try:
+    expiry = datetime.strptime(expiry_str, "%b %d %H:%M:%S %Y %Z")
+except ValueError:
+    sys.stderr.write(f"Failed to parse expiry date '{expiry_str}'.\n")
+    sys.exit(2)
+expiry = expiry.replace(tzinfo=timezone.utc)
+if expiry <= datetime.now(timezone.utc):
+    sys.exit(1)
+PY
+        PYTHON_EXIT_CODE=$?
+        if [ $PYTHON_EXIT_CODE -eq 1 ]; then
           echo "::error::The certificate at '${{ inputs.certificate-op-reference }}' has expired on $CERTIFICATE_EXPIRY."
+          rm -f "$CERTIFICATE_PEM_PATH"
+          exit 1
+        elif [ $PYTHON_EXIT_CODE -eq 2 ]; then
+          echo "::error::Unable to parse the certificate expiry date: $CERTIFICATE_EXPIRY."
           rm -f "$CERTIFICATE_PEM_PATH"
           exit 1
         fi
