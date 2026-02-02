@@ -1,4 +1,4 @@
-import IStateStore from "./IStateStore"
+import IStateStore from "./IStateStore.js"
 
 export interface KeyValueStateWriterReader {
   getState(name: string): string | null

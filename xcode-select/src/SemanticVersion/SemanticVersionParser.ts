@@ -1,4 +1,4 @@
-import SemanticVersion from "./SemanticVersion"
+import SemanticVersion from "./SemanticVersion.js"
 
 export default class SemanticVersionParser {
   parse(version: string): SemanticVersion | null {
