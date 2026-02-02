@@ -1,9 +1,9 @@
 import SemanticVersionTemplate, { 
   SemanticVersionTemplatePlaceholder
-} from "../SemanticVersion/SemanticVersionTemplate"
-import { semanticVersionSort } from "../SemanticVersion/SemanticVersion"
-import XcodeVersion from "./XcodeVersion"
-import IXcodeVersionRepository from "./IXcodeVersionRepository"
+} from "../SemanticVersion/SemanticVersionTemplate.js"
+import { semanticVersionSort } from "../SemanticVersion/SemanticVersion.js"
+import XcodeVersion from "./XcodeVersion.js"
+import IXcodeVersionRepository from "./IXcodeVersionRepository.js"
 
 export default class XcodeVersionMatcher {
   private readonly xcodeVersionRepository: IXcodeVersionRepository

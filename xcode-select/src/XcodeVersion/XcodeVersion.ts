@@ -1,4 +1,4 @@
-import  SemanticVersion, { semanticVersionSort } from "../SemanticVersion/SemanticVersion"
+import  SemanticVersion, { semanticVersionSort } from "../SemanticVersion/SemanticVersion.js"
 
 export default class XcodeVersion {
   private _filePath: string

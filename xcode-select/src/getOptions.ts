@@ -1,5 +1,5 @@
 import * as core from "@actions/core"
-import { ActionOptions } from "./Action"
+import { ActionOptions } from "./Action.js"
 
 export default function getOptions(): ActionOptions {
   return {
