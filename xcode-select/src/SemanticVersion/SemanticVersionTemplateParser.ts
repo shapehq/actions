@@ -2,8 +2,8 @@ import SemanticVersionTemplate, {
   SemanticVersionTemplatePlaceholder,
   SemanticVersionTemplateMinor,
   SemanticVersionTemplatePatch
-} from "./SemanticVersionTemplate"
-import ISemanticVersionTemplateParser from "./ISemanticVersionTemplateParser"
+} from "./SemanticVersionTemplate.js"
+import ISemanticVersionTemplateParser from "./ISemanticVersionTemplateParser.js"
 
 export default class SemanticVersionTemplateParser implements ISemanticVersionTemplateParser {
   parse(string: string): SemanticVersionTemplate {

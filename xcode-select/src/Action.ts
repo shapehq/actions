@@ -1,9 +1,9 @@
-import IStateStore from "./StateStore/IStateStore"
-import ILogger from "./Logger/ILogger"
-import SemanticVersionTemplateParser from "./SemanticVersion/SemanticVersionTemplateParser"
-import IXcodeVersionRepository from "./XcodeVersion/IXcodeVersionRepository"
-import XcodeVersionMatcher from "./XcodeVersion/XcodeVersionMatcher"
-import IXcodeSelector from "./XcodeSelector/IXcodeSelector"
+import IStateStore from "./StateStore/IStateStore.js"
+import ILogger from "./Logger/ILogger.js"
+import SemanticVersionTemplateParser from "./SemanticVersion/SemanticVersionTemplateParser.js"
+import IXcodeVersionRepository from "./XcodeVersion/IXcodeVersionRepository.js"
+import XcodeVersionMatcher from "./XcodeVersion/XcodeVersionMatcher.js"
+import IXcodeSelector from "./XcodeSelector/IXcodeSelector.js"
 
 export interface ActionOptions {
   readonly version: string

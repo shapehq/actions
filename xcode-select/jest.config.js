@@ -1,10 +1,20 @@
-module.exports = {
+/** @type {import('ts-jest').JestConfigWithTsJest} **/
+export default {
   clearMocks: true,
-  moduleFileExtensions: ["js", "ts"],
-  testEnvironment: "node",
-  testMatch: ["**/*.test.ts"],
+  extensionsToTreatAsEsm: ['.ts'],
+  moduleFileExtensions: ['ts', 'js'],
+  preset: 'ts-jest',
+  resolver: 'ts-jest-resolver',
+  testEnvironment: 'node',
+  testMatch: ['**/*.test.ts'],
   transform: {
-    "^.+\\.ts$": "ts-jest"
+    '^.+\\.ts$': [
+      'ts-jest',
+      {
+        tsconfig: 'tsconfig.json',
+        useESM: true
+      }
+    ]
   },
   verbose: true
 }

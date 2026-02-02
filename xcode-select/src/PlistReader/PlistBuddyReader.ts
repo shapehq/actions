@@ -1,5 +1,5 @@
-import ICommandRunner from "../CommandRunner/ICommandRunner"
-import IPlistReader from "./IPlistReader"
+import ICommandRunner from "../CommandRunner/ICommandRunner.js"
+import IPlistReader from "./IPlistReader.js"
 
 export default class PlistBuddyReader implements IPlistReader {
   private readonly commandRunner: ICommandRunner

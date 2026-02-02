@@ -1,7 +1,7 @@
 import os from "os"
 import fs from "fs"
 import path from "path"
-import IFileSystem from "./IFileSystem"
+import IFileSystem from "./IFileSystem.js"
 
 export default class FileSystem implements IFileSystem {
   get homeDir(): string {

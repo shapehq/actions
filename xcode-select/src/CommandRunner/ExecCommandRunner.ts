@@ -1,5 +1,5 @@
 import { execFile } from "child_process"
-import ICommandRunner from "./ICommandRunner"
+import ICommandRunner from "./ICommandRunner.js"
 
 export default class ExecCommandRunner implements ICommandRunner {
   run(cmd: string[]): Promise<string> {

@@ -1,5 +1,5 @@
-import IXcodeSelector from "./IXcodeSelector"
-import ICommandRunner from "../CommandRunner/ICommandRunner"
+import IXcodeSelector from "./IXcodeSelector.js"
+import ICommandRunner from "../CommandRunner/ICommandRunner.js"
 
 export default class CLIXcodeSelector implements IXcodeSelector {
   private readonly commandRunner: ICommandRunner
