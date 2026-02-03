@@ -1,2 +1,18 @@
 render-ios-app-icon-badge/lib
 xcode-select/lib
+**/node_modules/
+
+# Private keys and certificates
+*.p8
+*.p12
+*.pem
+*.key
+*.mobileprovision
+private_keys/
+
+# Environment and credential files
+.env
+.env.local
+credentials.json
+serviceAccount*.json
+*-credentials.json

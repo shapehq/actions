@@ -1,9 +1,9 @@
 import SemanticVersionTemplate, { 
   SemanticVersionTemplatePlaceholder
-} from "../SemanticVersion/SemanticVersionTemplate"
-import { semanticVersionSort } from "../SemanticVersion/SemanticVersion"
-import XcodeVersion from "./XcodeVersion"
-import IXcodeVersionRepository from "./IXcodeVersionRepository"
+} from "../SemanticVersion/SemanticVersionTemplate.js"
+import { semanticVersionSort } from "../SemanticVersion/SemanticVersion.js"
+import XcodeVersion from "./XcodeVersion.js"
+import IXcodeVersionRepository from "./IXcodeVersionRepository.js"
 
 export default class XcodeVersionMatcher {
   private readonly xcodeVersionRepository: IXcodeVersionRepository
@@ -12,9 +12,8 @@ export default class XcodeVersionMatcher {
     this.xcodeVersionRepository = config.xcodeVersionRepository
   }
   
-  findXcodeVersion(needle: SemanticVersionTemplate): XcodeVersion {
-    const xcodeVersions = this.xcodeVersionRepository
-      .getXcodeVersions()
+  async findXcodeVersion(needle: SemanticVersionTemplate): Promise<XcodeVersion> {
+    const xcodeVersions = (await this.xcodeVersionRepository.getXcodeVersions())
       .sort((lhs, rhs) => {
         const versionCompare = semanticVersionSort(lhs.version, rhs.version)
         if (versionCompare !== 0) {
@@ -23,6 +22,9 @@ export default class XcodeVersionMatcher {
         // Prefer non-beta (release) over beta when versions are equal
         if (lhs.isBeta !== rhs.isBeta) {
           return lhs.isBeta ? -1 : 1
+        }
+        if (lhs.isReleaseCandidate !== rhs.isReleaseCandidate) {
+          return lhs.isReleaseCandidate ? -1 : 1
         }
         return 0
       })

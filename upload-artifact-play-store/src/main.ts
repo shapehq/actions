@@ -21,7 +21,7 @@ async function publishApp(
   packageName: string,
   bundlePath: string,
   proguardMappingFilePath: string | undefined,
-): Promise<void> {
+): Promise<string> {
   const authClient = await createAuthClient(serviceAccountKeyPath);
   const publisher = google.androidpublisher({
     version: "v3",
@@ -32,11 +32,15 @@ async function publishApp(
   await validateSelectedTrack(publisher, editId, packageName);
 
   const versionCode = await uploadReleaseFiles(publisher, editId, packageName, bundlePath);
+
   if (proguardMappingFilePath) {
     await uploadProguardMappingFile(publisher, editId, packageName, versionCode, proguardMappingFilePath);
   }
   await updateTrack(publisher, editId, packageName, versionCode);
   await commitEdit(publisher, editId, packageName);
+
+  // Return the internal sharing URL
+  return `https://play.google.com/apps/test/${packageName}/${versionCode}`;
 }
 
 async function createEdit(publisher: Publisher, packageName: string): Promise<string> {
@@ -201,7 +205,9 @@ async function run(): Promise<void> {
     const bundlePath = core.getInput("bundlePath", { required: true });
     const proguardMappingFilePath = core.getInput("proguardMappingFilePath");
 
-    publishApp(serviceAccountKeyPath, packageName, bundlePath, proguardMappingFilePath);
+    const internalSharingUrl = await publishApp(serviceAccountKeyPath, packageName, bundlePath, proguardMappingFilePath);
+    core.setOutput("internal-sharing-url", internalSharingUrl);
+    core.info(`Internal sharing URL: ${internalSharingUrl}`);
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message);
   }

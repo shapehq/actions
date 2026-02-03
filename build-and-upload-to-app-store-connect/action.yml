@@ -47,19 +47,26 @@ inputs:
     description: Name of the uploaded archive containing the dSYMs.
     default: dSYMs
     required: true
+  pretty-xcodebuild-output:
+    description: Whether to pipe xcodebuild output through xcbeautify for prettier formatting.
+    default: true
+    required: true
+  additional-altool-args:
+    description: Additional arguments passed to altool when uploading the app.
+    required: false
 runs:
   using: composite
   steps:
     - name: Install App Store Connect API Key
       id: install-app-store-connect-api-key
-      uses: shapehq/actions/install-asc-api-key@main
+      uses: shapehq/actions/install-asc-api-key@v1
       with:
         op-asc-key-issuer-id-reference: ${{ inputs.op-app-store-connect-api-key-issuer-id-reference }}
         op-asc-key-id-reference: ${{ inputs.op-app-store-connect-api-key-id-reference }}
         op-asc-key-file-reference: ${{ inputs.op-app-store-connect-api-key-file-reference }}
         output-asc-key-file-directory: ~/.private_keys
     - name: Install Development Certificate
-      uses: shapehq/actions/install-certificate@main
+      uses: shapehq/actions/install-certificate@v1
       with:
         password-op-reference: ${{ inputs.op-development-certificate-password-reference }}
         certificate-op-reference: ${{ inputs.op-development-certificate-reference }}
@@ -104,42 +111,52 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         # Archive App
-        CMD=$(cat <<EOF
+        archive_app() {
+          local cmd_args=""
+          if [ -n "${{ inputs.marketing-version }}" ]; then
+            cmd_args="$cmd_args MARKETING_VERSION=${{ inputs.marketing-version }}"
+          fi
+          if [ -n "${{ inputs.additional-archive-args }}" ]; then
+            cmd_args="$cmd_args ${{ inputs.additional-archive-args }}"
+          fi
           xcodebuild archive\
             -scheme ${{ inputs.scheme }}\
             -destination generic/platform=ios\
             -configuration ${{ inputs.configuration }}\
             -archivePath ${{ inputs.scheme }}.xcarchive\
+            -skipPackagePluginValidation\
             -allowProvisioningUpdates\
             -authenticationKeyIssuerID ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
             -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
-            -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }}
-        EOF
-        )
-        if [ -n "${{ inputs.marketing-version }}" ]; then
-          CMD="$CMD MARKETING_VERSION=${{ inputs.marketing-version }}"
+            -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }} $cmd_args
+        }
+        if [[ "${{ inputs.pretty-xcodebuild-output }}" == "true" ]]; then
+          set -o pipefail && archive_app 2>&1 | xcbeautify --renderer github-actions
+        else
+          archive_app
         fi
-        if [ -n "${{ inputs.additional-archive-args }}" ]; then
-          CMD="$CMD ${{ inputs.additional-archive-args }}"
-        fi
-        set -o pipefail && $CMD 2>&1 | xcbeautify --renderer github-actions
     - name: Export IPA from Archive
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
         # Export IPA from Archive
-        set -o pipefail &&\
-        xcodebuild -exportArchive\
-          -archivePath "${{ inputs.scheme }}.xcarchive"\
-          -exportPath ${{ inputs.build-directory }}\
-          -exportOptionsPlist "${{ steps.create-export-options-plist.outputs.file-path }}"\
-          -allowProvisioningUpdates\
-          -authenticationKeyIssuerID ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
-          -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
-          -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }} 2>&1\
-          | xcbeautify --renderer github-actions
+        export_ipa() {
+          xcodebuild -exportArchive\
+            -archivePath "${{ inputs.scheme }}.xcarchive"\
+            -exportPath ${{ inputs.build-directory }}\
+            -exportOptionsPlist "${{ steps.create-export-options-plist.outputs.file-path }}"\
+            -allowProvisioningUpdates\
+            -authenticationKeyIssuerID ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}\
+            -authenticationKeyID ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
+            -authenticationKeyPath ${{ steps.install-app-store-connect-api-key.outputs.key-file-path }}
+        }
+        if [[ "${{ inputs.pretty-xcodebuild-output }}" == "true" ]]; then
+          set -o pipefail && export_ipa 2>&1 | xcbeautify --renderer github-actions
+        else
+          export_ipa
+        fi
     - name: Archive the dSYMs
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ inputs.dsyms-archive-name }}
         path: ${{ inputs.working-directory }}/${{ inputs.scheme }}.xcarchive/dSYMs/*
@@ -161,10 +178,21 @@ runs:
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
-        # Upload IPA to App Store Connect
-        xcrun altool\
-          --upload-app\
-          -t ios\
-          -f "${{ steps.find-ipa.outputs.file-path }}"\
-          --apiKey ${{ steps.install-app-store-connect-api-key.outputs.key-id }}\
-          --apiIssuer ${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}
+        set -euo pipefail
+
+        # Build the command as an array
+        cmd=(xcrun altool
+          --upload-app
+          -t ios
+          -f "${{ steps.find-ipa.outputs.file-path }}"
+          --apiKey "${{ steps.install-app-store-connect-api-key.outputs.key-id }}"
+          --apiIssuer "${{ steps.install-app-store-connect-api-key.outputs.issuer-id }}"
+        )
+
+        # Only append if input is non-empty. Tokenize respecting quotes.
+        if [[ -n "${{ inputs.additional-altool-args }}" ]]; then
+          read -r -a extra <<< "${{ inputs.additional-altool-args }}"
+          cmd+=("${extra[@]}")
+        fi
+
+        "${cmd[@]}"

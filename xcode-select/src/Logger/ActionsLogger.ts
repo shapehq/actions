@@ -1,5 +1,5 @@
 import * as core from "@actions/core"
-import ILogger from "./ILogger"
+import ILogger from "./ILogger.js"
 
 export default class ActionsLogger implements ILogger {
   log(message: string) {

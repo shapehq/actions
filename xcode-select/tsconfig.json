@@ -1,15 +1,26 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "lib": ["es6"],
-    "outDir": "./lib",
-    "rootDir": "./src",
-    "declaration": true,
-    "strict": true,
-    "noImplicitAny": false,
+    "allowSyntheticDefaultImports": true,
+    "declaration": false,
+    "declarationMap": false,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "newLine": "lf",
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "outDir": "./dist",
+    "pretty": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "target": "ES2022",
+    "rootDir": "./src"
   },
-  "exclude": ["__test__", "lib", "node_modules"]
+  "exclude": ["__test__", "dist", "node_modules"],
+  "include": ["src"]
 }

@@ -1,9 +1,9 @@
-import IStateStore from "./StateStore/IStateStore"
-import ILogger from "./Logger/ILogger"
-import SemanticVersionTemplateParser from "./SemanticVersion/SemanticVersionTemplateParser"
-import IXcodeVersionRepository from "./XcodeVersion/IXcodeVersionRepository"
-import XcodeVersionMatcher from "./XcodeVersion/XcodeVersionMatcher"
-import IXcodeSelector from "./XcodeSelector/IXcodeSelector"
+import IStateStore from "./StateStore/IStateStore.js"
+import ILogger from "./Logger/ILogger.js"
+import SemanticVersionTemplateParser from "./SemanticVersion/SemanticVersionTemplateParser.js"
+import IXcodeVersionRepository from "./XcodeVersion/IXcodeVersionRepository.js"
+import XcodeVersionMatcher from "./XcodeVersion/XcodeVersionMatcher.js"
+import IXcodeSelector from "./XcodeSelector/IXcodeSelector.js"
 
 export interface ActionOptions {
   readonly version: string
@@ -49,12 +49,11 @@ export default class Action {
       throw new Error(options.version + " could not be parsed to a semantic version template.")
     }
     try {
-      const xcodeVersion = this.xcodeVersionMatcher.findXcodeVersion(versionTemplate)
+      const xcodeVersion = await this.xcodeVersionMatcher.findXcodeVersion(versionTemplate)
       await this.xcodeSelector.select(xcodeVersion.filePath)
       this.logger.log(xcodeVersion.name + " was selected.")
-    } catch {
-      const installedXcodeNames = this.xcodeVersionRepository
-        .getXcodeVersions()
+    } catch (error) {
+      const installedXcodeNames = (await this.xcodeVersionRepository.getXcodeVersions())
         .map(e => "- " + e.name)
         .join("\n")
       throw new Error(

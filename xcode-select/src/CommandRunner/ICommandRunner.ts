@@ -1,3 +1,3 @@
 export default interface ICommandRunner {
-  run(cmd: string): Promise<string>
+  run(cmd: string[]): Promise<string>
 }

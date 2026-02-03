@@ -37,7 +37,7 @@ test("It throws when given invalid version", async () => {
     xcodeSelector: new MockXcodeSelector()
   })
   const options = new MockActionOptions("foo")
-  expect(action.run(options)).rejects.toThrow()
+  await expect(action.run(options)).rejects.toThrow()
 })
 
 test("It throws error when Xcode version not found", async () => {
@@ -52,7 +52,7 @@ test("It throws error when Xcode version not found", async () => {
     xcodeSelector: new MockXcodeSelector()
   })
   const options = new MockActionOptions("15.0")
-  expect(action.run(options)).rejects.toThrow()
+  await expect(action.run(options)).rejects.toThrow()
 })
 
 test("It selects an Xcode version", async () => {

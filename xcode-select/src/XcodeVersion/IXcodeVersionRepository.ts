@@ -1,5 +1,5 @@
-import XcodeVersion from "./XcodeVersion"
+import XcodeVersion from "./XcodeVersion.js"
 
 export default interface IXcodeVersionRepository {
-  getXcodeVersions(): XcodeVersion[]
+  getXcodeVersions(): Promise<XcodeVersion[]>
 }

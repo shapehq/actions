@@ -43,7 +43,7 @@ async function renderBetaBadge(options: { filePath: string, curlColor?: string }
 
 async function getCurlColor(filePath: string, tintColor?: string) {
   const imageSize = await getImageSize(filePath)
-  if (tintColor && tintColor.length > 0) {
+  if (tintColor && typeof tintColor === 'string' && tintColor.length > 0) {
     return hexToRgb(tintColor)
   } else {
     return await getPixelColor(filePath, { x: imageSize.width - 1, y: 0 })
