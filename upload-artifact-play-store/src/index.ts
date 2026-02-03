@@ -2,12 +2,13 @@ import * as core from "@actions/core";
 import * as google from "@googleapis/androidpublisher";
 import * as fs from "fs";
 
-import { androidpublisher_v3 } from "@googleapis/androidpublisher";
-import Publisher = androidpublisher_v3.Androidpublisher;
-import Apk = androidpublisher_v3.Schema$Apk;
-import Bundle = androidpublisher_v3.Schema$Bundle;
-import Track = androidpublisher_v3.Schema$Track;
-import { GoogleAuth } from "google-auth-library";
+import type { androidpublisher_v3 } from "@googleapis/androidpublisher";
+import type { GoogleAuth } from "google-auth-library";
+
+type Publisher = androidpublisher_v3.Androidpublisher;
+type Apk = androidpublisher_v3.Schema$Apk;
+type Bundle = androidpublisher_v3.Schema$Bundle;
+type Track = androidpublisher_v3.Schema$Track;
 
 async function createAuthClient(serviceAccountKeyPath: string): Promise<GoogleAuth> {
   return new google.auth.GoogleAuth({

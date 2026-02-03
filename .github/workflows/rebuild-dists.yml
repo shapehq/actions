@@ -81,7 +81,7 @@ jobs:
         run: npm ci
       - name: Build
         working-directory: ${{ matrix.package }}
-        run: npm run build
+        run: npm run package
       - name: Commit and push if needed
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then
