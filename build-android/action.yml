@@ -1,39 +1,49 @@
-name: "Android Build"
-description: "Builds your Android project with Gradle."
-author: "Gerard Sala"
+name: 'Android Build'
+description: 'Builds your Android project with Gradle.'
+author: 'Gerard Sala'
 
 inputs:
   project-location:
-    description: "The root directory of your Android project. For example, where your root build gradle file exist (also gradlew, settings.gradle, and so on)"
+    description:
+      'The root directory of your Android project. For example, where your root build gradle file exist (also gradlew, settings.gradle, and
+      so on)'
     required: false
-    default: "."
+    default: '.'
   module:
-    description: "Set the module that you want to build. To see your available modules, please open your project in Android Studio and go in [Project Structure] and see the list on the left."
+    description:
+      'Set the module that you want to build. To see your available modules, please open your project in Android Studio and go in [Project
+      Structure] and see the list on the left.'
     required: false
-    default: "app"
+    default: 'app'
   variant:
-    description: "Set the build variants you want to create. To see your available variants, open your project in Android Studio and go in [Project Structure] -> variants section. This input also accepts multiple variants, comma-separated."
+    description:
+      'Set the build variants you want to create. To see your available variants, open your project in Android Studio and go in [Project
+      Structure] -> variants section. This input also accepts multiple variants, comma-separated.'
     required: false
-    default: "debug"
+    default: 'debug'
   artifact-type:
-    description: "Set the build type that you want to build. Can be `apk` or `aab`."
+    description: 'Set the build type that you want to build. Can be `apk` or `aab`.'
     required: false
-    default: "apk"
+    default: 'apk'
   arguments:
-    description: "Extra arguments passed to the gradle task"
+    description: 'Extra arguments passed to the gradle task'
     required: false
-    default: ""
+    default: ''
 
 outputs:
   apk-path:
-    description: "Path of the generated APK after filtering. If the build generates more than one APK which fulfills the filter inputs, this output will contain the last ones path."
+    description:
+      'Path of the generated APK after filtering. If the build generates more than one APK which fulfills the filter inputs, this output
+      will contain the last ones path.'
   apk-path-list:
-    description: "List of the generated APK paths after filtering. The paths are separated with | character."
+    description: 'List of the generated APK paths after filtering. The paths are separated with | character.'
   aab-path:
-    description: "Path of the generated AAB after filtering. If the build generates more than one AAB which fulfills the filter inputs, this output will contain the last ones path."
+    description:
+      'Path of the generated AAB after filtering. If the build generates more than one AAB which fulfills the filter inputs, this output
+      will contain the last ones path.'
   aab-path-list:
-    description: "List of the generated AAB paths after filtering. The paths are separated with | character."
+    description: 'List of the generated AAB paths after filtering. The paths are separated with | character.'
 
 runs:
-  using: "node20"
-  main: "dist/index.js"
+  using: 'node24'
+  main: 'dist/index.js'

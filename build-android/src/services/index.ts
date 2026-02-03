@@ -1,4 +1,4 @@
-export { processConfig } from "./config.service";
-export { executeGradleBuild } from "./build.service";
-export { discoverArtifacts } from "./artifact-discovery.service";
-export { exportResult } from "./export.service";
+export { processConfig } from './config.service.js'
+export { executeGradleBuild } from './build.service.js'
+export { discoverArtifacts } from './artifact-discovery.service.js'
+export { exportResult } from './export.service.js'
