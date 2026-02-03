@@ -1,11 +1,13 @@
 name: Install App Store Connect API Key
 inputs:
-  op-asc-key-issuer-id-reference:
+  asc-key-issuer-id:
     required: true
-  op-asc-key-id-reference:
+  asc-key-id:
     required: true
-  op-asc-key-file-reference:
-    required: true
+  asc-key-base64:
+    required: false
+  asc-key-file:
+    required: false
   output-asc-key-file-directory:
     required: false
     default: .
@@ -23,22 +25,32 @@ runs:
   steps:
     - id: read
       run: |
-        # Read issuer id
-        issuer_id=$(op read "${{ inputs.op-asc-key-issuer-id-reference }}")
+        set -euo pipefail
+        issuer_id="${{ inputs.asc-key-issuer-id }}"
+        key_id="${{ inputs.asc-key-id }}"
+        if [ -z "$issuer_id" ] || [ -z "$key_id" ]; then
+          echo "Error: asc-key-issuer-id and asc-key-id are required."
+          exit 1
+        fi
         echo "issuer_id=${issuer_id}" >> $GITHUB_OUTPUT
-
-        # Read key id
-        key_id=$(op read "${{ inputs.op-asc-key-id-reference }}")
         echo "key_id=${key_id}" >> $GITHUB_OUTPUT
         
         # Ensure output directory exists
         eval output_dir="${{ inputs.output-asc-key-file-directory }}"
         mkdir -p "$output_dir"
 
-        # Read key file
+        # Write key file
         key_filename="AuthKey_${key_id}.p8"
         key_file_path="${output_dir}/${key_filename}"
-        op read --out-file "${key_file_path}" "${{ inputs.op-asc-key-file-reference }}"
+        if [[ -n "${{ inputs.asc-key-base64 }}" ]]; then
+          printf '%s' "${{ inputs.asc-key-base64 }}" | openssl base64 -d -A -out "${key_file_path}"
+        elif [[ -n "${{ inputs.asc-key-file }}" ]]; then
+          eval asc_key_file="${{ inputs.asc-key-file }}"
+          cp "${asc_key_file}" "${key_file_path}"
+        else
+          echo "Error: Provide asc-key-base64 or asc-key-file."
+          exit 1
+        fi
         key_full_file_path=$(readlink -f $key_file_path)
         echo "key_filename=${key_filename}" >> $GITHUB_OUTPUT
         echo "key_file_path=${key_full_file_path}" >> $GITHUB_OUTPUT
