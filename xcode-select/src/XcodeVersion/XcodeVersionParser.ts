@@ -1,6 +1,6 @@
-import SemanticVersionParser from "../SemanticVersion/SemanticVersionParser"
-import XcodeVersion from "./XcodeVersion"
-import IXcodeVersionParser from "./IXcodeVersionParser"
+import SemanticVersionParser from "../SemanticVersion/SemanticVersionParser.js"
+import XcodeVersion from "./XcodeVersion.js"
+import IXcodeVersionParser from "./IXcodeVersionParser.js"
 
 export default class XcodeVersionParser implements IXcodeVersionParser {
   private readonly semanticVersionParser: SemanticVersionParser

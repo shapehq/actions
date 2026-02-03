@@ -1,10 +1,10 @@
 import path from "path"
-import IFileSystem from "../FileSystem/IFileSystem"
-import XcodeVersion from "./XcodeVersion"
-import IXcodeVersionParser from "./IXcodeVersionParser"
-import IXcodeVersionRepository from "./IXcodeVersionRepository"
-import { xcodeVersionSort } from "../XcodeVersion/XcodeVersion"
-import IPlistReader from "../PlistReader/IPlistReader"
+import IFileSystem from "../FileSystem/IFileSystem.js"
+import XcodeVersion from "./XcodeVersion.js"
+import IXcodeVersionParser from "./IXcodeVersionParser.js"
+import IXcodeVersionRepository from "./IXcodeVersionRepository.js"
+import { xcodeVersionSort } from "../XcodeVersion/XcodeVersion.js"
+import IPlistReader from "../PlistReader/IPlistReader.js"
 
 export default class FileSystemXcodeVersionRepository implements IXcodeVersionRepository {
   private readonly fileSystem: IFileSystem

@@ -48,12 +48,15 @@ runs:
       run: npm install -g firebase-tools
 
     - name: Load credentials
+      id: upload-artifact-firebase-credentials
       uses: 1password/load-secrets-action@v3
       env:
         SERVICE_ACCOUNT_CREDENTIALS: ${{ inputs.serviceCredentialsOpReference }}
 
     - name: Write credentials file
       shell: bash
+      env:
+        SERVICE_ACCOUNT_CREDENTIALS: ${{ steps.upload-artifact-firebase-credentials.outputs.SERVICE_ACCOUNT_CREDENTIALS }}
       run: |
         echo "$SERVICE_ACCOUNT_CREDENTIALS" > service-account.json
         echo "GOOGLE_APPLICATION_CREDENTIALS=service-account.json" >> $GITHUB_ENV
