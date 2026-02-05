@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import { Config, Result } from './types.js'
-import { processConfig, executeGradleBuild, discoverArtifacts, exportResult } from './services/index.js'
+import { processConfig, executeGradleBuild, discoverArtifacts, discoverManifests, exportResult } from './services/index.js'
 
 async function run(): Promise<void> {
   try {
@@ -8,8 +8,10 @@ async function run(): Promise<void> {
     const config: Config = await processConfig()
     await executeGradleBuild(config)
     const { appFiles } = await discoverArtifacts(config, startTime)
+    const { manifestFiles } = await discoverManifests(config, startTime)
     const result: Result = {
-      appFiles
+      appFiles,
+      manifestFiles
     }
     await exportResult(result)
   } catch (error) {

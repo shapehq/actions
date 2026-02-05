@@ -1,47 +1,36 @@
 import * as core from '@actions/core'
 import * as path from 'path'
-import { Result, APK_APP_TYPE, APK_ENV_KEY, AAB_ENV_KEY, APK_LIST_ENV_KEY, AAB_LIST_ENV_KEY, AAB_APP_TYPE } from '../types.js'
+import { Result, ARTIFACT_ENV_KEY, ARTIFACT_LIST_ENV_KEY, MANIFEST_ENV_KEY, MANIFEST_LIST_ENV_KEY } from '../types.js'
 
 export async function exportResult(result: Result): Promise<void> {
   if (result.appFiles.length === 0) {
     throw new Error('Could not find any app artifacts')
   }
 
-  // Group artifacts by type
-  const apkArtifacts = result.appFiles.filter((artifact) => artifact.type === APK_APP_TYPE)
-  const aabArtifacts = result.appFiles.filter((artifact) => artifact.type === AAB_APP_TYPE)
+  const lastArtifact = result.appFiles[result.appFiles.length - 1]
+  core.setOutput(ARTIFACT_ENV_KEY, lastArtifact.path)
+  core.info('')
+  core.info(`  Output [ ${ARTIFACT_ENV_KEY} = ${path.basename(lastArtifact.path)} ]`)
 
-  // Set outputs for APK artifacts if any exist
-  if (apkArtifacts.length > 0) {
-    const lastApkArtifact = apkArtifacts[apkArtifacts.length - 1]
-    core.setOutput(APK_ENV_KEY, lastApkArtifact.path)
+  const artifactPaths = result.appFiles.map((artifact) => artifact.path).join('|')
+  core.setOutput(ARTIFACT_LIST_ENV_KEY, artifactPaths)
+  core.info(`  Output [ ${ARTIFACT_LIST_ENV_KEY} = ${result.appFiles.map((a) => path.basename(a.path)).join('|')} ]`)
+
+  if (result.manifestFiles.length > 0) {
+    const lastManifest = result.manifestFiles[result.manifestFiles.length - 1]
+    core.setOutput(MANIFEST_ENV_KEY, lastManifest.path)
     core.info('')
-    core.info(`  Output [ ${APK_ENV_KEY} = ${path.basename(lastApkArtifact.path)} ]`)
+    core.info(`  Output [ ${MANIFEST_ENV_KEY} = ${path.basename(lastManifest.path)} ]`)
 
-    const apkPaths = apkArtifacts.map((artifact) => artifact.path).join('|')
-    core.setOutput(APK_LIST_ENV_KEY, apkPaths)
-    core.info(`  Output [ ${APK_LIST_ENV_KEY} = ${apkArtifacts.map((a) => path.basename(a.path)).join('|')} ]`)
-  }
-
-  // Set outputs for AAB artifacts if any exist
-  if (aabArtifacts.length > 0) {
-    const lastAabArtifact = aabArtifacts[aabArtifacts.length - 1]
-    core.setOutput(AAB_ENV_KEY, lastAabArtifact.path)
-    core.info('')
-    core.info(`  Output [ ${AAB_ENV_KEY} = ${path.basename(lastAabArtifact.path)} ]`)
-
-    const aabPaths = aabArtifacts.map((artifact) => artifact.path).join('|')
-    core.setOutput(AAB_LIST_ENV_KEY, aabPaths)
-    core.info(`  Output [ ${AAB_LIST_ENV_KEY} = ${aabArtifacts.map((a) => path.basename(a.path)).join('|')} ]`)
+    const manifestPaths = result.manifestFiles.map((manifest) => manifest.path).join('|')
+    core.setOutput(MANIFEST_LIST_ENV_KEY, manifestPaths)
+    core.info(`  Output [ ${MANIFEST_LIST_ENV_KEY} = ${result.manifestFiles.map((m) => path.basename(m.path)).join('|')} ]`)
+  } else {
+    core.warning('No merged manifest files found to export.')
   }
 
   // Log summary
   core.info('')
   core.info(`Total artifacts exported: ${result.appFiles.length}`)
-  if (apkArtifacts.length > 0) {
-    core.info(`  APK artifacts: ${apkArtifacts.length}`)
-  }
-  if (aabArtifacts.length > 0) {
-    core.info(`  AAB artifacts: ${aabArtifacts.length}`)
-  }
+  core.info(`Total merged manifests exported: ${result.manifestFiles.length}`)
 }

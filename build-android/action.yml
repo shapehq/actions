@@ -31,18 +31,17 @@ inputs:
     default: ''
 
 outputs:
-  apk-path:
+  artifact-path:
     description:
-      'Path of the generated APK after filtering. If the build generates more than one APK which fulfills the filter inputs, this output
-      will contain the last ones path.'
-  apk-path-list:
-    description: 'List of the generated APK paths after filtering. The paths are separated with | character.'
-  aab-path:
+      'Path of the generated APK/AAB after filtering. If the build generates more than one matching artifact, this output will contain the
+      last ones path.'
+  artifact-path-list:
+    description: 'List of the generated APK/AAB paths after filtering. The paths are separated with | character.'
+  manifest-path:
     description:
-      'Path of the generated AAB after filtering. If the build generates more than one AAB which fulfills the filter inputs, this output
-      will contain the last ones path.'
-  aab-path-list:
-    description: 'List of the generated AAB paths after filtering. The paths are separated with | character.'
+      'Path of the merged AndroidManifest.xml after filtering. If more than one match is found, this output will contain the last ones path.'
+  manifest-path-list:
+    description: 'List of the merged AndroidManifest.xml paths after filtering. The paths are separated with | character.'
 
 runs:
   using: 'node24'

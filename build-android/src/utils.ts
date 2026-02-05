@@ -16,6 +16,14 @@ export function parseVariants(input: string): string[] {
   return variants
 }
 
+export function capitalizeVariant(variant: string): string {
+  if (!variant) {
+    return variant
+  }
+
+  return variant.charAt(0).toUpperCase() + variant.slice(1)
+}
+
 export async function fileExists(filePath: string): Promise<boolean> {
   try {
     await fs.access(filePath)
@@ -97,5 +105,53 @@ export function generateAppPathPatterns(module: string, variants: string[], appT
   }
 
   // Remove duplicates while preserving order
+  return [...new Set(patterns)]
+}
+
+export function generateManifestPathPatterns(module: string, variants: string[]): string[] {
+  const patterns: string[] = []
+  const modulePrefix = module && module.startsWith(':') ? module.substring(1) : module
+  const hasModule = Boolean(modulePrefix)
+  const hasVariants = variants.length > 0
+
+  const addVariantPatterns = (prefix: string, variant: string): void => {
+    const trimmed = variant.trim()
+    if (!trimmed) {
+      return
+    }
+
+    const variantCap = capitalizeVariant(trimmed)
+
+    patterns.push(`${prefix}/build/intermediates/merged_manifests/${trimmed}/process${variantCap}Manifest/AndroidManifest.xml`)
+    patterns.push(`${prefix}/build/intermediates/merged_manifest/${trimmed}/AndroidManifest.xml`)
+    patterns.push(`${prefix}/build/intermediates/merged_manifest/${trimmed}/merged/AndroidManifest.xml`)
+    patterns.push(`${prefix}/build/intermediates/merged_manifests/${trimmed}/AndroidManifest.xml`)
+    patterns.push(`${prefix}/build/intermediates/merged_manifests/${trimmed}/merged/AndroidManifest.xml`)
+    patterns.push(`${prefix}/build/intermediates/merged_manifest/*${trimmed}*/AndroidManifest.xml`)
+    patterns.push(`${prefix}/build/intermediates/merged_manifests/*${trimmed}*/AndroidManifest.xml`)
+  }
+
+  if (hasModule && hasVariants) {
+    for (const variant of variants) {
+      addVariantPatterns(modulePrefix, variant)
+    }
+  } else if (hasModule) {
+    patterns.push(`${modulePrefix}/build/intermediates/merged_manifests/*/process*Manifest/AndroidManifest.xml`)
+    patterns.push(`${modulePrefix}/build/intermediates/merged_manifest/*/AndroidManifest.xml`)
+    patterns.push(`${modulePrefix}/build/intermediates/merged_manifest/*/merged/AndroidManifest.xml`)
+    patterns.push(`${modulePrefix}/build/intermediates/merged_manifests/*/AndroidManifest.xml`)
+    patterns.push(`${modulePrefix}/build/intermediates/merged_manifests/*/merged/AndroidManifest.xml`)
+  } else if (hasVariants) {
+    for (const variant of variants) {
+      addVariantPatterns('*', variant)
+    }
+  }
+
+  patterns.push('*/build/intermediates/merged_manifests/*/process*Manifest/AndroidManifest.xml')
+  patterns.push('*/build/intermediates/merged_manifest/*/AndroidManifest.xml')
+  patterns.push('*/build/intermediates/merged_manifest/*/merged/AndroidManifest.xml')
+  patterns.push('*/build/intermediates/merged_manifests/*/AndroidManifest.xml')
+  patterns.push('*/build/intermediates/merged_manifests/*/merged/AndroidManifest.xml')
+
   return [...new Set(patterns)]
 }

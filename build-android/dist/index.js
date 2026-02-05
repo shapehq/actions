@@ -33085,10 +33085,10 @@ function superRefine(fn) {
 
 const APK_APP_TYPE = 'apk';
 const AAB_APP_TYPE = 'aab';
-const APK_ENV_KEY = 'apk-path';
-const APK_LIST_ENV_KEY = 'apk-path-list';
-const AAB_ENV_KEY = 'aab-path';
-const AAB_LIST_ENV_KEY = 'aab-path-list';
+const ARTIFACT_ENV_KEY = 'artifact-path';
+const ARTIFACT_LIST_ENV_KEY = 'artifact-path-list';
+const MANIFEST_ENV_KEY = 'manifest-path';
+const MANIFEST_LIST_ENV_KEY = 'manifest-path-list';
 
 function parseVariants(input) {
     if (!input.trim()) {
@@ -33100,6 +33100,12 @@ function parseVariants(input) {
         .map((v) => v.trim())
         .filter((v) => v.length > 0);
     return variants;
+}
+function capitalizeVariant(variant) {
+    if (!variant) {
+        return variant;
+    }
+    return variant.charAt(0).toUpperCase() + variant.slice(1);
 }
 function getFileExtension(filePath) {
     return extname(filePath);
@@ -33162,6 +33168,49 @@ function generateAppPathPatterns(module, variants, appType) {
         patterns.push('*/build/outputs/bundle/*.aab');
     }
     // Remove duplicates while preserving order
+    return [...new Set(patterns)];
+}
+function generateManifestPathPatterns(module, variants) {
+    const patterns = [];
+    const modulePrefix = module && module.startsWith(':') ? module.substring(1) : module;
+    const hasModule = Boolean(modulePrefix);
+    const hasVariants = variants.length > 0;
+    const addVariantPatterns = (prefix, variant) => {
+        const trimmed = variant.trim();
+        if (!trimmed) {
+            return;
+        }
+        const variantCap = capitalizeVariant(trimmed);
+        patterns.push(`${prefix}/build/intermediates/merged_manifests/${trimmed}/process${variantCap}Manifest/AndroidManifest.xml`);
+        patterns.push(`${prefix}/build/intermediates/merged_manifest/${trimmed}/AndroidManifest.xml`);
+        patterns.push(`${prefix}/build/intermediates/merged_manifest/${trimmed}/merged/AndroidManifest.xml`);
+        patterns.push(`${prefix}/build/intermediates/merged_manifests/${trimmed}/AndroidManifest.xml`);
+        patterns.push(`${prefix}/build/intermediates/merged_manifests/${trimmed}/merged/AndroidManifest.xml`);
+        patterns.push(`${prefix}/build/intermediates/merged_manifest/*${trimmed}*/AndroidManifest.xml`);
+        patterns.push(`${prefix}/build/intermediates/merged_manifests/*${trimmed}*/AndroidManifest.xml`);
+    };
+    if (hasModule && hasVariants) {
+        for (const variant of variants) {
+            addVariantPatterns(modulePrefix, variant);
+        }
+    }
+    else if (hasModule) {
+        patterns.push(`${modulePrefix}/build/intermediates/merged_manifests/*/process*Manifest/AndroidManifest.xml`);
+        patterns.push(`${modulePrefix}/build/intermediates/merged_manifest/*/AndroidManifest.xml`);
+        patterns.push(`${modulePrefix}/build/intermediates/merged_manifest/*/merged/AndroidManifest.xml`);
+        patterns.push(`${modulePrefix}/build/intermediates/merged_manifests/*/AndroidManifest.xml`);
+        patterns.push(`${modulePrefix}/build/intermediates/merged_manifests/*/merged/AndroidManifest.xml`);
+    }
+    else if (hasVariants) {
+        for (const variant of variants) {
+            addVariantPatterns('*', variant);
+        }
+    }
+    patterns.push('*/build/intermediates/merged_manifests/*/process*Manifest/AndroidManifest.xml');
+    patterns.push('*/build/intermediates/merged_manifest/*/AndroidManifest.xml');
+    patterns.push('*/build/intermediates/merged_manifest/*/merged/AndroidManifest.xml');
+    patterns.push('*/build/intermediates/merged_manifests/*/AndroidManifest.xml');
+    patterns.push('*/build/intermediates/merged_manifests/*/merged/AndroidManifest.xml');
     return [...new Set(patterns)];
 }
 
@@ -35452,42 +35501,113 @@ function printAppSearchInfo(appArtifacts, appPathPatterns) {
     info('');
 }
 
+async function discoverManifests(config, started) {
+    info('');
+    info('Export Merged Manifests:');
+    const manifestPathPatterns = generateManifestPathPatterns(config.module, config.variants);
+    const projectRoot = path.resolve(config.projectLocation).replace(/\\/g, '/').replace(/\/+$/u, '');
+    const scopedPatterns = manifestPathPatterns.map((pattern) => `${projectRoot}/${pattern.replace(/^\/+/u, '')}`);
+    info('Generated search patterns:');
+    scopedPatterns.forEach((pattern) => info(`  ${pattern}`));
+    const manifestFiles = await getManifests(config.projectLocation, started, scopedPatterns);
+    printManifestSearchInfo(manifestFiles, scopedPatterns);
+    if (manifestFiles.length === 0) {
+        warning(`No merged manifests found with generated patterns:\n${scopedPatterns.join('\n')}`);
+        warning('The merged manifest location can vary across AGP versions; please verify your build outputs.');
+    }
+    return {
+        manifestFiles
+    };
+}
+async function getManifests(projectLocation, started, patterns) {
+    const manifests = [];
+    for (const pattern of patterns) {
+        try {
+            const files = await findManifests(projectLocation, started, pattern);
+            manifests.push(...files);
+        }
+        catch (error) {
+            warning(`Failed to find manifest with pattern ( ${pattern} ), error: ${error}`);
+            continue;
+        }
+    }
+    if (manifests.length === 0) {
+        if (started.getTime() > 0) {
+            warning(`No merged manifests found with patterns: ${patterns.join(', ')} that has modification time after: ${started}`);
+            warning('Retrying without modtime check....');
+            info('');
+            return getManifests(projectLocation, new Date(0), patterns);
+        }
+        warning(`No merged manifests found with pattern: ${patterns.join(', ')} without modtime check`);
+    }
+    return manifests;
+}
+async function findManifests(projectLocation, generatedAfter, pattern) {
+    const manifests = [];
+    try {
+        const globber = await create(pattern, {
+            followSymbolicLinks: false,
+            implicitDescendants: true
+        });
+        const files = await globber.glob();
+        for (const file of files) {
+            try {
+                const stats = await fs.promises.stat(file);
+                if (generatedAfter && stats.mtime < generatedAfter) {
+                    continue;
+                }
+                manifests.push({
+                    path: file,
+                    name: getBaseName(file)
+                });
+            }
+            catch (error) {
+                warning(`Failed to stat file ${file}: ${error}`);
+            }
+        }
+    }
+    catch (error) {
+        throw new Error(`Failed to find manifests with pattern ${pattern}: ${error}`);
+    }
+    return manifests;
+}
+function printManifestSearchInfo(manifestFiles, patterns) {
+    const manifestNames = manifestFiles.map((m) => m.name);
+    info('Used patterns for merged manifest search:');
+    info(patterns.join('\n'));
+    info('');
+    info('Found merged manifests:');
+    info(manifestNames.join('\n'));
+    info('');
+}
+
 async function exportResult(result) {
     if (result.appFiles.length === 0) {
         throw new Error('Could not find any app artifacts');
     }
-    // Group artifacts by type
-    const apkArtifacts = result.appFiles.filter((artifact) => artifact.type === APK_APP_TYPE);
-    const aabArtifacts = result.appFiles.filter((artifact) => artifact.type === AAB_APP_TYPE);
-    // Set outputs for APK artifacts if any exist
-    if (apkArtifacts.length > 0) {
-        const lastApkArtifact = apkArtifacts[apkArtifacts.length - 1];
-        setOutput(APK_ENV_KEY, lastApkArtifact.path);
+    const lastArtifact = result.appFiles[result.appFiles.length - 1];
+    setOutput(ARTIFACT_ENV_KEY, lastArtifact.path);
+    info('');
+    info(`  Output [ ${ARTIFACT_ENV_KEY} = ${path.basename(lastArtifact.path)} ]`);
+    const artifactPaths = result.appFiles.map((artifact) => artifact.path).join('|');
+    setOutput(ARTIFACT_LIST_ENV_KEY, artifactPaths);
+    info(`  Output [ ${ARTIFACT_LIST_ENV_KEY} = ${result.appFiles.map((a) => path.basename(a.path)).join('|')} ]`);
+    if (result.manifestFiles.length > 0) {
+        const lastManifest = result.manifestFiles[result.manifestFiles.length - 1];
+        setOutput(MANIFEST_ENV_KEY, lastManifest.path);
         info('');
-        info(`  Output [ ${APK_ENV_KEY} = ${path.basename(lastApkArtifact.path)} ]`);
-        const apkPaths = apkArtifacts.map((artifact) => artifact.path).join('|');
-        setOutput(APK_LIST_ENV_KEY, apkPaths);
-        info(`  Output [ ${APK_LIST_ENV_KEY} = ${apkArtifacts.map((a) => path.basename(a.path)).join('|')} ]`);
+        info(`  Output [ ${MANIFEST_ENV_KEY} = ${path.basename(lastManifest.path)} ]`);
+        const manifestPaths = result.manifestFiles.map((manifest) => manifest.path).join('|');
+        setOutput(MANIFEST_LIST_ENV_KEY, manifestPaths);
+        info(`  Output [ ${MANIFEST_LIST_ENV_KEY} = ${result.manifestFiles.map((m) => path.basename(m.path)).join('|')} ]`);
     }
-    // Set outputs for AAB artifacts if any exist
-    if (aabArtifacts.length > 0) {
-        const lastAabArtifact = aabArtifacts[aabArtifacts.length - 1];
-        setOutput(AAB_ENV_KEY, lastAabArtifact.path);
-        info('');
-        info(`  Output [ ${AAB_ENV_KEY} = ${path.basename(lastAabArtifact.path)} ]`);
-        const aabPaths = aabArtifacts.map((artifact) => artifact.path).join('|');
-        setOutput(AAB_LIST_ENV_KEY, aabPaths);
-        info(`  Output [ ${AAB_LIST_ENV_KEY} = ${aabArtifacts.map((a) => path.basename(a.path)).join('|')} ]`);
+    else {
+        warning('No merged manifest files found to export.');
     }
     // Log summary
     info('');
     info(`Total artifacts exported: ${result.appFiles.length}`);
-    if (apkArtifacts.length > 0) {
-        info(`  APK artifacts: ${apkArtifacts.length}`);
-    }
-    if (aabArtifacts.length > 0) {
-        info(`  AAB artifacts: ${aabArtifacts.length}`);
-    }
+    info(`Total merged manifests exported: ${result.manifestFiles.length}`);
 }
 
 async function run() {
@@ -35496,8 +35616,10 @@ async function run() {
         const config = await processConfig();
         await executeGradleBuild(config);
         const { appFiles } = await discoverArtifacts(config, startTime);
+        const { manifestFiles } = await discoverManifests(config, startTime);
         const result = {
-            appFiles
+            appFiles,
+            manifestFiles
         };
         await exportResult(result);
     }

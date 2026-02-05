@@ -10,6 +10,7 @@ export interface Config {
 
 export interface Result {
   appFiles: Artifact[]
+  manifestFiles: ManifestFile[]
 }
 
 export interface Artifact {
@@ -18,10 +19,15 @@ export interface Artifact {
   type: ArtifactType
 }
 
+export interface ManifestFile {
+  path: string
+  name: string
+}
+
 export const APK_APP_TYPE = 'apk'
 export const AAB_APP_TYPE = 'aab'
 
-export const APK_ENV_KEY = 'apk-path'
-export const APK_LIST_ENV_KEY = 'apk-path-list'
-export const AAB_ENV_KEY = 'aab-path'
-export const AAB_LIST_ENV_KEY = 'aab-path-list'
+export const ARTIFACT_ENV_KEY = 'artifact-path'
+export const ARTIFACT_LIST_ENV_KEY = 'artifact-path-list'
+export const MANIFEST_ENV_KEY = 'manifest-path'
+export const MANIFEST_LIST_ENV_KEY = 'manifest-path-list'

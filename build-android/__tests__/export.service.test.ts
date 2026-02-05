@@ -1,5 +1,12 @@
 import { exportResult } from '../src/services/export.service.js'
-import { AAB_APP_TYPE, AAB_ENV_KEY, AAB_LIST_ENV_KEY, APK_APP_TYPE, APK_ENV_KEY, APK_LIST_ENV_KEY } from '../src/types.js'
+import {
+  AAB_APP_TYPE,
+  APK_APP_TYPE,
+  ARTIFACT_ENV_KEY,
+  ARTIFACT_LIST_ENV_KEY,
+  MANIFEST_ENV_KEY,
+  MANIFEST_LIST_ENV_KEY
+} from '../src/types.js'
 import * as core from '@actions/core'
 import { jest } from '@jest/globals'
 
@@ -8,18 +15,22 @@ describe('exportResult', () => {
     jest.clearAllMocks()
   })
 
-  it('writes outputs for last APK/AAB artifacts and lists', async () => {
+  it('writes outputs for last artifact and manifest list', async () => {
     await exportResult({
       appFiles: [
         { path: '/tmp/app-1.apk', name: 'app-1.apk', type: APK_APP_TYPE },
         { path: '/tmp/app-2.apk', name: 'app-2.apk', type: APK_APP_TYPE },
         { path: '/tmp/app-3.aab', name: 'app-3.aab', type: AAB_APP_TYPE }
+      ],
+      manifestFiles: [
+        { path: '/tmp/manifest-1.xml', name: 'AndroidManifest.xml' },
+        { path: '/tmp/manifest-2.xml', name: 'AndroidManifest.xml' }
       ]
     })
 
-    expect(core.setOutput).toHaveBeenCalledWith(APK_ENV_KEY, '/tmp/app-2.apk')
-    expect(core.setOutput).toHaveBeenCalledWith(APK_LIST_ENV_KEY, '/tmp/app-1.apk|/tmp/app-2.apk')
-    expect(core.setOutput).toHaveBeenCalledWith(AAB_ENV_KEY, '/tmp/app-3.aab')
-    expect(core.setOutput).toHaveBeenCalledWith(AAB_LIST_ENV_KEY, '/tmp/app-3.aab')
+    expect(core.setOutput).toHaveBeenCalledWith(ARTIFACT_ENV_KEY, '/tmp/app-3.aab')
+    expect(core.setOutput).toHaveBeenCalledWith(ARTIFACT_LIST_ENV_KEY, '/tmp/app-1.apk|/tmp/app-2.apk|/tmp/app-3.aab')
+    expect(core.setOutput).toHaveBeenCalledWith(MANIFEST_ENV_KEY, '/tmp/manifest-2.xml')
+    expect(core.setOutput).toHaveBeenCalledWith(MANIFEST_LIST_ENV_KEY, '/tmp/manifest-1.xml|/tmp/manifest-2.xml')
   })
 })
