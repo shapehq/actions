@@ -10,8 +10,8 @@ inputs:
     description: Runner to post    
     required: true
     default: ${{ runner.name }}
-  op-slack-token-reference:
-    description: Slack access token reference
+  slack-token:
+    description: Slack access token
     required: true
   buttons:
     description: A JSON array of buttons
@@ -32,13 +32,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Read Slack Token
-      id: read-token
-      run: |
-        TOKEN=$(op read "${{ inputs.op-slack-token-reference }}")
-        echo "::add-mask::$TOKEN"
-        echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
-      shell: bash
     - name: Post to Slack
       uses: actions/github-script@v8
       with:
@@ -49,7 +42,7 @@ runs:
           const fields = '${{ inputs.fields }}'
           const addWorkflowInfoFields = ${{ inputs.add-workflow-info-fields }}
           const addViewLogsButton = ${{ inputs.add-view-logs-button }}
-          const accessToken = '${{ steps.read-token.outputs.token }}'
+          const accessToken = '${{ inputs.slack-token }}'
 
           if (!channel || channel.length == 0) {
             core.setFailed('Error: Channel must be specified and be non-empty.')

@@ -14,6 +14,11 @@ The action has the following inputs:
 | distributionListDefinitions | The available distribution lists in JSON format. E.g. `{"Shape": ["a@shape.dk", "b@shape.dk"], "Client": ["a@example.com", "b@example.com"]}`                  |
 | distributionListTargets     | The distribution lists that will receive the builds, comma-separated. Should be one or more of the keys in `distributionListDefinitions`. E.g. `Shape,Client`. |
 | releaseNotes                | The release notes that are going to be shown in Shipshape for this build.                                                                                      |
+| ssh-key                     | SSH private key contents used to access Shipshape.                                                                                                             |
+| ssh-key-base64              | Base64-encoded SSH private key.                                                                                                                                |
+| ssh-key-file                | Path to an SSH private key file.                                                                                                                               |
+| ssh-key-password            | Password for the SSH key, if needed.                                                                                                                           |
+| shipshape-activation-code   | Activation code for Shipshape.                                                                                                                                |
 
 Example:
 
@@ -29,4 +34,6 @@ Example:
     distributionListDefinitions: ${{ vars.DISTRIBUTION_LISTS }}
     distributionListTargets: ${{ github.event.inputs.DISTRIBUTION_LISTS }}
     releaseNotes: ${{ github.event.inputs.RELEASE_NOTES }}
+    ssh-key: ${{ secrets.CI_SSH_KEY }}
+    shipshape-activation-code: ${{ secrets.SHIPSHAPE_ACTIVATION_CODE }}
 ```

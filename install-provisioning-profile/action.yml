@@ -2,16 +2,28 @@ name: Install Provisioning Profile
 description: Installs a provisioning profile
 author: Simon B. Støvring
 inputs:
-  op-reference:
-    description: Reference to the provisioning profile in 1Password.
-    required: true
+  provisioning-profile-base64:
+    description: Base64-encoded provisioning profile (.mobileprovision).
+    required: false
+  provisioning-profile-file:
+    description: Path to a provisioning profile file (.mobileprovision).
+    required: false
 runs:
   using: composite
   steps:
     - name: Install Provisioning Profile
       run: |
+        set -euo pipefail
         PROVISIONING_PROFILE_DIR=~/Library/MobileDevice/Provisioning\ Profiles
         PROVISIONING_PROFILE_FILE_PATH=$PROVISIONING_PROFILE_DIR/$(uuidgen).mobileprovision
         mkdir -p "${PROVISIONING_PROFILE_DIR}"
-        op read --out-file "${PROVISIONING_PROFILE_FILE_PATH}" "${{ inputs.op-reference }}"
+        if [[ -n "${{ inputs.provisioning-profile-base64 }}" ]]; then
+          printf '%s' "${{ inputs.provisioning-profile-base64 }}" | openssl base64 -d -A -out "${PROVISIONING_PROFILE_FILE_PATH}"
+        elif [[ -n "${{ inputs.provisioning-profile-file }}" ]]; then
+          eval provisioning_profile_file="${{ inputs.provisioning-profile-file }}"
+          cp "${provisioning_profile_file}" "${PROVISIONING_PROFILE_FILE_PATH}"
+        else
+          echo "Error: Provide provisioning-profile-base64 or provisioning-profile-file."
+          exit 1
+        fi
       shell: bash

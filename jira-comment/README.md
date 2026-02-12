@@ -10,5 +10,5 @@ Adds comment to a Jira issue.
     issues: ${{ steps.changelog.outputs.issues }}
     jira-base-url: https://shapedk.atlassian.net
     jira-user-email: ci@shape.dk
-    op-jira-api-token-reference: op://My Vault/Shape CI Bot API Token for Jira credentials
+    jira-api-token: ${{ secrets.JIRA_API_TOKEN }}
 ```
