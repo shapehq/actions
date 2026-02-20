@@ -35492,7 +35492,7 @@ async function findArtifacts(projectLocation, generatedAfter, pattern, includeMo
     return artifacts;
 }
 function printAppSearchInfo(appArtifacts, appPathPatterns) {
-    const artPaths = appArtifacts.map((a) => a.name);
+    const artPaths = appArtifacts.map((a) => a.path);
     info('Used patterns for generated artifact search:');
     info(appPathPatterns.join('\n'));
     info('');
@@ -35588,18 +35588,18 @@ async function exportResult(result) {
     const lastArtifact = result.appFiles[result.appFiles.length - 1];
     setOutput(ARTIFACT_ENV_KEY, lastArtifact.path);
     info('');
-    info(`  Output [ ${ARTIFACT_ENV_KEY} = ${path.basename(lastArtifact.path)} ]`);
+    info(`  Output [ ${ARTIFACT_ENV_KEY} = ${lastArtifact.path} ]`);
     const artifactPaths = result.appFiles.map((artifact) => artifact.path).join('|');
     setOutput(ARTIFACT_LIST_ENV_KEY, artifactPaths);
-    info(`  Output [ ${ARTIFACT_LIST_ENV_KEY} = ${result.appFiles.map((a) => path.basename(a.path)).join('|')} ]`);
+    info(`  Output [ ${ARTIFACT_LIST_ENV_KEY} = ${artifactPaths} ]`);
     if (result.manifestFiles.length > 0) {
         const lastManifest = result.manifestFiles[result.manifestFiles.length - 1];
         setOutput(MANIFEST_ENV_KEY, lastManifest.path);
         info('');
-        info(`  Output [ ${MANIFEST_ENV_KEY} = ${path.basename(lastManifest.path)} ]`);
+        info(`  Output [ ${MANIFEST_ENV_KEY} = ${lastManifest.path} ]`);
         const manifestPaths = result.manifestFiles.map((manifest) => manifest.path).join('|');
         setOutput(MANIFEST_LIST_ENV_KEY, manifestPaths);
-        info(`  Output [ ${MANIFEST_LIST_ENV_KEY} = ${result.manifestFiles.map((m) => path.basename(m.path)).join('|')} ]`);
+        info(`  Output [ ${MANIFEST_LIST_ENV_KEY} = ${manifestPaths} ]`);
     }
     else {
         warning('No merged manifest files found to export.');

@@ -136,7 +136,7 @@ async function findArtifacts(
 }
 
 function printAppSearchInfo(appArtifacts: Artifact[], appPathPatterns: string[]): void {
-  const artPaths = appArtifacts.map((a) => a.name)
+  const artPaths = appArtifacts.map((a) => a.path)
 
   core.info('Used patterns for generated artifact search:')
   core.info(appPathPatterns.join('\n'))
