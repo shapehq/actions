@@ -32,11 +32,18 @@ export async function discoverManifests(config: Config, started: Date): Promise<
 
 async function getManifests(projectLocation: string, started: Date, patterns: string[]): Promise<ManifestFile[]> {
   const manifests: ManifestFile[] = []
+  const seenPaths = new Set<string>()
 
   for (const pattern of patterns) {
     try {
       const files = await findManifests(projectLocation, started, pattern)
-      manifests.push(...files)
+      for (const manifest of files) {
+        if (seenPaths.has(manifest.path)) {
+          continue
+        }
+        seenPaths.add(manifest.path)
+        manifests.push(manifest)
+      }
     } catch (error) {
       core.warning(`Failed to find manifest with pattern ( ${pattern} ), error: ${error}`)
       continue
@@ -91,12 +98,14 @@ async function findManifests(projectLocation: string, generatedAfter: Date, patt
 }
 
 function printManifestSearchInfo(manifestFiles: ManifestFile[], patterns: string[]): void {
-  const manifestNames = manifestFiles.map((m) => m.name)
+  const manifestPaths = manifestFiles.map((m) => m.path)
+  const formattedPatterns = patterns.length > 0 ? patterns.map((p) => `  - ${p}`).join('\n') : '  - (none)'
+  const formattedManifests = manifestPaths.length > 0 ? manifestPaths.map((p) => `  - ${p}`).join('\n') : '  - (none)'
 
-  core.info('Used patterns for merged manifest search:')
-  core.info(patterns.join('\n'))
-  core.info('')
-  core.info('Found merged manifests:')
-  core.info(manifestNames.join('\n'))
+  core.info('Merged Manifest Discovery Summary:')
+  core.info(`  Search patterns: ${patterns.length}`)
+  core.info(formattedPatterns)
+  core.info(`  Found merged manifests: ${manifestPaths.length}`)
+  core.info(formattedManifests)
   core.info('')
 }

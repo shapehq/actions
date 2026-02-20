@@ -46,11 +46,18 @@ async function getArtifacts(
   config: Config
 ): Promise<Artifact[]> {
   const artifacts: Artifact[] = []
+  const seenPaths = new Set<string>()
 
   for (const pattern of patterns) {
     try {
       const afs = await findArtifacts(projectLocation, started, pattern, includeModule, config)
-      artifacts.push(...afs)
+      for (const artifact of afs) {
+        if (seenPaths.has(artifact.path)) {
+          continue
+        }
+        seenPaths.add(artifact.path)
+        artifacts.push(artifact)
+      }
     } catch (error) {
       core.warning(`Failed to find artifact with pattern ( ${pattern} ), error: ${error}`)
       continue
@@ -137,11 +144,13 @@ async function findArtifacts(
 
 function printAppSearchInfo(appArtifacts: Artifact[], appPathPatterns: string[]): void {
   const artPaths = appArtifacts.map((a) => a.path)
+  const formattedPatterns = appPathPatterns.length > 0 ? appPathPatterns.map((p) => `  - ${p}`).join('\n') : '  - (none)'
+  const formattedArtifacts = artPaths.length > 0 ? artPaths.map((p) => `  - ${p}`).join('\n') : '  - (none)'
 
-  core.info('Used patterns for generated artifact search:')
-  core.info(appPathPatterns.join('\n'))
-  core.info('')
-  core.info('Found app artifacts:')
-  core.info(artPaths.join('\n'))
+  core.info('Artifact Discovery Summary:')
+  core.info(`  Search patterns: ${appPathPatterns.length}`)
+  core.info(formattedPatterns)
+  core.info(`  Found app artifacts: ${artPaths.length}`)
+  core.info(formattedArtifacts)
   core.info('')
 }
