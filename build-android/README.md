@@ -27,8 +27,8 @@ The action has the following inputs:
 The action has the following outputs:
 
 | Name               | Description                                                                                                                                      |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | artifact-path      | Path of the generated APK/AAB after filtering. If the build generates more than one matching artifact, this output contains the last one's path. |
-| artifact-path-list | List of the generated APK/AAB paths after filtering. The paths are separated with `                                                              | ` characters. |
+| artifact-path-list | List of the generated APK/AAB paths after filtering. The paths are separated with `\|` characters.                                              |
 | manifest-path      | Path of the merged `AndroidManifest.xml` after filtering. If more than one match is found, this output contains the last one's path.             |
-| manifest-path-list | List of the merged manifest paths after filtering. The paths are separated with `                                                                | ` characters. |
+| manifest-path-list | List of the merged manifest paths after filtering. The paths are separated with `\|` characters.                                                |
