@@ -9,8 +9,13 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Load CI SSH Key
+      id: ci-ssh-key
+      uses: 1password/load-secrets-action@v3
+      env:
+        CI_SSH_KEY: op://GitHub Actions/CI SSH Private Key/ci-ssh-key
     - name: Install CI SSH Key
       uses: shapehq/actions/install-ssh-key@v1
       with:
-        op-reference: op://GitHub Actions/CI SSH Private Key/ci-ssh-key
+        ssh-key: ${{ steps.ci-ssh-key.outputs.CI_SSH_KEY }}
         filename: ${{ inputs.filename }}

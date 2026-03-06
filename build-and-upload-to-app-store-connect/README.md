@@ -9,11 +9,11 @@ As a side effect, the action will upload the dSYM files as an artifact to the jo
   with:
     scheme: Example
     configuration: Debug
-    op-app-store-connect-api-key-issuer-id-reference: op://GitHub Actions/Company App Store Connect API Key/Issuer ID
-    op-app-store-connect-api-key-id-reference: op://GitHub Actions/Company App Store Connect API Key/Key ID
-    op-app-store-connect-api-key-file-reference: op://GitHub Actions/Company App Store Connect API Key/AuthKey.p8
-    op-development-certificate-reference: op://GitHub Actions/Company Development Certificate/Certificate.p12
-    op-development-certificate-password-reference: op://GitHub Actions/Company Development Certificate/password
+    app-store-connect-api-key-issuer-id: ${{ secrets.ASC_KEY_ISSUER_ID }}
+    app-store-connect-api-key-id: ${{ secrets.ASC_KEY_ID }}
+    app-store-connect-api-key-base64: ${{ secrets.ASC_KEY_BASE64 }}
+    development-certificate-base64: ${{ secrets.DEVELOPMENT_CERTIFICATE_BASE64 }}
+    development-certificate-password: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSWORD }}
 ```
 
 You may use the `marketing-version` and `build-number` inputs to automatically set a version number and build number prior to building the project.
@@ -26,11 +26,11 @@ You may use the `marketing-version` and `build-number` inputs to automatically s
     configuration: Debug
     marketing-version: ${{ inputs.version_number }}
     build-number: ${{ github.run_number }}
-    op-app-store-connect-api-key-issuer-id-reference: op://GitHub Actions/Company App Store Connect API Key/Issuer ID
-    op-app-store-connect-api-key-id-reference: op://GitHub Actions/Company App Store Connect API Key/Key ID
-    op-app-store-connect-api-key-file-reference: op://GitHub Actions/Company App Store Connect API Key/AuthKey.p8
-    op-development-certificate-reference: op://GitHub Actions/Company Development Certificate/Certificate.p12
-    op-development-certificate-password-reference: op://GitHub Actions/Company Development Certificate/password
+    app-store-connect-api-key-issuer-id: ${{ secrets.ASC_KEY_ISSUER_ID }}
+    app-store-connect-api-key-id: ${{ secrets.ASC_KEY_ID }}
+    app-store-connect-api-key-base64: ${{ secrets.ASC_KEY_BASE64 }}
+    development-certificate-base64: ${{ secrets.DEVELOPMENT_CERTIFICATE_BASE64 }}
+    development-certificate-password: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSWORD }}
 ```
 
 The action supports the following inputs.
@@ -43,11 +43,13 @@ The action supports the following inputs.
 | marketing-version                                | No       |               | The marketing version number of the app, such as "1.0.0". This sets the MARKETING_VERSION in Xcode, determining the version displayed on the App Store.                                |
 | build-number                                     | No       |               | An incrementing number specifying the build version, which is used to uniquely identify an archive or build sent to the App Store Connect.                                             |
 | testflight-internal-testing-only                 | Yes      | false         | When enabled, the build cannot be distributed via external TestFlight or the App Store. Must be either "true" or "false".                                                              |
-| op-app-store-connect-api-key-issuer-id-reference | Yes      |               | A reference to the location in 1Password where the Issuer ID for the App Store Connect API key is stored. This ID is crucial for API interactions with App Store Connect.              |
-| op-app-store-connect-api-key-id-reference        | Yes      |               | A reference to the location in 1Password where the App Store Connect API Key ID is stored, used for authentication during API requests.                                                |
-| op-app-store-connect-api-key-file-reference      | Yes      |               | A reference to the 1Password field containing the AuthKey.p8 file, essential for establishing connections to App Store Connect.                                                        |
-| op-development-certificate-reference             | Yes      |               | Points to a field in 1Password where the development certificate and its corresponding private key (.p12 file) are stored, necessary for signing the app during the development phase. |
-| op-development-certificate-password-reference    | Yes      |               | Indicates the location in 1Password where the password for decrypting the development certificate (.p12 file) is kept.                                                                 |
+| app-store-connect-api-key-issuer-id              | Yes      |               | Issuer ID for the App Store Connect API key.                                                                                                                                            |
+| app-store-connect-api-key-id                     | Yes      |               | App Store Connect API Key ID.                                                                                                                                                            |
+| app-store-connect-api-key-base64                 | No       |               | Base64-encoded AuthKey.p8 file. Provide this or `app-store-connect-api-key-file`.                                                                                                        |
+| app-store-connect-api-key-file                   | No       |               | Path to an AuthKey.p8 file. Provide this or `app-store-connect-api-key-base64`.                                                                                                          |
+| development-certificate-base64                   | No       |               | Base64-encoded development certificate (.p12). Provide this or `development-certificate-file`.                                                                                          |
+| development-certificate-file                     | No       |               | Path to a development certificate (.p12). Provide this or `development-certificate-base64`.                                                                                             |
+| development-certificate-password                 | Yes      |               | Password for decrypting the development certificate (.p12 file).                                                                                                                         |
 | additional-archive-args                          | No       |               | Additional arguments passed to xcodebuild when archiving the app.                                                                                                                      |
 | additional-altool-args                           | No       |               | Additional arguments passed to altool when uploading the app.                                                                                                                          |
 | build-directory                                  | Yes      | .build        | Defines the directory where the build artifacts, like the final binary or intermediate files, will be stored.                                                                          |

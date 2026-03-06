@@ -6,5 +6,14 @@ Installs a provisioning profile.
 - name: Install Provisioning Profile
   uses: shapehq/actions/install-provisioning-profile@v1
   with:
-    op-reference: op://My Vault/My Provisioning Profile/profile.mobileprovision
+    provisioning-profile-base64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+```
+
+Alternatively, provide a file path to a provisioning profile:
+
+```yml
+- name: Install Provisioning Profile
+  uses: shapehq/actions/install-provisioning-profile@v1
+  with:
+    provisioning-profile-file: ${{ env.PROVISIONING_PROFILE_PATH }}
 ```

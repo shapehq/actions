@@ -6,5 +6,5 @@ Checks if there are missing translations in the Localize.biz project throws erro
 - name: Verify Loco Translations
   uses: shapehq/actions/loco-translation-status-checker@v1
   with:
-    op-loco-api-key-reference: op://My Vault/My Loco API Key/key
+    loco-api-key: ${{ secrets.LOCO_API_KEY }}
 ```
