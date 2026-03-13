@@ -48,8 +48,10 @@ runs:
       shell: bash
       run: |
         vibeke_service_url="https://vibeke.shapetools.io"
+        default_model="claude-opus-4-6"
         allowed_tools="WebFetch,WebSearch,Edit,MultiEdit,Write,Bash,mcp__github__create_pull_request,mcp__github__list_pull_requests,mcp__github__get_pull_request_files,mcp__github__get_pull_request_status,mcp__github__update_pull_request_branch,mcp__github__get_pull_request_comments,mcp__github__get_pull_request_reviews,mcp__github__get_pull_request_diff,mcp__github__create_pull_request,mcp__github__update_pull_request,mcp__github__create_or_update_file,mcp__github__delete_file,mcp__github__list_branches,mcp__github__push_files,mcp__github__get_file_contents,mcp__github__create_branch,mcp__github__list_commits,mcp__github__get_commit,mcp__github__get_tag,mcp__github__list_tags,mcp__github__search_code"
         echo "vibeke-service-url=${vibeke_service_url}" >> $GITHUB_OUTPUT
+        echo "default-model=${default_model}" >> $GITHUB_OUTPUT
         echo "allowed-tools=${allowed_tools}" >> $GITHUB_OUTPUT
     - name: Exchange GitHub Token for Installation Token
       id: exchange-github-token
@@ -68,27 +70,32 @@ runs:
           exit 1
         fi
     - name: Claude Code
-      uses: anthropics/claude-code-base-action@v0.0.26
+      uses: anthropics/claude-code-action@v1
       if: github.event_name == 'repository_dispatch' && github.event.action == 'vibeke_create_pr'
       id: claude-code-create-pr
       env:
         GITHUB_TOKEN: ${{ github.event.client_payload.installation_token }}
       with:
         anthropic_api_key: ${{ steps.anthropic-api-key.outputs.api-key }}
-        model: ${{ github.event.client_payload.model }}
         prompt: ${{ github.event.client_payload.prompt }}
         timeout_minutes: 60
-        allowed_tools: ${{ steps.config.outputs.allowed-tools }}
+        github_token: ${{ github.event.client_payload.installation_token }}
+        claude_args: |
+          --model ${{ github.event.client_payload.model || steps.config.outputs.default-model }}
+          --max-turns 50
+          --allowedTools ${{ steps.config.outputs.allowed-tools }}
     - name: Claude Code
-      uses: anthropics/claude-code-action@beta
+      uses: anthropics/claude-code-action@v1
       if: ${{ steps.check-pr-comment.outputs.is-pr-comment == 'true' }}
       id: claude-code-update-pr
       with:
         anthropic_api_key: ${{ steps.anthropic-api-key.outputs.api-key }}
         timeout_minutes: 60
-        allowed_tools: ${{ steps.config.outputs.allowed-tools }}
         trigger_phrase: "@vibeke-by-framna"
         github_token: ${{ steps.exchange-github-token.outputs.installation-token }}
+        claude_args: |
+          --model ${{ steps.config.outputs.default-model }}
+          --allowedTools ${{ steps.config.outputs.allowed-tools }}
     - name: Display Claude Code Report
       if: ${{ steps.claude-code-create-pr.outputs.execution_file != '' || steps.claude-code-update-pr.outputs.execution_file != '' }}
       shell: bash
