@@ -80,6 +80,7 @@ runs:
         prompt: ${{ github.event.client_payload.prompt }}
         timeout_minutes: 60
         github_token: ${{ github.event.client_payload.installation_token }}
+        allowed_bots: "vibeke-by-framna"
         claude_args: |
           --model ${{ github.event.client_payload.model || steps.config.outputs.default-model }}
           --max-turns 50
