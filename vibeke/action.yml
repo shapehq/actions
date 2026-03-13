@@ -78,7 +78,6 @@ runs:
       with:
         anthropic_api_key: ${{ steps.anthropic-api-key.outputs.api-key }}
         prompt: ${{ github.event.client_payload.prompt }}
-        timeout_minutes: 60
         github_token: ${{ github.event.client_payload.installation_token }}
         allowed_bots: "vibeke-by-framna"
         claude_args: |
@@ -91,7 +90,6 @@ runs:
       id: claude-code-update-pr
       with:
         anthropic_api_key: ${{ steps.anthropic-api-key.outputs.api-key }}
-        timeout_minutes: 60
         trigger_phrase: "@vibeke-by-framna"
         github_token: ${{ steps.exchange-github-token.outputs.installation-token }}
         claude_args: |
