@@ -62,6 +62,10 @@ Click on any action name below to view detailed documentation, usage examples, a
       <td>Creates (or updates if already exists) a PR comment. Always updates the same comment by default using a hidden marker.</td>
     </tr>
     <tr>
+      <td nowrap><a href="./get-linked-issue-node-ids/">get-linked-issue-node-ids</a></td>
+      <td>Resolves the issue node IDs linked from a pull request via closing references.</td>
+    </tr>
+    <tr>
       <td nowrap><a href="./install-appiconannotator/">install-appiconannotator</a></td>
       <td>Installs <a href="https://github.com/shapehq/appiconannotator">appiconannotator</a>.</td>
     </tr>
@@ -118,6 +122,10 @@ Click on any action name below to view detailed documentation, usage examples, a
       <td>Checks if there are missing translations in the Localize.biz project and posts warning to Slack.</td>
     </tr>
     <tr>
+      <td nowrap><a href="./normalize-github-file-links/">normalize-github-file-links</a></td>
+      <td>Rewrites local workspace file links to GitHub blob links on a target branch.</td>
+    </tr>
+    <tr>
       <td nowrap><a href="./oasdiff/">oasdiff</a></td>
       <td>Runs <a href="https://github.com/tufin/oasdiff">oasdiff</a> changelog between two OpenAPI specs and outputs the differences.</td>
     </tr>
@@ -128,6 +136,10 @@ Click on any action name below to view detailed documentation, usage examples, a
     <tr>
       <td nowrap><a href="./render-ios-app-icon-badge/">render-ios-app-icon-badge</a></td>
       <td>Adds a badge to an iOS app icon to indicate that the app is meant for testing purposes.</td>
+    </tr>
+    <tr>
+      <td nowrap><a href="./set-project-status/">set-project-status</a></td>
+      <td>Adds GitHub issues or pull requests to a Project v2 and sets their Status field.</td>
     </tr>
     <tr>
       <td nowrap><a href="./swiftlint/">swiftlint</a></td>

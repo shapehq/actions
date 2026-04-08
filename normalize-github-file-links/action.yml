@@ -1,0 +1,74 @@
+name: Normalize GitHub File Links
+description: Rewrites local workspace file links to GitHub blob links on a target branch.
+inputs:
+  markdown:
+    description: Markdown content whose local file links should be normalized.
+    required: true
+  branch-name:
+    description: The git branch to use in generated GitHub blob links.
+    required: true
+outputs:
+  markdown:
+    description: The normalized markdown content.
+    value: ${{ steps.normalize.outputs.markdown }}
+runs:
+  using: composite
+  steps:
+    - name: Normalize markdown file links
+      id: normalize
+      uses: actions/github-script@v8
+      env:
+        MARKDOWN: ${{ inputs.markdown }}
+        REPOSITORY: ${{ github.repository }}
+        BRANCH_NAME: ${{ inputs.branch-name }}
+        WORKSPACE: ${{ github.workspace }}
+      with:
+        script: |
+          const raw = process.env.MARKDOWN || '';
+          const workspace = (process.env.WORKSPACE || '').replace(/\/+$/, '');
+          const repository = process.env.REPOSITORY;
+          const branchName = process.env.BRANCH_NAME;
+
+          const encodePath = (value) => value.split('/').map(encodeURIComponent).join('/');
+
+          const toGitHubUrl = (relativePath, lineNumber) => {
+            const base = `https://github.com/${repository}/blob/${encodePath(branchName)}/${encodePath(relativePath)}`;
+            return lineNumber ? `${base}#L${lineNumber}` : base;
+          };
+
+          const normalizeUrl = (url) => {
+            if (!url) {
+              return url;
+            }
+
+            let candidate = url.trim().replace(/^<|>$/g, '');
+            candidate = candidate
+              .replace(/^file:\/\//, '')
+              .replace(/^https:\/\/github\.com(?=\/Users\/runner\/work\/)/, '');
+
+            let lineNumber = '';
+            const lineMatch = candidate.match(/:(\d+)(?::\d+)?$/);
+            if (lineMatch) {
+              lineNumber = lineMatch[1];
+              candidate = candidate.slice(0, -lineMatch[0].length);
+            } else {
+              const anchorMatch = candidate.match(/#L(\d+)$/);
+              if (anchorMatch) {
+                lineNumber = anchorMatch[1];
+                candidate = candidate.slice(0, -anchorMatch[0].length);
+              }
+            }
+
+            if (!candidate.startsWith(`${workspace}/`)) {
+              return url;
+            }
+
+            const relativePath = candidate.slice(workspace.length + 1);
+            return toGitHubUrl(relativePath, lineNumber);
+          };
+
+          const normalized = raw.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, url) => {
+            return `[${label}](${normalizeUrl(url)})`;
+          });
+
+          core.setOutput('markdown', normalized);

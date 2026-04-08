@@ -1,0 +1,297 @@
+name: Set Project Status
+description: Add GitHub issues or pull requests to a Project v2 and set their Status field.
+
+inputs:
+  github-token:
+    description: Token with permission to read and write the target GitHub Project v2.
+    required: true
+  project-owner:
+    description: User or organization login that owns the project.
+    required: true
+  project-number:
+    description: Project number from the project URL.
+    required: true
+  status-field-name:
+    description: Name of the single-select field to update.
+    required: false
+    default: Status
+  status-name:
+    description: Name of the single-select option to set.
+    required: false
+  status-name-map:
+    description: JSON object mapping content node IDs to status option names.
+    required: false
+    default: "{}"
+  content-node-ids:
+    description: Comma, space, or newline separated list of issue or pull request node IDs.
+    required: true
+  add-if-missing:
+    description: Add the issue or pull request to the project if it is not already present.
+    required: false
+    default: "true"
+  on-missing-project:
+    description: Whether missing projects should fail or warn.
+    required: false
+    default: fail
+  on-missing-field:
+    description: Whether missing status fields should fail or warn.
+    required: false
+    default: fail
+  on-missing-option:
+    description: Whether missing target status options should fail or warn.
+    required: false
+    default: fail
+
+outputs:
+  previous-statuses:
+    description: JSON object mapping content node IDs to their prior status values.
+    value: ${{ steps.set_status.outputs.previous_statuses }}
+  applied-statuses:
+    description: JSON object mapping content node IDs to the status values applied by this run.
+    value: ${{ steps.set_status.outputs.applied_statuses }}
+  skipped-content-node-ids:
+    description: Newline-separated content node IDs skipped by the action.
+    value: ${{ steps.set_status.outputs.skipped_content_node_ids }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set project item status
+      id: set_status
+      uses: actions/github-script@v8
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const owner = process.env.PROJECT_OWNER;
+          const projectNumber = Number(process.env.PROJECT_NUMBER);
+          const statusFieldName = process.env.STATUS_FIELD_NAME || 'Status';
+          const fallbackStatusName = process.env.STATUS_NAME || '';
+          const statusNameMap = JSON.parse(process.env.STATUS_NAME_MAP || '{}');
+          const addIfMissing = (process.env.ADD_IF_MISSING || 'true').toLowerCase() === 'true';
+          const onMissingProject = process.env.ON_MISSING_PROJECT || 'fail';
+          const onMissingField = process.env.ON_MISSING_FIELD || 'fail';
+          const onMissingOption = process.env.ON_MISSING_OPTION || 'fail';
+          const contentNodeIds = (process.env.CONTENT_NODE_IDS || '')
+            .split(/[\s,]+/)
+            .map((value) => value.trim())
+            .filter(Boolean);
+
+          const handleMissing = (mode, message) => {
+            if (mode === 'warn') {
+              core.warning(message);
+              return false;
+            }
+
+            core.setFailed(message);
+            return true;
+          };
+
+          if (contentNodeIds.length === 0) {
+            core.info('No content node IDs provided. Skipping project status update.');
+            return;
+          }
+
+          const projectFieldsFragment = `
+            id
+            fields(first: 50) {
+              nodes {
+                ... on ProjectV2Field {
+                  id
+                  name
+                }
+                ... on ProjectV2SingleSelectField {
+                  id
+                  name
+                  options {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+          `;
+
+          const organizationData = await github.graphql(
+            `
+              query($owner: String!, $number: Int!) {
+                organization(login: $owner) {
+                  projectV2(number: $number) {
+                    ${projectFieldsFragment}
+                  }
+                }
+              }
+            `,
+            {
+              owner,
+              number: projectNumber,
+            }
+          );
+
+          const project = organizationData.organization?.projectV2 ?? null;
+
+          if (!project) {
+            if (handleMissing(onMissingProject, `Could not find project ${owner}/${projectNumber}.`)) {
+              return;
+            }
+            return;
+          }
+
+          const statusField = project.fields.nodes.find((field) => field?.name === statusFieldName);
+          if (!statusField) {
+            if (handleMissing(onMissingField, `Could not find project field "${statusFieldName}".`)) {
+              return;
+            }
+            return;
+          }
+
+          if (!Array.isArray(statusField.options)) {
+            core.setFailed(`Project field "${statusFieldName}" is not a single-select field.`);
+            return;
+          }
+
+          const contentQuery = `
+            query($contentId: ID!, $statusFieldName: String!) {
+              node(id: $contentId) {
+                __typename
+                ... on Issue {
+                  number
+                  url
+                  projectItems(first: 100) {
+                    nodes {
+                      id
+                      fieldValueByName(name: $statusFieldName) {
+                        ... on ProjectV2ItemFieldSingleSelectValue {
+                          name
+                        }
+                      }
+                      project {
+                        id
+                      }
+                    }
+                  }
+                }
+                ... on PullRequest {
+                  number
+                  url
+                  projectItems(first: 100) {
+                    nodes {
+                      id
+                      fieldValueByName(name: $statusFieldName) {
+                        ... on ProjectV2ItemFieldSingleSelectValue {
+                          name
+                        }
+                      }
+                      project {
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          `;
+
+          const addItemMutation = `
+            mutation($projectId: ID!, $contentId: ID!) {
+              addProjectV2ItemById(input: {
+                projectId: $projectId
+                contentId: $contentId
+              }) {
+                item {
+                  id
+                }
+              }
+            }
+          `;
+
+          const updateStatusMutation = `
+            mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+              updateProjectV2ItemFieldValue(input: {
+                projectId: $projectId
+                itemId: $itemId
+                fieldId: $fieldId
+                value: {
+                  singleSelectOptionId: $optionId
+                }
+              }) {
+                projectV2Item {
+                  id
+                }
+              }
+            }
+          `;
+
+          const previousStatuses = {};
+          const appliedStatuses = {};
+          const skippedContentNodeIds = [];
+
+          for (const contentId of contentNodeIds) {
+            const contentData = await github.graphql(contentQuery, { contentId, statusFieldName });
+            const content = contentData.node;
+
+            if (!content) {
+              core.warning(`Could not resolve content node ${contentId}. Skipping.`);
+              skippedContentNodeIds.push(contentId);
+              continue;
+            }
+
+            const matchingItem = content.projectItems?.nodes?.find((item) => item.project?.id === project.id);
+            let itemId = matchingItem?.id;
+            previousStatuses[contentId] = matchingItem?.fieldValueByName?.name || '';
+
+            if (!itemId && addIfMissing) {
+              const addResult = await github.graphql(addItemMutation, {
+                projectId: project.id,
+                contentId,
+              });
+              itemId = addResult.addProjectV2ItemById?.item?.id;
+              previousStatuses[contentId] = '';
+            }
+
+            if (!itemId) {
+              core.warning(`Content ${content.url || contentId} is not in project ${projectNumber}. Skipping.`);
+              skippedContentNodeIds.push(contentId);
+              continue;
+            }
+
+            const desiredStatusName = statusNameMap[contentId] ?? fallbackStatusName;
+            if (!desiredStatusName) {
+              core.info(`No target status provided for ${content.url || contentId}. Skipping.`);
+              skippedContentNodeIds.push(contentId);
+              continue;
+            }
+
+            const statusOption = statusField.options.find((option) => option.name === desiredStatusName);
+            if (!statusOption) {
+              if (handleMissing(onMissingOption, `Could not find option "${desiredStatusName}" in project field "${statusFieldName}".`)) {
+                return;
+              }
+              skippedContentNodeIds.push(contentId);
+              return;
+            }
+
+            await github.graphql(updateStatusMutation, {
+              projectId: project.id,
+              itemId,
+              fieldId: statusField.id,
+              optionId: statusOption.id,
+            });
+
+            appliedStatuses[contentId] = desiredStatusName;
+            core.info(`Set ${content.url || contentId} to "${desiredStatusName}".`);
+          }
+
+          core.setOutput('previous_statuses', JSON.stringify(previousStatuses));
+          core.setOutput('applied_statuses', JSON.stringify(appliedStatuses));
+          core.setOutput('skipped_content_node_ids', skippedContentNodeIds.join('\n'));
+      env:
+        PROJECT_OWNER: ${{ inputs.project-owner }}
+        PROJECT_NUMBER: ${{ inputs.project-number }}
+        STATUS_FIELD_NAME: ${{ inputs.status-field-name }}
+        STATUS_NAME: ${{ inputs.status-name }}
+        STATUS_NAME_MAP: ${{ inputs.status-name-map }}
+        CONTENT_NODE_IDS: ${{ inputs.content-node-ids }}
+        ADD_IF_MISSING: ${{ inputs.add-if-missing }}
+        ON_MISSING_PROJECT: ${{ inputs.on-missing-project }}
+        ON_MISSING_FIELD: ${{ inputs.on-missing-field }}
+        ON_MISSING_OPTION: ${{ inputs.on-missing-option }}

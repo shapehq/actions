@@ -1,0 +1,58 @@
+name: Get Linked Issue Node IDs
+description: Resolve the issue node IDs linked from a pull request via closing references.
+
+inputs:
+  github-token:
+    description: Token used to query the pull request.
+    required: true
+  repository-owner:
+    description: Repository owner login.
+    required: true
+  repository-name:
+    description: Repository name.
+    required: true
+  pull-request-number:
+    description: Pull request number.
+    required: true
+
+outputs:
+  issue-node-ids:
+    description: Newline-separated linked issue node IDs.
+    value: ${{ steps.resolve.outputs.issue_node_ids }}
+
+runs:
+  using: composite
+  steps:
+    - name: Resolve linked issues
+      id: resolve
+      uses: actions/github-script@v8
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const result = await github.graphql(
+            `
+              query($owner: String!, $repo: String!, $number: Int!) {
+                repository(owner: $owner, name: $repo) {
+                  pullRequest(number: $number) {
+                    closingIssuesReferences(first: 20) {
+                      nodes {
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            `,
+            {
+              owner: process.env.REPOSITORY_OWNER,
+              repo: process.env.REPOSITORY_NAME,
+              number: Number(process.env.PULL_REQUEST_NUMBER),
+            }
+          );
+
+          const issueNodeIds = result.repository.pullRequest.closingIssuesReferences.nodes.map((issue) => issue.id);
+          core.setOutput('issue_node_ids', issueNodeIds.join('\n'));
+      env:
+        REPOSITORY_OWNER: ${{ inputs.repository-owner }}
+        REPOSITORY_NAME: ${{ inputs.repository-name }}
+        PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
