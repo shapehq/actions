@@ -28042,13 +28042,13 @@ function info(message) {
 
 var build = {};
 
-var src$6 = {};
-
 var src$5 = {};
+
+var src$4 = {};
 
 var googleauth = {};
 
-var src$4 = {};
+var src$3 = {};
 
 var gaxios = {};
 
@@ -28180,7 +28180,7 @@ function requireExtend () {
 var common$1 = {};
 
 var name$1 = "gaxios";
-var version$2 = "7.1.3";
+var version$2 = "7.1.4";
 var description$1 = "A simple common HTTP client specifically for Google APIs and services.";
 var main$1 = "build/cjs/src/index.js";
 var types$1 = "build/cjs/src/index.d.ts";
@@ -28239,18 +28239,18 @@ var devDependencies$1 = {
 	"@types/mocha": "^10.0.10",
 	"@types/multiparty": "4.2.1",
 	"@types/mv": "^2.1.0",
-	"@types/ncp": "^2.0.1",
-	"@types/node": "^22.0.0",
-	"@types/sinon": "^17.0.0",
-	"@types/tmp": "0.2.6",
+	"@types/ncp": "^2.0.8",
+	"@types/node": "^22.13.1",
+	"@types/sinon": "^17.0.3",
+	"@types/tmp": "^0.2.6",
 	assert: "^2.0.0",
 	browserify: "^17.0.0",
-	c8: "^10.0.0",
+	c8: "^10.1.3",
 	cors: "^2.8.5",
 	express: "^5.0.0",
-	gts: "^6.0.0",
+	gts: "^6.0.2",
 	"is-docker": "^3.0.0",
-	jsdoc: "^4.0.0",
+	jsdoc: "^4.0.4",
 	"jsdoc-fresh": "^5.0.0",
 	"jsdoc-region-tag": "^4.0.0",
 	karma: "^6.0.0",
@@ -28266,25 +28266,24 @@ var devDependencies$1 = {
 	multiparty: "^4.2.1",
 	mv: "^2.1.1",
 	ncp: "^2.0.0",
-	nock: "^14.0.0-beta.13",
-	"null-loader": "^4.0.0",
+	nock: "^14.0.5",
+	"null-loader": "^4.0.1",
 	"pack-n-play": "^4.0.0",
 	puppeteer: "^24.0.0",
 	sinon: "^21.0.0",
 	"stream-browserify": "^3.0.0",
 	tmp: "0.2.5",
 	"ts-loader": "^9.5.2",
-	typescript: "^5.8.3",
-	webpack: "^5.35.0",
+	typescript: "5.8.3",
+	webpack: "^5.97.1",
 	"webpack-cli": "^6.0.1"
 };
 var dependencies$1 = {
 	extend: "^3.0.2",
 	"https-proxy-agent": "^7.0.1",
-	"node-fetch": "^3.3.2",
-	rimraf: "^5.0.1"
+	"node-fetch": "^3.3.2"
 };
-var homepage = "https://github.com/googleapis/google-cloud-node-core/tree/main/packages/gaxios";
+var homepage$1 = "https://github.com/googleapis/google-cloud-node-core/tree/main/packages/gaxios";
 var require$$0$1 = {
 	name: name$1,
 	version: version$2,
@@ -28301,7 +28300,7 @@ var require$$0$1 = {
 	license: license$1,
 	devDependencies: devDependencies$1,
 	dependencies: dependencies$1,
-	homepage: homepage
+	homepage: homepage$1
 };
 
 var util$2;
@@ -29422,11 +29421,11 @@ function requireGaxios () {
 	return gaxios;
 }
 
-var hasRequiredSrc$6;
+var hasRequiredSrc$5;
 
-function requireSrc$6 () {
-	if (hasRequiredSrc$6) return src$4;
-	hasRequiredSrc$6 = 1;
+function requireSrc$5 () {
+	if (hasRequiredSrc$5) return src$3;
+	hasRequiredSrc$5 = 1;
 	(function (exports$1) {
 		// Copyright 2018 Google LLC
 		// Licensed under the Apache License, Version 2.0 (the "License");
@@ -29440,7 +29439,7 @@ function requireSrc$6 () {
 		// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 		// See the License for the specific language governing permissions and
 		// limitations under the License.
-		var __createBinding = (src$4 && src$4.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+		var __createBinding = (src$3 && src$3.__createBinding) || (Object.create ? (function(o, m, k, k2) {
 		    if (k2 === undefined) k2 = k;
 		    var desc = Object.getOwnPropertyDescriptor(m, k);
 		    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -29451,7 +29450,7 @@ function requireSrc$6 () {
 		    if (k2 === undefined) k2 = k;
 		    o[k2] = m[k];
 		}));
-		var __exportStar = (src$4 && src$4.__exportStar) || function(m, exports$1) {
+		var __exportStar = (src$3 && src$3.__exportStar) || function(m, exports$1) {
 		    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports$1, p)) __createBinding(exports$1, m, p);
 		};
 		Object.defineProperty(exports$1, "__esModule", { value: true });
@@ -29475,11 +29474,11 @@ function requireSrc$6 () {
 		    return exports$1.instance.request(opts);
 		}
 		
-	} (src$4));
-	return src$4;
+	} (src$3));
+	return src$3;
 }
 
-var src$3 = {};
+var src$2 = {};
 
 var jsonBigint = {exports: {}};
 
@@ -33398,7 +33397,7 @@ function requireGcpResidency () {
 	return gcpResidency;
 }
 
-var src$2 = {};
+var src$1 = {};
 
 var loggingUtils = {};
 
@@ -33938,11 +33937,11 @@ function requireLoggingUtils () {
 	return loggingUtils;
 }
 
-var hasRequiredSrc$5;
+var hasRequiredSrc$4;
 
-function requireSrc$5 () {
-	if (hasRequiredSrc$5) return src$2;
-	hasRequiredSrc$5 = 1;
+function requireSrc$4 () {
+	if (hasRequiredSrc$4) return src$1;
+	hasRequiredSrc$4 = 1;
 	(function (exports$1) {
 		// Copyright 2024 Google LLC
 		//
@@ -33957,6 +33956,33 @@ function requireSrc$5 () {
 		// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 		// See the License for the specific language governing permissions and
 		// limitations under the License.
+		var __createBinding = (src$1 && src$1.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+		    if (k2 === undefined) k2 = k;
+		    var desc = Object.getOwnPropertyDescriptor(m, k);
+		    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+		      desc = { enumerable: true, get: function() { return m[k]; } };
+		    }
+		    Object.defineProperty(o, k2, desc);
+		}) : (function(o, m, k, k2) {
+		    if (k2 === undefined) k2 = k;
+		    o[k2] = m[k];
+		}));
+		var __exportStar = (src$1 && src$1.__exportStar) || function(m, exports$1) {
+		    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports$1, p)) __createBinding(exports$1, m, p);
+		};
+		Object.defineProperty(exports$1, "__esModule", { value: true });
+		__exportStar(requireLoggingUtils(), exports$1);
+		
+	} (src$1));
+	return src$1;
+}
+
+var hasRequiredSrc$3;
+
+function requireSrc$3 () {
+	if (hasRequiredSrc$3) return src$2;
+	hasRequiredSrc$3 = 1;
+	(function (exports$1) {
 		var __createBinding = (src$2 && src$2.__createBinding) || (Object.create ? (function(o, m, k, k2) {
 		    if (k2 === undefined) k2 = k;
 		    var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -33968,39 +33994,12 @@ function requireSrc$5 () {
 		    if (k2 === undefined) k2 = k;
 		    o[k2] = m[k];
 		}));
-		var __exportStar = (src$2 && src$2.__exportStar) || function(m, exports$1) {
-		    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports$1, p)) __createBinding(exports$1, m, p);
-		};
-		Object.defineProperty(exports$1, "__esModule", { value: true });
-		__exportStar(requireLoggingUtils(), exports$1);
-		
-	} (src$2));
-	return src$2;
-}
-
-var hasRequiredSrc$4;
-
-function requireSrc$4 () {
-	if (hasRequiredSrc$4) return src$3;
-	hasRequiredSrc$4 = 1;
-	(function (exports$1) {
-		var __createBinding = (src$3 && src$3.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-		    if (k2 === undefined) k2 = k;
-		    var desc = Object.getOwnPropertyDescriptor(m, k);
-		    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-		      desc = { enumerable: true, get: function() { return m[k]; } };
-		    }
-		    Object.defineProperty(o, k2, desc);
-		}) : (function(o, m, k, k2) {
-		    if (k2 === undefined) k2 = k;
-		    o[k2] = m[k];
-		}));
-		var __setModuleDefault = (src$3 && src$3.__setModuleDefault) || (Object.create ? (function(o, v) {
+		var __setModuleDefault = (src$2 && src$2.__setModuleDefault) || (Object.create ? (function(o, v) {
 		    Object.defineProperty(o, "default", { enumerable: true, value: v });
 		}) : function(o, v) {
 		    o["default"] = v;
 		});
-		var __importStar = (src$3 && src$3.__importStar) || (function () {
+		var __importStar = (src$2 && src$2.__importStar) || (function () {
 		    var ownKeys = function(o) {
 		        ownKeys = Object.getOwnPropertyNames || function (o) {
 		            var ar = [];
@@ -34017,7 +34016,7 @@ function requireSrc$4 () {
 		        return result;
 		    };
 		})();
-		var __exportStar = (src$3 && src$3.__exportStar) || function(m, exports$1) {
+		var __exportStar = (src$2 && src$2.__exportStar) || function(m, exports$1) {
 		    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports$1, p)) __createBinding(exports$1, m, p);
 		};
 		Object.defineProperty(exports$1, "__esModule", { value: true });
@@ -34046,10 +34045,10 @@ function requireSrc$4 () {
 		 * See the License for the specific language governing permissions and
 		 * limitations under the License.
 		 */
-		const gaxios_1 = requireSrc$6();
+		const gaxios_1 = requireSrc$5();
 		const jsonBigint = requireJsonBigint();
 		const gcp_residency_1 = requireGcpResidency();
-		const logger = __importStar(requireSrc$5());
+		const logger = __importStar(requireSrc$4());
 		exports$1.BASE_PATH = '/computeMetadata/v1';
 		exports$1.HOST_ADDRESS = 'http://169.254.169.254';
 		exports$1.SECONDARY_HOST_ADDRESS = 'http://metadata.google.internal.';
@@ -34384,8 +34383,8 @@ function requireSrc$4 () {
 		}
 		__exportStar(requireGcpResidency(), exports$1);
 		
-	} (src$3));
-	return src$3;
+	} (src$2));
+	return src$2;
 }
 
 var crypto$3 = {};
@@ -34657,7 +34656,7 @@ function requireCrypto$2 () {
 	        const cryptoKey = await window.crypto.subtle.importKey('jwk', pubkey, algo, true, ['verify']);
 	        // SubtleCrypto's verify method is async so we must make
 	        // this method async as well.
-	        const result = await window.crypto.subtle.verify(algo, cryptoKey, signatureArray, dataArray);
+	        const result = await window.crypto.subtle.verify(algo, cryptoKey, Buffer.from(signatureArray), dataArray);
 	        return result;
 	    }
 	    async sign(privateKey, data) {
@@ -34804,7 +34803,12 @@ function requireCrypto$1 () {
 	 * @return The ArrayBuffer representation of the input.
 	 */
 	function toArrayBuffer(buffer) {
-	    return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
+	    const ab = new ArrayBuffer(buffer.length);
+	    const view = new Uint8Array(ab);
+	    for (let i = 0; i < buffer.length; ++i) {
+	        view[i] = buffer[i];
+	    }
+	    return ab;
 	}
 	/**
 	 * Converts an ArrayBuffer to a Node.js Buffer.
@@ -35379,7 +35383,7 @@ var authclient = {};
 var shared = {};
 
 var name = "google-auth-library";
-var version$1 = "10.5.0";
+var version$1 = "10.6.2";
 var author = "Google Inc.";
 var description = "Google APIs Authentication Client Library for Node.js";
 var engines = {
@@ -35387,7 +35391,11 @@ var engines = {
 };
 var main = "./build/src/index.js";
 var types = "./build/src/index.d.ts";
-var repository = "googleapis/google-auth-library-nodejs.git";
+var repository = {
+	type: "git",
+	directory: "packages/google-auth-library-nodejs",
+	url: "https://github.com/googleapis/google-cloud-node-core.git"
+};
 var keywords = [
 	"google",
 	"api",
@@ -35398,10 +35406,9 @@ var keywords = [
 var dependencies = {
 	"base64-js": "^1.3.0",
 	"ecdsa-sig-formatter": "^1.0.11",
-	gaxios: "^7.0.0",
-	"gcp-metadata": "^8.0.0",
-	"google-logging-utils": "^1.0.0",
-	gtoken: "^8.0.0",
+	gaxios: "^7.1.4",
+	"gcp-metadata": "8.1.2",
+	"google-logging-utils": "1.1.3",
 	jws: "^4.0.0"
 };
 var devDependencies = {
@@ -35409,15 +35416,15 @@ var devDependencies = {
 	"@types/jws": "^3.1.0",
 	"@types/mocha": "^10.0.10",
 	"@types/mv": "^2.1.0",
-	"@types/ncp": "^2.0.1",
-	"@types/node": "^22.0.0",
-	"@types/sinon": "^17.0.0",
+	"@types/ncp": "^2.0.8",
+	"@types/node": "^24.0.0",
+	"@types/sinon": "^21.0.0",
 	"assert-rejects": "^1.0.0",
-	c8: "^10.0.0",
-	codecov: "^3.0.2",
-	gts: "^6.0.0",
+	c8: "^10.1.3",
+	codecov: "^3.8.3",
+	gts: "^6.0.2",
 	"is-docker": "^3.0.0",
-	jsdoc: "^4.0.0",
+	jsdoc: "^4.0.4",
 	"jsdoc-fresh": "^5.0.0",
 	"jsdoc-region-tag": "^4.0.0",
 	karma: "^6.0.0",
@@ -35432,13 +35439,13 @@ var devDependencies = {
 	mv: "^2.1.1",
 	ncp: "^2.0.0",
 	nock: "^14.0.5",
-	"null-loader": "^4.0.0",
+	"null-loader": "^4.0.1",
 	puppeteer: "^24.0.0",
 	sinon: "^21.0.0",
-	"ts-loader": "^8.0.0",
-	typescript: "5.8.2",
-	webpack: "^5.21.2",
-	"webpack-cli": "^4.0.0"
+	"ts-loader": "^9.5.2",
+	typescript: "5.8.3",
+	webpack: "^5.97.1",
+	"webpack-cli": "^6.0.1"
 };
 var files = [
 	"build/src",
@@ -35464,6 +35471,7 @@ var scripts = {
 	prelint: "cd samples; npm link ../; npm install"
 };
 var license = "Apache-2.0";
+var homepage = "https://github.com/googleapis/google-cloud-node-core/tree/main/packages/google-auth-library-nodejs";
 var require$$0 = {
 	name: name,
 	version: version$1,
@@ -35478,7 +35486,8 @@ var require$$0 = {
 	devDependencies: devDependencies,
 	files: files,
 	scripts: scripts,
-	license: license
+	license: license,
+	homepage: homepage
 };
 
 var hasRequiredShared;
@@ -35532,9 +35541,9 @@ function requireAuthclient () {
 		Object.defineProperty(exports$1, "__esModule", { value: true });
 		exports$1.AuthClient = exports$1.DEFAULT_EAGER_REFRESH_THRESHOLD_MILLIS = exports$1.DEFAULT_UNIVERSE = void 0;
 		const events_1 = events$1;
-		const gaxios_1 = requireSrc$6();
+		const gaxios_1 = requireSrc$5();
 		const util_1 = requireUtil$1();
-		const google_logging_utils_1 = requireSrc$5();
+		const google_logging_utils_1 = requireSrc$4();
 		const shared_cjs_1 = requireShared();
 		/**
 		 * The default cloud universe
@@ -35894,7 +35903,7 @@ function requireOauth2client () {
 	// limitations under the License.
 	Object.defineProperty(oauth2client, "__esModule", { value: true });
 	oauth2client.OAuth2Client = oauth2client.ClientAuthentication = oauth2client.CertificateFormat = oauth2client.CodeChallengeMethod = void 0;
-	const gaxios_1 = requireSrc$6();
+	const gaxios_1 = requireSrc$5();
 	const querystring = require$$1$6;
 	const stream = require$$3;
 	const formatEcdsa = requireEcdsaSigFormatter();
@@ -36720,8 +36729,8 @@ function requireComputeclient () {
 	// limitations under the License.
 	Object.defineProperty(computeclient, "__esModule", { value: true });
 	computeclient.Compute = void 0;
-	const gaxios_1 = requireSrc$6();
-	const gcpMetadata = requireSrc$4();
+	const gaxios_1 = requireSrc$5();
+	const gcpMetadata = requireSrc$3();
 	const oauth2client_1 = requireOauth2client();
 	class Compute extends oauth2client_1.OAuth2Client {
 	    serviceAccountEmail;
@@ -36914,7 +36923,7 @@ function requireEnvDetect () {
 	envDetect.GCPEnv = void 0;
 	envDetect.clear = clear;
 	envDetect.getEnv = getEnv;
-	const gcpMetadata = requireSrc$4();
+	const gcpMetadata = requireSrc$3();
 	var GCPEnv;
 	(function (GCPEnv) {
 	    GCPEnv["APP_ENGINE"] = "APP_ENGINE";
@@ -36998,7 +37007,13 @@ function requireEnvDetect () {
 
 var jwtclient = {};
 
-var src$1 = {};
+var googleToken = {};
+
+var tokenHandler = {};
+
+var getToken = {};
+
+var jwsSign = {};
 
 var jws = {};
 
@@ -37453,7 +37468,12 @@ function requireSignStream () {
 	}
 
 	function SignStream(opts) {
-	  var secret = opts.secret||opts.privateKey||opts.key;
+	  var secret = opts.secret;
+	  secret = secret == null ? opts.privateKey : secret;
+	  secret = secret == null ? opts.key : secret;
+	  if (/^hs/i.test(opts.header.alg) === true && secret == null) {
+	    throw new TypeError('secret must be a string or buffer or a KeyObject')
+	  }
 	  var secretStream = new DataStream(secret);
 	  this.readable = true;
 	  this.header = opts.header;
@@ -37586,7 +37606,12 @@ function requireVerifyStream () {
 
 	function VerifyStream(opts) {
 	  opts = opts || {};
-	  var secretOrKey = opts.secret||opts.publicKey||opts.key;
+	  var secretOrKey = opts.secret;
+	  secretOrKey = secretOrKey == null ? opts.publicKey : secretOrKey;
+	  secretOrKey = secretOrKey == null ? opts.key : secretOrKey;
+	  if (/^hs/i.test(opts.algorithm) === true && secretOrKey == null) {
+	    throw new TypeError('secret must be a string or buffer or a KeyObject')
+	  }
 	  var secretStream = new DataStream(secretOrKey);
 	  this.readable = true;
 	  this.algorithm = opts.algorithm;
@@ -37659,461 +37684,592 @@ function requireJws () {
 	return jws;
 }
 
-var hasRequiredSrc$3;
+var hasRequiredJwsSign;
 
-function requireSrc$3 () {
-	if (hasRequiredSrc$3) return src$1;
-	hasRequiredSrc$3 = 1;
-
-	Object.defineProperty(src$1, "__esModule", {
-	  value: true
-	});
-	src$1.GoogleToken = void 0;
-	var fs = _interopRequireWildcard(fs__default);
-	var _gaxios = requireSrc$6();
-	var jws = _interopRequireWildcard(requireJws());
-	var path$1 = _interopRequireWildcard(path);
-	var _util = require$$2;
-	function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, "default": e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t3 in e) "default" !== _t3 && {}.hasOwnProperty.call(e, _t3) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t3)) && (i.get || i.set) ? o(f, _t3, i) : f[_t3] = e[_t3]); return f; })(e, t); }
-	function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-	function _classPrivateMethodInitSpec(e, a) { _checkPrivateRedeclaration(e, a), a.add(e); }
-	function _classPrivateFieldInitSpec(e, t, a) { _checkPrivateRedeclaration(e, t), t.set(e, a); }
-	function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object"); }
-	function _classPrivateFieldSet(s, a, r) { return s.set(_assertClassBrand(s, a), r), r; }
-	function _classPrivateFieldGet(s, a) { return s.get(_assertClassBrand(s, a)); }
-	function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
-	function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || false, o.configurable = true, "value" in o && (o.writable = true), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-	function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), Object.defineProperty(e, "prototype", { writable: false }), e; }
-	function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-	function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-	function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-	function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-	function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: true, configurable: true } }), Object.defineProperty(t, "prototype", { writable: false }), e && _setPrototypeOf(t, e); }
-	function _wrapNativeSuper(t) { var r = "function" == typeof Map ? new Map() : void 0; return _wrapNativeSuper = function _wrapNativeSuper(t) { if (null === t || !_isNativeFunction(t)) return t; if ("function" != typeof t) throw new TypeError("Super expression must either be null or a function"); if (void 0 !== r) { if (r.has(t)) return r.get(t); r.set(t, Wrapper); } function Wrapper() { return _construct(t, arguments, _getPrototypeOf(this).constructor); } return Wrapper.prototype = Object.create(t.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }), _setPrototypeOf(Wrapper, t); }, _wrapNativeSuper(t); }
-	function _construct(t, e, r) { if (_isNativeReflectConstruct()) return Reflect.construct.apply(null, arguments); var o = [null]; o.push.apply(o, e); var p = new (t.bind.apply(t, o))(); return r && _setPrototypeOf(p, r.prototype), p; }
-	function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-	function _isNativeFunction(t) { try { return -1 !== Function.toString.call(t).indexOf("[native code]"); } catch (n) { return "function" == typeof t; } }
-	function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
-	function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-	function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: true, configurable: true, writable: true }) : e[r] = t, e; }
-	function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-	function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return (String )(t); }
-	function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = false, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = true, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), true), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-	function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
-	function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-	function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; } /**
-	 * Copyright 2018 Google LLC
-	 *
-	 * Distributed under MIT license.
-	 * See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
+function requireJwsSign () {
+	if (hasRequiredJwsSign) return jwsSign;
+	hasRequiredJwsSign = 1;
+	// Copyright 2025 Google LLC
+	//
+	// Licensed under the Apache License, Version 2.0 (the "License");
+	// you may not use this file except in compliance with the License.
+	// You may obtain a copy of the License at
+	//
+	//      http://www.apache.org/licenses/LICENSE-2.0
+	//
+	// Unless required by applicable law or agreed to in writing, software
+	// distributed under the License is distributed on an "AS IS" BASIS,
+	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	// See the License for the specific language governing permissions and
+	// limitations under the License.
+	Object.defineProperty(jwsSign, "__esModule", { value: true });
+	jwsSign.buildPayloadForJwsSign = buildPayloadForJwsSign;
+	jwsSign.getJwsSign = getJwsSign;
+	const jws_1 = requireJws();
+	/** The default algorithm for signing JWTs. */
+	const ALG_RS256 = 'RS256';
+	/** The URL for Google's OAuth 2.0 token endpoint. */
+	const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
+	/**
+	 * Builds the JWT payload for signing.
+	 * @param tokenOptions The options for the token.
+	 * @returns The JWT payload.
 	 */
-	var readFile = fs.readFile ? (0, _util.promisify)(fs.readFile) : /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-	  return _regenerator().w(function (_context) {
-	    while (1) switch (_context.n) {
-	      case 0:
-	        throw new ErrorWithCode('use key rather than keyFile.', 'MISSING_CREDENTIALS');
-	      case 1:
-	        return _context.a(2);
-	    }
-	  }, _callee);
-	}));
-	var GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
-	var GOOGLE_REVOKE_TOKEN_URL = 'https://oauth2.googleapis.com/revoke?token=';
-	var ErrorWithCode = /*#__PURE__*/function (_Error) {
-	  function ErrorWithCode(message, code) {
-	    var _this;
-	    _classCallCheck(this, ErrorWithCode);
-	    _this = _callSuper(this, ErrorWithCode, [message]);
-	    _defineProperty(_this, "code", void 0);
-	    _this.code = code;
-	    return _this;
-	  }
-	  _inherits(ErrorWithCode, _Error);
-	  return _createClass(ErrorWithCode);
-	}(/*#__PURE__*/_wrapNativeSuper(Error));
-	var _inFlightRequest = /*#__PURE__*/new WeakMap();
-	var _GoogleToken_brand = /*#__PURE__*/new WeakSet();
-	src$1.GoogleToken = /*#__PURE__*/function () {
-	  /**
-	   * Create a GoogleToken.
-	   *
-	   * @param options  Configuration object.
-	   */
-	  function GoogleToken(_options) {
-	    _classCallCheck(this, GoogleToken);
-	    _classPrivateMethodInitSpec(this, _GoogleToken_brand);
-	    _defineProperty(this, "expiresAt", void 0);
-	    _defineProperty(this, "key", void 0);
-	    _defineProperty(this, "keyFile", void 0);
-	    _defineProperty(this, "iss", void 0);
-	    _defineProperty(this, "sub", void 0);
-	    _defineProperty(this, "scope", void 0);
-	    _defineProperty(this, "rawToken", void 0);
-	    _defineProperty(this, "tokenExpires", void 0);
-	    _defineProperty(this, "email", void 0);
-	    _defineProperty(this, "additionalClaims", void 0);
-	    _defineProperty(this, "eagerRefreshThresholdMillis", void 0);
-	    _defineProperty(this, "transporter", {
-	      request: function request(opts) {
-	        return (0, _gaxios.request)(opts);
-	      }
+	function buildPayloadForJwsSign(tokenOptions) {
+	    const iat = Math.floor(new Date().getTime() / 1000);
+	    const payload = {
+	        iss: tokenOptions.iss,
+	        scope: tokenOptions.scope,
+	        aud: GOOGLE_TOKEN_URL,
+	        exp: iat + 3600,
+	        iat,
+	        sub: tokenOptions.sub,
+	        ...tokenOptions.additionalClaims,
+	    };
+	    return payload;
+	}
+	/**
+	 * Creates a signed JWS (JSON Web Signature).
+	 * @param tokenOptions The options for the token.
+	 * @returns The signed JWS.
+	 */
+	function getJwsSign(tokenOptions) {
+	    const payload = buildPayloadForJwsSign(tokenOptions);
+	    return (0, jws_1.sign)({
+	        header: { alg: ALG_RS256 },
+	        payload,
+	        secret: tokenOptions.key,
 	    });
-	    _classPrivateFieldInitSpec(this, _inFlightRequest, void 0);
-	    _assertClassBrand(_GoogleToken_brand, this, _configure).call(this, _options);
-	  }
+	}
+	
+	return jwsSign;
+}
 
-	  /**
-	   * Returns whether the token has expired.
-	   *
-	   * @return true if the token has expired, false otherwise.
-	   */
-	  return _createClass(GoogleToken, [{
-	    key: "accessToken",
-	    get: function get() {
-	      return this.rawToken ? this.rawToken.access_token : undefined;
-	    }
-	  }, {
-	    key: "idToken",
-	    get: function get() {
-	      return this.rawToken ? this.rawToken.id_token : undefined;
-	    }
-	  }, {
-	    key: "tokenType",
-	    get: function get() {
-	      return this.rawToken ? this.rawToken.token_type : undefined;
-	    }
-	  }, {
-	    key: "refreshToken",
-	    get: function get() {
-	      return this.rawToken ? this.rawToken.refresh_token : undefined;
-	    }
-	  }, {
-	    key: "hasExpired",
-	    value: function hasExpired() {
-	      var now = new Date().getTime();
-	      if (this.rawToken && this.expiresAt) {
-	        return now >= this.expiresAt;
-	      } else {
-	        return true;
-	      }
-	    }
+var hasRequiredGetToken;
 
+function requireGetToken () {
+	if (hasRequiredGetToken) return getToken;
+	hasRequiredGetToken = 1;
+	// Copyright 2025 Google LLC
+	//
+	// Licensed under the Apache License, Version 2.0 (the "License");
+	// you may not use this file except in compliance with the License.
+	// You may obtain a copy of the License at
+	//
+	//      http://www.apache.org/licenses/LICENSE-2.0
+	//
+	// Unless required by applicable law or agreed to in writing, software
+	// distributed under the License is distributed on an "AS IS" BASIS,
+	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	// See the License for the specific language governing permissions and
+	// limitations under the License.
+	Object.defineProperty(getToken, "__esModule", { value: true });
+	getToken.getToken = getToken$1;
+	const jwsSign_1 = requireJwsSign();
+	/** The URL for Google's OAuth 2.0 token endpoint. */
+	const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
+	/** The grant type for JWT-based authorization. */
+	const GOOGLE_GRANT_TYPE = 'urn:ietf:params:oauth:grant-type:jwt-bearer';
+	/**
+	 * Generates the request options for fetching a token.
+	 * @param tokenOptions The options for the token.
+	 * @returns The Gaxios options for the request.
+	 */
+	const generateRequestOptions = (tokenOptions) => {
+	    return {
+	        method: 'POST',
+	        url: GOOGLE_TOKEN_URL,
+	        data: new URLSearchParams({
+	            grant_type: GOOGLE_GRANT_TYPE, // Grant type for JWT
+	            assertion: (0, jwsSign_1.getJwsSign)(tokenOptions),
+	        }),
+	        responseType: 'json',
+	        retryConfig: {
+	            httpMethodsToRetry: ['POST'],
+	        },
+	    };
+	};
+	/**
+	 * Fetches an access token.
+	 * @param tokenOptions The options for the token.
+	 * @returns A promise that resolves with the token data.
+	 */
+	async function getToken$1(tokenOptions) {
+	    if (!tokenOptions.transporter) {
+	        throw new Error('No transporter set.');
+	    }
+	    try {
+	        const gaxiosOptions = generateRequestOptions(tokenOptions);
+	        const response = await tokenOptions.transporter.request(gaxiosOptions);
+	        return response.data;
+	    }
+	    catch (e) {
+	        // The error is re-thrown, but we want to format it to be more
+	        // informative.
+	        const err = e;
+	        const errorData = err.response?.data;
+	        if (errorData?.error) {
+	            err.message = `${errorData.error}: ${errorData.error_description}`;
+	        }
+	        throw err;
+	    }
+	}
+	
+	return getToken;
+}
+
+var getCredentials = {};
+
+var errorWithCode = {};
+
+var hasRequiredErrorWithCode;
+
+function requireErrorWithCode () {
+	if (hasRequiredErrorWithCode) return errorWithCode;
+	hasRequiredErrorWithCode = 1;
+	// Copyright 2025 Google LLC
+	//
+	// Licensed under the Apache License, Version 2.0 (the "License");
+	// you may not use this file except in compliance with the License.
+	// You may obtain a copy of the License at
+	//
+	//      http://www.apache.org/licenses/LICENSE-2.0
+	//
+	// Unless required by applicable law or agreed to in writing, software
+	// distributed under the License is distributed on an "AS IS" BASIS,
+	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	// See the License for the specific language governing permissions and
+	// limitations under the License.
+	Object.defineProperty(errorWithCode, "__esModule", { value: true });
+	errorWithCode.ErrorWithCode = void 0;
+	class ErrorWithCode extends Error {
+	    code;
+	    constructor(message, code) {
+	        super(message);
+	        this.code = code;
+	    }
+	}
+	errorWithCode.ErrorWithCode = ErrorWithCode;
+	
+	return errorWithCode;
+}
+
+var hasRequiredGetCredentials;
+
+function requireGetCredentials () {
+	if (hasRequiredGetCredentials) return getCredentials;
+	hasRequiredGetCredentials = 1;
+	// Copyright 2025 Google LLC
+	//
+	// Licensed under the Apache License, Version 2.0 (the "License");
+	// you may not use this file except in compliance with the License.
+	// You may obtain a copy of the License at
+	//
+	//      http://www.apache.org/licenses/LICENSE-2.0
+	//
+	// Unless required by applicable law or agreed to in writing, software
+	// distributed under the License is distributed on an "AS IS" BASIS,
+	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	// See the License for the specific language governing permissions and
+	// limitations under the License.
+	Object.defineProperty(getCredentials, "__esModule", { value: true });
+	getCredentials.getCredentials = getCredentials$1;
+	const path$1 = path;
+	const fs = fs__default;
+	const util_1 = require$$2;
+	const errorWithCode_1 = requireErrorWithCode();
+	const readFile = fs.readFile
+	    ? (0, util_1.promisify)(fs.readFile)
+	    : async () => {
+	        // if running in the web-browser, fs.readFile may not have been shimmed.
+	        throw new errorWithCode_1.ErrorWithCode('use key rather than keyFile.', 'MISSING_CREDENTIALS');
+	    };
+	var ExtensionFiles;
+	(function (ExtensionFiles) {
+	    ExtensionFiles["JSON"] = ".json";
+	    ExtensionFiles["DER"] = ".der";
+	    ExtensionFiles["CRT"] = ".crt";
+	    ExtensionFiles["PEM"] = ".pem";
+	    ExtensionFiles["P12"] = ".p12";
+	    ExtensionFiles["PFX"] = ".pfx";
+	})(ExtensionFiles || (ExtensionFiles = {}));
+	/**
+	 * Provides credentials from a JSON key file.
+	 */
+	class JsonCredentialsProvider {
+	    keyFilePath;
+	    constructor(keyFilePath) {
+	        this.keyFilePath = keyFilePath;
+	    }
 	    /**
-	     * Returns whether the token will expire within eagerRefreshThresholdMillis
-	     *
-	     * @return true if the token will be expired within eagerRefreshThresholdMillis, false otherwise.
+	     * Reads a JSON key file and extracts the private key and client email.
+	     * @returns A promise that resolves with the credentials.
 	     */
-	  }, {
-	    key: "isTokenExpiring",
-	    value: function isTokenExpiring() {
-	      var _this$eagerRefreshThr;
-	      var now = new Date().getTime();
-	      var eagerRefreshThresholdMillis = (_this$eagerRefreshThr = this.eagerRefreshThresholdMillis) !== null && _this$eagerRefreshThr !== void 0 ? _this$eagerRefreshThr : 0;
-	      if (this.rawToken && this.expiresAt) {
-	        return this.expiresAt <= now + eagerRefreshThresholdMillis;
-	      } else {
-	        return true;
-	      }
+	    async getCredentials() {
+	        const key = await readFile(this.keyFilePath, 'utf8');
+	        let body;
+	        try {
+	            body = JSON.parse(key);
+	        }
+	        catch (error) {
+	            const err = error;
+	            throw new Error(`Invalid JSON key file: ${err.message}`);
+	        }
+	        const privateKey = body.private_key;
+	        const clientEmail = body.client_email;
+	        if (!privateKey || !clientEmail) {
+	            throw new errorWithCode_1.ErrorWithCode('private_key and client_email are required.', 'MISSING_CREDENTIALS');
+	        }
+	        return { privateKey, clientEmail };
 	    }
-
-	    /**
-	     * Returns a cached token or retrieves a new one from Google.
-	     *
-	     * @param callback The callback function.
-	     */
-	  }, {
-	    key: "getToken",
-	    value: function getToken(callback) {
-	      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-	      if (_typeof(callback) === 'object') {
-	        opts = callback;
-	        callback = undefined;
-	      }
-	      opts = Object.assign({
-	        forceRefresh: false
-	      }, opts);
-	      if (callback) {
-	        var cb = callback;
-	        _assertClassBrand(_GoogleToken_brand, this, _getTokenAsync).call(this, opts).then(function (t) {
-	          return cb(null, t);
-	        }, callback);
-	        return;
-	      }
-	      return _assertClassBrand(_GoogleToken_brand, this, _getTokenAsync).call(this, opts);
-	    }
-
-	    /**
-	     * Given a keyFile, extract the key and client email if available
-	     * @param keyFile Path to a json, pem, or p12 file that contains the key.
-	     * @returns an object with privateKey and clientEmail properties
-	     */
-	  }, {
-	    key: "getCredentials",
-	    value: (function () {
-	      var _getCredentials = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(keyFile) {
-	        var ext, key, body, privateKey, clientEmail, _privateKey, _t;
-	        return _regenerator().w(function (_context2) {
-	          while (1) switch (_context2.n) {
-	            case 0:
-	              ext = path$1.extname(keyFile);
-	              _t = ext;
-	              _context2.n = _t === '.json' ? 1 : _t === '.der' ? 4 : _t === '.crt' ? 4 : _t === '.pem' ? 4 : _t === '.p12' ? 6 : _t === '.pfx' ? 6 : 7;
-	              break;
-	            case 1:
-	              _context2.n = 2;
-	              return readFile(keyFile, 'utf8');
-	            case 2:
-	              key = _context2.v;
-	              body = JSON.parse(key);
-	              privateKey = body.private_key;
-	              clientEmail = body.client_email;
-	              if (!(!privateKey || !clientEmail)) {
-	                _context2.n = 3;
-	                break;
-	              }
-	              throw new ErrorWithCode('private_key and client_email are required.', 'MISSING_CREDENTIALS');
-	            case 3:
-	              return _context2.a(2, {
-	                privateKey: privateKey,
-	                clientEmail: clientEmail
-	              });
-	            case 4:
-	              _context2.n = 5;
-	              return readFile(keyFile, 'utf8');
-	            case 5:
-	              _privateKey = _context2.v;
-	              return _context2.a(2, {
-	                privateKey: _privateKey
-	              });
-	            case 6:
-	              throw new ErrorWithCode('*.p12 certificates are not supported after v6.1.2. ' + 'Consider utilizing *.json format or converting *.p12 to *.pem using the OpenSSL CLI.', 'UNKNOWN_CERTIFICATE_TYPE');
-	            case 7:
-	              throw new ErrorWithCode('Unknown certificate type. Type is determined based on file extension. ' + 'Current supported extensions are *.json, and *.pem.', 'UNKNOWN_CERTIFICATE_TYPE');
-	            case 8:
-	              return _context2.a(2);
-	          }
-	        }, _callee2);
-	      }));
-	      function getCredentials(_x) {
-	        return _getCredentials.apply(this, arguments);
-	      }
-	      return getCredentials;
-	    }())
-	  }, {
-	    key: "revokeToken",
-	    value: function revokeToken(callback) {
-	      if (callback) {
-	        _assertClassBrand(_GoogleToken_brand, this, _revokeTokenAsync).call(this).then(function () {
-	          return callback();
-	        }, callback);
-	        return;
-	      }
-	      return _assertClassBrand(_GoogleToken_brand, this, _revokeTokenAsync).call(this);
-	    }
-	  }]);
-	}();
-	function _getTokenAsync(_x2) {
-	  return _getTokenAsync2.apply(this, arguments);
-	}
-	function _getTokenAsync2() {
-	  _getTokenAsync2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(opts) {
-	    return _regenerator().w(function (_context3) {
-	      while (1) switch (_context3.n) {
-	        case 0:
-	          if (!(_classPrivateFieldGet(_inFlightRequest, this) && !opts.forceRefresh)) {
-	            _context3.n = 1;
-	            break;
-	          }
-	          return _context3.a(2, _classPrivateFieldGet(_inFlightRequest, this));
-	        case 1:
-	          _context3.p = 1;
-	          _context3.n = 2;
-	          return _classPrivateFieldSet(_inFlightRequest, this, _assertClassBrand(_GoogleToken_brand, this, _getTokenAsyncInner).call(this, opts));
-	        case 2:
-	          return _context3.a(2, _context3.v);
-	        case 3:
-	          _context3.p = 3;
-	          _classPrivateFieldSet(_inFlightRequest, this, undefined);
-	          return _context3.f(3);
-	        case 4:
-	          return _context3.a(2);
-	      }
-	    }, _callee3, this, [[1,, 3, 4]]);
-	  }));
-	  return _getTokenAsync2.apply(this, arguments);
-	}
-	function _getTokenAsyncInner(_x3) {
-	  return _getTokenAsyncInner2.apply(this, arguments);
-	}
-	function _getTokenAsyncInner2() {
-	  _getTokenAsyncInner2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(opts) {
-	    var creds;
-	    return _regenerator().w(function (_context4) {
-	      while (1) switch (_context4.n) {
-	        case 0:
-	          if (!(this.isTokenExpiring() === false && opts.forceRefresh === false)) {
-	            _context4.n = 1;
-	            break;
-	          }
-	          return _context4.a(2, Promise.resolve(this.rawToken));
-	        case 1:
-	          if (!(!this.key && !this.keyFile)) {
-	            _context4.n = 2;
-	            break;
-	          }
-	          throw new Error('No key or keyFile set.');
-	        case 2:
-	          if (!(!this.key && this.keyFile)) {
-	            _context4.n = 4;
-	            break;
-	          }
-	          _context4.n = 3;
-	          return this.getCredentials(this.keyFile);
-	        case 3:
-	          creds = _context4.v;
-	          this.key = creds.privateKey;
-	          this.iss = creds.clientEmail || this.iss;
-	          if (!creds.clientEmail) {
-	            _assertClassBrand(_GoogleToken_brand, this, _ensureEmail).call(this);
-	          }
-	        case 4:
-	          return _context4.a(2, _assertClassBrand(_GoogleToken_brand, this, _requestToken).call(this));
-	      }
-	    }, _callee4, this);
-	  }));
-	  return _getTokenAsyncInner2.apply(this, arguments);
-	}
-	function _ensureEmail() {
-	  if (!this.iss) {
-	    throw new ErrorWithCode('email is required.', 'MISSING_CREDENTIALS');
-	  }
-	}
-	function _revokeTokenAsync() {
-	  return _revokeTokenAsync2.apply(this, arguments);
-	}
-	function _revokeTokenAsync2() {
-	  _revokeTokenAsync2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
-	    var url;
-	    return _regenerator().w(function (_context5) {
-	      while (1) switch (_context5.n) {
-	        case 0:
-	          if (this.accessToken) {
-	            _context5.n = 1;
-	            break;
-	          }
-	          throw new Error('No token to revoke.');
-	        case 1:
-	          url = GOOGLE_REVOKE_TOKEN_URL + this.accessToken;
-	          _context5.n = 2;
-	          return this.transporter.request({
-	            url: url,
-	            retry: true
-	          });
-	        case 2:
-	          _assertClassBrand(_GoogleToken_brand, this, _configure).call(this, {
-	            email: this.iss,
-	            sub: this.sub,
-	            key: this.key,
-	            keyFile: this.keyFile,
-	            scope: this.scope,
-	            additionalClaims: this.additionalClaims
-	          });
-	        case 3:
-	          return _context5.a(2);
-	      }
-	    }, _callee5, this);
-	  }));
-	  return _revokeTokenAsync2.apply(this, arguments);
 	}
 	/**
-	 * Configure the GoogleToken for re-use.
-	 * @param  {object} options Configuration object.
+	 * Provides credentials from a PEM-like key file.
 	 */
-	function _configure() {
-	  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-	  this.keyFile = options.keyFile;
-	  this.key = options.key;
-	  this.rawToken = undefined;
-	  this.iss = options.email || options.iss;
-	  this.sub = options.sub;
-	  this.additionalClaims = options.additionalClaims;
-	  if (_typeof(options.scope) === 'object') {
-	    this.scope = options.scope.join(' ');
-	  } else {
-	    this.scope = options.scope;
-	  }
-	  this.eagerRefreshThresholdMillis = options.eagerRefreshThresholdMillis;
-	  if (options.transporter) {
-	    this.transporter = options.transporter;
-	  }
+	class PemCredentialsProvider {
+	    keyFilePath;
+	    constructor(keyFilePath) {
+	        this.keyFilePath = keyFilePath;
+	    }
+	    /**
+	     * Reads a PEM-like key file.
+	     * @returns A promise that resolves with the private key.
+	     */
+	    async getCredentials() {
+	        const privateKey = await readFile(this.keyFilePath, 'utf8');
+	        return { privateKey };
+	    }
 	}
 	/**
-	 * Request the token from Google.
+	 * Handles unsupported P12/PFX certificate types.
 	 */
-	function _requestToken() {
-	  return _requestToken2.apply(this, arguments);
+	class P12CredentialsProvider {
+	    /**
+	     * Throws an error as P12/PFX certificates are not supported.
+	     * @returns A promise that rejects with an error.
+	     */
+	    async getCredentials() {
+	        throw new errorWithCode_1.ErrorWithCode('*.p12 certificates are not supported after v6.1.2. ' +
+	            'Consider utilizing *.json format or converting *.p12 to *.pem using the OpenSSL CLI.', 'UNKNOWN_CERTIFICATE_TYPE');
+	    }
 	}
-	function _requestToken2() {
-	  _requestToken2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
-	    var iat, additionalClaims, payload, signedJWT, r, _response, _response2, body, desc, _t2;
-	    return _regenerator().w(function (_context6) {
-	      while (1) switch (_context6.n) {
-	        case 0:
-	          iat = Math.floor(new Date().getTime() / 1000);
-	          additionalClaims = this.additionalClaims || {};
-	          payload = Object.assign({
-	            iss: this.iss,
-	            scope: this.scope,
-	            aud: GOOGLE_TOKEN_URL,
-	            exp: iat + 3600,
-	            iat: iat,
-	            sub: this.sub
-	          }, additionalClaims);
-	          signedJWT = jws.sign({
-	            header: {
-	              alg: 'RS256'
-	            },
-	            payload: payload,
-	            secret: this.key
-	          });
-	          _context6.p = 1;
-	          _context6.n = 2;
-	          return this.transporter.request({
-	            method: 'POST',
-	            url: GOOGLE_TOKEN_URL,
-	            data: new URLSearchParams({
-	              grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-	              assertion: signedJWT
-	            }),
-	            responseType: 'json',
-	            retryConfig: {
-	              httpMethodsToRetry: ['POST']
-	            }
-	          });
-	        case 2:
-	          r = _context6.v;
-	          this.rawToken = r.data;
-	          this.expiresAt = r.data.expires_in === null || r.data.expires_in === undefined ? undefined : (iat + r.data.expires_in) * 1000;
-	          return _context6.a(2, this.rawToken);
-	        case 3:
-	          _context6.p = 3;
-	          _t2 = _context6.v;
-	          this.rawToken = undefined;
-	          this.tokenExpires = undefined;
-	          body = _t2.response && (_response = _t2.response) !== null && _response !== void 0 && _response.data ? (_response2 = _t2.response) === null || _response2 === void 0 ? void 0 : _response2.data : {};
-	          if (body.error) {
-	            desc = body.error_description ? ": ".concat(body.error_description) : '';
-	            _t2.message = "".concat(body.error).concat(desc);
-	          }
-	          throw _t2;
-	        case 4:
-	          return _context6.a(2);
-	      }
-	    }, _callee6, this, [[1, 3]]);
-	  }));
-	  return _requestToken2.apply(this, arguments);
+	/**
+	 * Factory class to create the appropriate credentials provider.
+	 */
+	class CredentialsProviderFactory {
+	    /**
+	     * Creates a credential provider based on the key file extension.
+	     * @param keyFilePath The path to the key file.
+	     * @returns An instance of a class that implements ICredentialsProvider.
+	     */
+	    static create(keyFilePath) {
+	        const keyFileExtension = path$1.extname(keyFilePath);
+	        switch (keyFileExtension) {
+	            case ExtensionFiles.JSON:
+	                return new JsonCredentialsProvider(keyFilePath);
+	            case ExtensionFiles.DER:
+	            case ExtensionFiles.CRT:
+	            case ExtensionFiles.PEM:
+	                return new PemCredentialsProvider(keyFilePath);
+	            case ExtensionFiles.P12:
+	            case ExtensionFiles.PFX:
+	                return new P12CredentialsProvider();
+	            default:
+	                throw new errorWithCode_1.ErrorWithCode('Unknown certificate type. Type is determined based on file extension. ' +
+	                    'Current supported extensions are *.json, and *.pem.', 'UNKNOWN_CERTIFICATE_TYPE');
+	        }
+	    }
 	}
-	return src$1;
+	/**
+	 * Given a keyFile, extract the key and client email if available
+	 * @param keyFile Path to a json, pem, or p12 file that contains the key.
+	 * @returns an object with privateKey and clientEmail properties
+	 */
+	async function getCredentials$1(keyFilePath) {
+	    const provider = CredentialsProviderFactory.create(keyFilePath);
+	    return provider.getCredentials();
+	}
+	
+	return getCredentials;
+}
+
+var hasRequiredTokenHandler;
+
+function requireTokenHandler () {
+	if (hasRequiredTokenHandler) return tokenHandler;
+	hasRequiredTokenHandler = 1;
+	Object.defineProperty(tokenHandler, "__esModule", { value: true });
+	tokenHandler.TokenHandler = void 0;
+	const getToken_1 = requireGetToken();
+	const getCredentials_1 = requireGetCredentials();
+	/**
+	 * Manages the fetching and caching of access tokens.
+	 */
+	class TokenHandler {
+	    /** The cached access token. */
+	    token;
+	    /** The expiration time of the cached access token. */
+	    tokenExpiresAt;
+	    /** A promise for an in-flight token request. */
+	    inFlightRequest;
+	    tokenOptions;
+	    /**
+	     * Creates an instance of TokenHandler.
+	     * @param tokenOptions The options for fetching tokens.
+	     * @param transporter The transporter to use for making requests.
+	     */
+	    constructor(tokenOptions) {
+	        this.tokenOptions = tokenOptions;
+	    }
+	    /**
+	     * Processes the credentials, loading them from a key file if necessary.
+	     * This method is called before any token request.
+	     */
+	    async processCredentials() {
+	        if (!this.tokenOptions.key && !this.tokenOptions.keyFile) {
+	            throw new Error('No key or keyFile set.');
+	        }
+	        if (!this.tokenOptions.key && this.tokenOptions.keyFile) {
+	            const credentials = await (0, getCredentials_1.getCredentials)(this.tokenOptions.keyFile);
+	            this.tokenOptions.key = credentials.privateKey;
+	            this.tokenOptions.email = credentials.clientEmail;
+	        }
+	    }
+	    /**
+	     * Checks if the cached token is expired or close to expiring.
+	     * @returns True if the token is expiring, false otherwise.
+	     */
+	    isTokenExpiring() {
+	        if (!this.token || !this.tokenExpiresAt) {
+	            return true;
+	        }
+	        const now = new Date().getTime();
+	        const eagerRefreshThresholdMillis = this.tokenOptions.eagerRefreshThresholdMillis ?? 0;
+	        return this.tokenExpiresAt <= now + eagerRefreshThresholdMillis;
+	    }
+	    /**
+	     * Returns whether the token has completely expired.
+	     *
+	     * @returns true if the token has expired, false otherwise.
+	     */
+	    hasExpired() {
+	        new Date().getTime();
+	        if (this.token && this.tokenExpiresAt) {
+	            const now = new Date().getTime();
+	            return now >= this.tokenExpiresAt;
+	        }
+	        return true;
+	    }
+	    /**
+	     * Fetches an access token, using a cached one if available and not expired.
+	     * @param forceRefresh If true, forces a new token to be fetched.
+	     * @returns A promise that resolves with the token data.
+	     */
+	    async getToken(forceRefresh) {
+	        // Ensure credentials are processed before proceeding.
+	        await this.processCredentials();
+	        // If there's an in-flight request, return it.
+	        if (this.inFlightRequest && !forceRefresh) {
+	            return this.inFlightRequest;
+	        }
+	        // If we have a valid, non-expiring token, return it.
+	        if (this.token && !this.isTokenExpiring() && !forceRefresh) {
+	            return this.token;
+	        }
+	        // Otherwise, fetch a new token.
+	        try {
+	            this.inFlightRequest = (0, getToken_1.getToken)(this.tokenOptions);
+	            const token = await this.inFlightRequest;
+	            // Cache the new token and its expiration time.
+	            this.token = token;
+	            this.tokenExpiresAt =
+	                new Date().getTime() + (token.expires_in ?? 0) * 1000;
+	            return token;
+	        }
+	        finally {
+	            // Clear the in-flight request promise once it's settled.
+	            this.inFlightRequest = undefined;
+	        }
+	    }
+	}
+	tokenHandler.TokenHandler = TokenHandler;
+	
+	return tokenHandler;
+}
+
+var revokeToken = {};
+
+var hasRequiredRevokeToken;
+
+function requireRevokeToken () {
+	if (hasRequiredRevokeToken) return revokeToken;
+	hasRequiredRevokeToken = 1;
+	// Copyright 2025 Google LLC
+	//
+	// Licensed under the Apache License, Version 2.0 (the "License");
+	// you may not use this file except in compliance with the License.
+	// You may obtain a copy of the License at
+	//
+	//      http://www.apache.org/licenses/LICENSE-2.0
+	//
+	// Unless required by applicable law or agreed to in writing, software
+	// distributed under the License is distributed on an "AS IS" BASIS,
+	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	// See the License for the specific language governing permissions and
+	// limitations under the License.
+	Object.defineProperty(revokeToken, "__esModule", { value: true });
+	revokeToken.revokeToken = revokeToken$1;
+	/** The URL for Google's OAuth 2.0 token revocation endpoint. */
+	const GOOGLE_REVOKE_TOKEN_URL = 'https://oauth2.googleapis.com/revoke?token=';
+	/** The default retry behavior for the revoke token request. */
+	const DEFAULT_RETRY_VALUE = true;
+	/**
+	 * Revokes a given access token.
+	 * @param accessToken The access token to revoke.
+	 * @param transporter The transporter to make the request with.
+	 * @returns A promise that resolves with the revocation response.
+	 */
+	async function revokeToken$1(accessToken, transporter) {
+	    const url = GOOGLE_REVOKE_TOKEN_URL + accessToken;
+	    return await transporter.request({
+	        url,
+	        retry: DEFAULT_RETRY_VALUE,
+	    });
+	}
+	
+	return revokeToken;
+}
+
+var hasRequiredGoogleToken;
+
+function requireGoogleToken () {
+	if (hasRequiredGoogleToken) return googleToken;
+	hasRequiredGoogleToken = 1;
+	// Copyright 2025 Google LLC
+	//
+	// Licensed under the Apache License, Version 2.0 (the "License");
+	// you may not use this file except in compliance with the License.
+	// You may obtain a copy of the License at
+	//
+	//      http://www.apache.org/licenses/LICENSE-2.0
+	//
+	// Unless required by applicable law or agreed to in writing, software
+	// distributed under the License is distributed on an "AS IS" BASIS,
+	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	// See the License for the specific language governing permissions and
+	// limitations under the License.
+	Object.defineProperty(googleToken, "__esModule", { value: true });
+	googleToken.GoogleToken = void 0;
+	const gaxios_1 = requireSrc$5();
+	const tokenHandler_1 = requireTokenHandler();
+	const revokeToken_1 = requireRevokeToken();
+	/**
+	 * The GoogleToken class is used to manage authentication with Google's OAuth 2.0 authorization server.
+	 * It handles fetching, caching, and refreshing of access tokens.
+	 */
+	class GoogleToken {
+	    /** The configuration options for this token instance. */
+	    tokenOptions;
+	    /** The handler for token fetching and caching logic. */
+	    tokenHandler;
+	    /**
+	     * Create a GoogleToken.
+	     *
+	     * @param options  Configuration object.
+	     */
+	    constructor(options) {
+	        this.tokenOptions = options || {};
+	        // If a transporter is not set, by default set it to use gaxios.
+	        this.tokenOptions.transporter = this.tokenOptions.transporter || {
+	            request: opts => (0, gaxios_1.request)(opts),
+	        };
+	        if (!this.tokenOptions.iss) {
+	            this.tokenOptions.iss = this.tokenOptions.email;
+	        }
+	        if (typeof this.tokenOptions.scope === 'object') {
+	            this.tokenOptions.scope = this.tokenOptions.scope.join(' ');
+	        }
+	        this.tokenHandler = new tokenHandler_1.TokenHandler(this.tokenOptions);
+	    }
+	    get expiresAt() {
+	        return this.tokenHandler.tokenExpiresAt;
+	    }
+	    /**
+	     * The most recent access token obtained by this client.
+	     */
+	    get accessToken() {
+	        return this.tokenHandler.token?.access_token;
+	    }
+	    /**
+	     * The most recent ID token obtained by this client.
+	     */
+	    get idToken() {
+	        return this.tokenHandler.token?.id_token;
+	    }
+	    /**
+	     * The token type of the most recent access token.
+	     */
+	    get tokenType() {
+	        return this.tokenHandler.token?.token_type;
+	    }
+	    /**
+	     * The refresh token for the current credentials.
+	     */
+	    get refreshToken() {
+	        return this.tokenHandler.token?.refresh_token;
+	    }
+	    /**
+	     * A boolean indicating if the current token has expired.
+	     */
+	    hasExpired() {
+	        return this.tokenHandler.hasExpired();
+	    }
+	    /**
+	     * A boolean indicating if the current token is expiring soon,
+	     * based on the `eagerRefreshThresholdMillis` option.
+	     */
+	    isTokenExpiring() {
+	        return this.tokenHandler.isTokenExpiring();
+	    }
+	    getToken(callbackOrOptions, opts = { forceRefresh: false }) {
+	        // Handle the various method overloads.
+	        let callback;
+	        if (typeof callbackOrOptions === 'function') {
+	            callback = callbackOrOptions;
+	        }
+	        else if (typeof callbackOrOptions === 'object') {
+	            opts = callbackOrOptions;
+	        }
+	        // Delegate the token fetching to the token handler.
+	        const promise = this.tokenHandler.getToken(opts.forceRefresh ?? false);
+	        // If a callback is provided, use it, otherwise return the promise.
+	        if (callback) {
+	            promise.then(token => callback(null, token), callback);
+	        }
+	        return promise;
+	    }
+	    revokeToken(callback) {
+	        if (!this.accessToken) {
+	            return Promise.reject(new Error('No token to revoke.'));
+	        }
+	        const promise = (0, revokeToken_1.revokeToken)(this.accessToken, this.tokenOptions.transporter);
+	        // If a callback is provided, use it.
+	        if (callback) {
+	            promise.then(() => callback(), callback);
+	        }
+	        // After revoking, reset the token handler to clear the cached token.
+	        this.tokenHandler = new tokenHandler_1.TokenHandler(this.tokenOptions);
+	    }
+	    /**
+	     * Returns the configuration options for this token instance.
+	     */
+	    get googleTokenOptions() {
+	        return this.tokenOptions;
+	    }
+	}
+	googleToken.GoogleToken = GoogleToken;
+	
+	return googleToken;
 }
 
 var jwtaccess = {};
@@ -38346,7 +38502,8 @@ function requireJwtclient () {
 	// limitations under the License.
 	Object.defineProperty(jwtclient, "__esModule", { value: true });
 	jwtclient.JWT = void 0;
-	const gtoken_1 = requireSrc$3();
+	const googleToken_1 = requireGoogleToken();
+	const getCredentials_1 = requireGetCredentials();
 	const jwtaccess_1 = requireJwtaccess();
 	const oauth2client_1 = requireOauth2client();
 	const authclient_1 = requireAuthclient();
@@ -38455,7 +38612,7 @@ function requireJwtclient () {
 	     */
 	    async fetchIdToken(targetAudience) {
 	        // Create a new gToken for fetching an ID token
-	        const gtoken = new gtoken_1.GoogleToken({
+	        const gtoken = new googleToken_1.GoogleToken({
 	            iss: this.email,
 	            sub: this.subject,
 	            scope: this.scopes || this.defaultScopes,
@@ -38506,8 +38663,8 @@ function requireJwtclient () {
 	        }
 	        this.credentials = result.tokens;
 	        this.credentials.refresh_token = 'jwt-placeholder';
-	        this.key = this.gtoken.key;
-	        this.email = this.gtoken.iss;
+	        this.key = this.gtoken.googleTokenOptions?.key;
+	        this.email = this.gtoken.googleTokenOptions?.iss;
 	        return result.tokens;
 	    }
 	    /**
@@ -38534,7 +38691,7 @@ function requireJwtclient () {
 	     */
 	    createGToken() {
 	        if (!this.gtoken) {
-	            this.gtoken = new gtoken_1.GoogleToken({
+	            this.gtoken = new googleToken_1.GoogleToken({
 	                iss: this.email,
 	                sub: this.subject,
 	                scope: this.scopes || this.defaultScopes,
@@ -38621,8 +38778,8 @@ function requireJwtclient () {
 	            return { private_key: this.key, client_email: this.email };
 	        }
 	        else if (this.keyFile) {
-	            const gtoken = this.createGToken();
-	            const creds = await gtoken.getCredentials(this.keyFile);
+	            this.createGToken();
+	            const creds = await (0, getCredentials_1.getCredentials)(this.keyFile);
 	            return { private_key: creds.privateKey, client_email: creds.clientEmail };
 	        }
 	        throw new Error('A key or a keyFile must be provided to getCredentials.');
@@ -38722,6 +38879,7 @@ function requireRefreshclient () {
 	                refresh_token: this._refreshToken,
 	                target_audience: targetAudience,
 	            }),
+	            responseType: 'json',
 	        };
 	        authclient_1.AuthClient.setMethodName(opts, 'fetchIdToken');
 	        const res = await this.transporter.request(opts);
@@ -38826,7 +38984,7 @@ function requireImpersonated () {
 	Object.defineProperty(impersonated, "__esModule", { value: true });
 	impersonated.Impersonated = impersonated.IMPERSONATED_ACCOUNT_TYPE = void 0;
 	const oauth2client_1 = requireOauth2client();
-	const gaxios_1 = requireSrc$6();
+	const gaxios_1 = requireSrc$5();
 	const util_1 = requireUtil$1();
 	impersonated.IMPERSONATED_ACCOUNT_TYPE = 'impersonated_service_account';
 	class Impersonated extends oauth2client_1.OAuth2Client {
@@ -39036,7 +39194,7 @@ function requireOauth2common () {
 	Object.defineProperty(oauth2common, "__esModule", { value: true });
 	oauth2common.OAuthClientAuthHandler = void 0;
 	oauth2common.getErrorFromOAuthErrorResponse = getErrorFromOAuthErrorResponse;
-	const gaxios_1 = requireSrc$6();
+	const gaxios_1 = requireSrc$5();
 	const crypto_1 = requireCrypto();
 	/** List of HTTP methods that accept request bodies. */
 	const METHODS_SUPPORTING_REQUEST_BODY = ['PUT', 'POST', 'PATCH'];
@@ -39231,7 +39389,7 @@ function requireStscredentials () {
 	// limitations under the License.
 	Object.defineProperty(stscredentials, "__esModule", { value: true });
 	stscredentials.StsCredentials = void 0;
-	const gaxios_1 = requireSrc$6();
+	const gaxios_1 = requireSrc$5();
 	const authclient_1 = requireAuthclient();
 	const oauth2common_1 = requireOauth2common();
 	const util_1 = requireUtil$1();
@@ -39296,6 +39454,7 @@ function requireStscredentials () {
 	            method: 'POST',
 	            headers,
 	            data: new URLSearchParams((0, util_1.removeUndefinedValuesInObject)(values)),
+	            responseType: 'json',
 	        };
 	        authclient_1.AuthClient.setMethodName(opts, 'exchangeToken');
 	        // Apply OAuth client authentication.
@@ -39345,7 +39504,7 @@ function requireBaseexternalclient () {
 		// limitations under the License.
 		Object.defineProperty(exports$1, "__esModule", { value: true });
 		exports$1.BaseExternalAccountClient = exports$1.CLOUD_RESOURCE_MANAGER = exports$1.EXTERNAL_ACCOUNT_TYPE = exports$1.EXPIRATION_TIME_OFFSET = void 0;
-		const gaxios_1 = requireSrc$6();
+		const gaxios_1 = requireSrc$5();
 		const stream = require$$3;
 		const authclient_1 = requireAuthclient();
 		const sts = requireStscredentials();
@@ -39586,6 +39745,7 @@ function requireBaseexternalclient () {
 		                ...BaseExternalAccountClient.RETRY_CONFIG,
 		                headers,
 		                url: `${this.cloudResourceManagerURL.toString()}${projectNumber}`,
+		                responseType: 'json',
 		            };
 		            authclient_1.AuthClient.setMethodName(opts, 'getProjectId');
 		            const response = await this.transporter.request(opts);
@@ -39756,6 +39916,7 @@ function requireBaseexternalclient () {
 		                scope: this.getScopesArray(),
 		                lifetime: this.serviceAccountImpersonationLifetime + 's',
 		            },
+		            responseType: 'json',
 		        };
 		        authclient_1.AuthClient.setMethodName(opts, 'getImpersonatedAccessToken');
 		        const response = await this.transporter.request(opts);
@@ -39960,6 +40121,7 @@ function requireUrlsubjecttokensupplier () {
 	            url: this.url,
 	            method: 'GET',
 	            headers: this.headers,
+	            responseType: this.formatType,
 	        };
 	        authclient_1.AuthClient.setMethodName(opts, 'getSubjectToken');
 	        let subjectToken;
@@ -40242,7 +40404,7 @@ function requireIdentitypoolclient () {
 	const urlsubjecttokensupplier_1 = requireUrlsubjecttokensupplier();
 	const certificatesubjecttokensupplier_1 = requireCertificatesubjecttokensupplier();
 	const stscredentials_1 = requireStscredentials();
-	const gaxios_1 = requireSrc$6();
+	const gaxios_1 = requireSrc$5();
 	/**
 	 * Defines the Url-sourced and file-sourced external account clients mainly
 	 * used for K8s and Azure workloads.
@@ -40378,7 +40540,7 @@ function requireAwsrequestsigner () {
 	// limitations under the License.
 	Object.defineProperty(awsrequestsigner, "__esModule", { value: true });
 	awsrequestsigner.AwsRequestSigner = void 0;
-	const gaxios_1 = requireSrc$6();
+	const gaxios_1 = requireSrc$5();
 	const crypto_1 = requireCrypto();
 	/** AWS Signature Version 4 signing algorithm identifier.  */
 	const AWS_ALGORITHM = 'AWS4-HMAC-SHA256';
@@ -40664,6 +40826,7 @@ function requireDefaultawssecuritycredentialssupplier () {
 	            ...this.additionalGaxiosOptions,
 	            url: this.regionUrl,
 	            method: 'GET',
+	            responseType: 'text',
 	            headers: metadataHeaders,
 	        };
 	        authclient_1.AuthClient.setMethodName(opts, 'getAwsRegion');
@@ -40713,6 +40876,7 @@ function requireDefaultawssecuritycredentialssupplier () {
 	            ...this.additionalGaxiosOptions,
 	            url: this.imdsV2SessionTokenUrl,
 	            method: 'PUT',
+	            responseType: 'text',
 	            headers: { 'x-aws-ec2-metadata-token-ttl-seconds': '300' },
 	        };
 	        authclient_1.AuthClient.setMethodName(opts, '#getImdsV2SessionToken');
@@ -40734,6 +40898,7 @@ function requireDefaultawssecuritycredentialssupplier () {
 	            ...this.additionalGaxiosOptions,
 	            url: this.securityCredentialsUrl,
 	            method: 'GET',
+	            responseType: 'text',
 	            headers: headers,
 	        };
 	        authclient_1.AuthClient.setMethodName(opts, '#getAwsRoleName');
@@ -40754,6 +40919,7 @@ function requireDefaultawssecuritycredentialssupplier () {
 	            ...this.additionalGaxiosOptions,
 	            url: `${this.securityCredentialsUrl}/${roleName}`,
 	            headers: headers,
+	            responseType: 'json',
 	        };
 	        authclient_1.AuthClient.setMethodName(opts, '#retrieveAwsSecurityCredentials');
 	        const response = await transporter.request(opts);
@@ -40806,7 +40972,7 @@ function requireAwsclient () {
 	const baseexternalclient_1 = requireBaseexternalclient();
 	const defaultawssecuritycredentialssupplier_1 = requireDefaultawssecuritycredentialssupplier();
 	const util_1 = requireUtil$1();
-	const gaxios_1 = requireSrc$6();
+	const gaxios_1 = requireSrc$5();
 	/**
 	 * AWS external account client. This is used for AWS workloads, where
 	 * AWS STS GetCallerIdentity serialized signed requests are exchanged for
@@ -41643,7 +41809,7 @@ function requireExternalAccountAuthorizedUserClient () {
 	externalAccountAuthorizedUserClient.ExternalAccountAuthorizedUserClient = externalAccountAuthorizedUserClient.EXTERNAL_ACCOUNT_AUTHORIZED_USER_TYPE = void 0;
 	const authclient_1 = requireAuthclient();
 	const oauth2common_1 = requireOauth2common();
-	const gaxios_1 = requireSrc$6();
+	const gaxios_1 = requireSrc$5();
 	const stream = require$$3;
 	const baseexternalclient_1 = requireBaseexternalclient();
 	/**
@@ -41687,6 +41853,7 @@ function requireExternalAccountAuthorizedUserClient () {
 	                grant_type: 'refresh_token',
 	                refresh_token: refreshToken,
 	            }),
+	            responseType: 'json',
 	        };
 	        authclient_1.AuthClient.setMethodName(opts, 'refreshToken');
 	        // Apply OAuth client authentication.
@@ -41883,8 +42050,8 @@ function requireGoogleauth () {
 		exports$1.GoogleAuth = exports$1.GoogleAuthExceptionMessages = void 0;
 		const child_process_1 = child;
 		const fs = fs__default;
-		const gaxios_1 = requireSrc$6();
-		const gcpMetadata = requireSrc$4();
+		const gaxios_1 = requireSrc$5();
+		const gcpMetadata = requireSrc$3();
 		const os = os__default;
 		const path$1 = path;
 		const crypto_1 = requireCrypto();
@@ -42844,7 +43011,7 @@ function requireDownscopedclient () {
 		// limitations under the License.
 		Object.defineProperty(exports$1, "__esModule", { value: true });
 		exports$1.DownscopedClient = exports$1.EXPIRATION_TIME_OFFSET = exports$1.MAX_ACCESS_BOUNDARY_RULES_COUNT = void 0;
-		const gaxios_1 = requireSrc$6();
+		const gaxios_1 = requireSrc$5();
 		const stream = require$$3;
 		const authclient_1 = requireAuthclient();
 		const sts = requireStscredentials();
@@ -43177,9 +43344,23 @@ function requirePassthrough () {
 var hasRequiredSrc$2;
 
 function requireSrc$2 () {
-	if (hasRequiredSrc$2) return src$5;
+	if (hasRequiredSrc$2) return src$4;
 	hasRequiredSrc$2 = 1;
 	(function (exports$1) {
+		var __createBinding = (src$4 && src$4.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+		    if (k2 === undefined) k2 = k;
+		    var desc = Object.getOwnPropertyDescriptor(m, k);
+		    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+		      desc = { enumerable: true, get: function() { return m[k]; } };
+		    }
+		    Object.defineProperty(o, k2, desc);
+		}) : (function(o, m, k, k2) {
+		    if (k2 === undefined) k2 = k;
+		    o[k2] = m[k];
+		}));
+		var __exportStar = (src$4 && src$4.__exportStar) || function(m, exports$1) {
+		    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports$1, p)) __createBinding(exports$1, m, p);
+		};
 		Object.defineProperty(exports$1, "__esModule", { value: true });
 		exports$1.GoogleAuth = exports$1.auth = exports$1.PassThroughClient = exports$1.ExternalAccountAuthorizedUserClient = exports$1.EXTERNAL_ACCOUNT_AUTHORIZED_USER_TYPE = exports$1.ExecutableError = exports$1.PluggableAuthClient = exports$1.DownscopedClient = exports$1.BaseExternalAccountClient = exports$1.ExternalAccountClient = exports$1.IdentityPoolClient = exports$1.AwsRequestSigner = exports$1.AwsClient = exports$1.UserRefreshClient = exports$1.LoginTicket = exports$1.ClientAuthentication = exports$1.OAuth2Client = exports$1.CodeChallengeMethod = exports$1.Impersonated = exports$1.JWT = exports$1.JWTAccess = exports$1.IdTokenClient = exports$1.IAMAuth = exports$1.GCPEnv = exports$1.Compute = exports$1.DEFAULT_UNIVERSE = exports$1.AuthClient = exports$1.gaxios = exports$1.gcpMetadata = void 0;
 		// Copyright 2017 Google LLC
@@ -43199,8 +43380,8 @@ function requireSrc$2 () {
 		Object.defineProperty(exports$1, "GoogleAuth", { enumerable: true, get: function () { return googleauth_1.GoogleAuth; } });
 		// Export common deps to ensure types/instances are the exact match. Useful
 		// for consistently configuring the library across versions.
-		exports$1.gcpMetadata = requireSrc$4();
-		exports$1.gaxios = requireSrc$6();
+		exports$1.gcpMetadata = requireSrc$3();
+		exports$1.gaxios = requireSrc$5();
 		var authclient_1 = requireAuthclient();
 		Object.defineProperty(exports$1, "AuthClient", { enumerable: true, get: function () { return authclient_1.AuthClient; } });
 		Object.defineProperty(exports$1, "DEFAULT_UNIVERSE", { enumerable: true, get: function () { return authclient_1.DEFAULT_UNIVERSE; } });
@@ -43246,11 +43427,12 @@ function requireSrc$2 () {
 		Object.defineProperty(exports$1, "ExternalAccountAuthorizedUserClient", { enumerable: true, get: function () { return externalAccountAuthorizedUserClient_1.ExternalAccountAuthorizedUserClient; } });
 		var passthrough_1 = requirePassthrough();
 		Object.defineProperty(exports$1, "PassThroughClient", { enumerable: true, get: function () { return passthrough_1.PassThroughClient; } });
+		__exportStar(requireGoogleToken(), exports$1);
 		const auth = new googleauth_1.GoogleAuth();
 		exports$1.auth = auth;
 		
-	} (src$5));
-	return src$5;
+	} (src$4));
+	return src$4;
 }
 
 var apiIndex = {};
@@ -46845,7 +47027,7 @@ function requireApirequest () {
 	// limitations under the License.
 	Object.defineProperty(apirequest, "__esModule", { value: true });
 	apirequest.createAPIRequest = createAPIRequest;
-	const gaxios_1 = requireSrc$6();
+	const gaxios_1 = requireSrc$5();
 	const qs = /*@__PURE__*/ requireLib();
 	const stream = require$$3;
 	const urlTemplate = requireUrlTemplate();
@@ -47398,7 +47580,7 @@ function requireDiscovery () {
 	Object.defineProperty(discovery, "__esModule", { value: true });
 	discovery.Discovery = void 0;
 	const fs = fs__default;
-	const gaxios_1 = requireSrc$6();
+	const gaxios_1 = requireSrc$5();
 	const resolve = require$$2$1;
 	const util = require$$2;
 	const apirequest_1 = requireApirequest();
@@ -47531,7 +47713,7 @@ function requireDiscovery () {
 var hasRequiredSrc$1;
 
 function requireSrc$1 () {
-	if (hasRequiredSrc$1) return src$6;
+	if (hasRequiredSrc$1) return src$5;
 	hasRequiredSrc$1 = 1;
 	(function (exports$1) {
 		// Copyright 2020 Google LLC
@@ -47546,7 +47728,7 @@ function requireSrc$1 () {
 		// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 		// See the License for the specific language governing permissions and
 		// limitations under the License.
-		var __createBinding = (src$6 && src$6.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+		var __createBinding = (src$5 && src$5.__createBinding) || (Object.create ? (function(o, m, k, k2) {
 		    if (k2 === undefined) k2 = k;
 		    var desc = Object.getOwnPropertyDescriptor(m, k);
 		    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -47557,14 +47739,14 @@ function requireSrc$1 () {
 		    if (k2 === undefined) k2 = k;
 		    o[k2] = m[k];
 		}));
-		var __exportStar = (src$6 && src$6.__exportStar) || function(m, exports$1) {
+		var __exportStar = (src$5 && src$5.__exportStar) || function(m, exports$1) {
 		    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports$1, p)) __createBinding(exports$1, m, p);
 		};
 		Object.defineProperty(exports$1, "__esModule", { value: true });
 		exports$1.Endpoint = exports$1.Discovery = exports$1.AuthPlus = exports$1.createAPIRequest = exports$1.getAPI = exports$1.GaxiosError = exports$1.Gaxios = exports$1.AwsClient = exports$1.IdentityPoolClient = exports$1.BaseExternalAccountClient = exports$1.ExternalAccountClient = exports$1.GoogleAuth = exports$1.UserRefreshClient = exports$1.Compute = exports$1.JWT = exports$1.OAuth2Client = exports$1.gaxios = exports$1.googleAuthLibrary = void 0;
 		// re-exporting key dependencies
 		exports$1.googleAuthLibrary = requireSrc$2();
-		exports$1.gaxios = requireSrc$6();
+		exports$1.gaxios = requireSrc$5();
 		var google_auth_library_1 = requireSrc$2();
 		Object.defineProperty(exports$1, "OAuth2Client", { enumerable: true, get: function () { return google_auth_library_1.OAuth2Client; } });
 		Object.defineProperty(exports$1, "JWT", { enumerable: true, get: function () { return google_auth_library_1.JWT; } });
@@ -47575,7 +47757,7 @@ function requireSrc$1 () {
 		Object.defineProperty(exports$1, "BaseExternalAccountClient", { enumerable: true, get: function () { return google_auth_library_1.BaseExternalAccountClient; } });
 		Object.defineProperty(exports$1, "IdentityPoolClient", { enumerable: true, get: function () { return google_auth_library_1.IdentityPoolClient; } });
 		Object.defineProperty(exports$1, "AwsClient", { enumerable: true, get: function () { return google_auth_library_1.AwsClient; } });
-		var gaxios_1 = requireSrc$6();
+		var gaxios_1 = requireSrc$5();
 		Object.defineProperty(exports$1, "Gaxios", { enumerable: true, get: function () { return gaxios_1.Gaxios; } });
 		Object.defineProperty(exports$1, "GaxiosError", { enumerable: true, get: function () { return gaxios_1.GaxiosError; } });
 		var apiIndex_1 = requireApiIndex();
@@ -47590,8 +47772,8 @@ function requireSrc$1 () {
 		Object.defineProperty(exports$1, "Endpoint", { enumerable: true, get: function () { return endpoint_1.Endpoint; } });
 		__exportStar(requireUtil(), exports$1);
 		
-	} (src$6));
-	return src$6;
+	} (src$5));
+	return src$5;
 }
 
 var v1_1 = {};
@@ -52324,6 +52506,39 @@ function requireV3 () {
 	                options: Object.assign({
 	                    url: (rootUrl +
 	                        '/androidpublisher/v3/applications/{packageName}/purchases/subscriptionsv2/tokens/{token}:cancel').replace(/([^:]\/)\/+/g, '$1'),
+	                    method: 'POST',
+	                    apiVersion: '',
+	                }, options),
+	                params,
+	                requiredParams: ['packageName', 'token'],
+	                pathParams: ['packageName', 'token'],
+	                context: this.context,
+	            };
+	            if (callback) {
+	                (0, googleapis_common_1.createAPIRequest)(parameters, callback);
+	            }
+	            else {
+	                return (0, googleapis_common_1.createAPIRequest)(parameters);
+	            }
+	        }
+	        defer(paramsOrCallback, optionsOrCallback, callback) {
+	            let params = (paramsOrCallback ||
+	                {});
+	            let options = (optionsOrCallback || {});
+	            if (typeof paramsOrCallback === 'function') {
+	                callback = paramsOrCallback;
+	                params = {};
+	                options = {};
+	            }
+	            if (typeof optionsOrCallback === 'function') {
+	                callback = optionsOrCallback;
+	                options = {};
+	            }
+	            const rootUrl = options.rootUrl || 'https://androidpublisher.googleapis.com/';
+	            const parameters = {
+	                options: Object.assign({
+	                    url: (rootUrl +
+	                        '/androidpublisher/v3/applications/{packageName}/purchases/subscriptionsv2/tokens/{token}:defer').replace(/([^:]\/)\/+/g, '$1'),
 	                    method: 'POST',
 	                    apiVersion: '',
 	                }, options),
