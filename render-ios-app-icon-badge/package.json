@@ -8,15 +8,15 @@
     "build": "tsc && ncc build --minify"
   },
   "dependencies": {
-    "@actions/core": "^3.0.0",
+    "@actions/core": "^3.0.1",
     "@vercel/ncc": "^0.38.4"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.6.0",
     "commander": "^14.0.3",
     "recursive-readdir": "^2.2.3",
     "tmp": "^0.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.3"
   }
 }
